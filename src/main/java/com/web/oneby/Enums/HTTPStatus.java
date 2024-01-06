@@ -1,5 +1,8 @@
 package com.web.oneby.Enums;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
+import com.fasterxml.jackson.annotation.JsonValue;
+
 public enum HTTPStatus {
     SUCCESS("fas fa-check-circle", "green"),
     WARNING("fas fa-exclamation-circle", "yellow"),
@@ -21,6 +24,19 @@ public enum HTTPStatus {
         return color;
     }
 
+    @JsonProperty("icon")
     private String icon;
+    @JsonProperty("color")
     private String color;
+
+    @JsonValue
+    public Object serialize() {
+        return new Object() {
+            @JsonProperty("icon")
+            String icon = getIcon();
+
+            @JsonProperty("color")
+            String color = getColor();
+        };
+    }
 }

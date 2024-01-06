@@ -21,9 +21,9 @@ public interface UserRepository extends JpaRepository<User, Long> {
     Optional<User> findByUsername(String username);
     Optional<User> findByEmail(String email);
     Optional<User> findByToken(String token);
-    @Query(value = "SELECT * FROM users WHERE (:#{#filter.name} IS NULL OR " +
+    @Query(value = "SELECT * FROM users JOIN user_roles ur on users.id = ur.user_id WHERE (:#{#filter.name} IS NULL OR " +
             "(email LIKE %:#{#filter.name}% OR username LIKE %:#{#filter.name}%)) " +
-            "AND (:#{#filter.roles.size()} = 0 OR role IN (:#{#filter.roles})) ",
+            "AND (:#{#filter.roles.size()} = 0 OR ur.roles IN (:#{#filter.roles})) ",
             nativeQuery = true)
     Page<User> findAll(@Param("filter") UserSearchFilterRequest filter, Pageable pageable);
 }

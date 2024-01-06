@@ -67,20 +67,20 @@ public class UserService implements UserDetailsService {
                 userRepository.findByUsername(createUserRequest.getUsername()).isPresent() &&
                 userRepository.findByEmail(createUserRequest.getEmail()).isEmpty()
         ) {
-            messageHandler = HTTPMessageHandler.fromHTTPMessage(HTTPMessage.USERNAME_IS_EXIST, language);
-            throw new RuntimeException("Username is exist!");
+            messageHandler.set(HTTPMessage.USERNAME_IS_EXIST, language);
+            return null;
         } else if (
                 userRepository.findByUsername(createUserRequest.getUsername()).isEmpty() &&
                 userRepository.findByEmail(createUserRequest.getEmail()).isPresent()
         ) {
-            messageHandler = HTTPMessageHandler.fromHTTPMessage(HTTPMessage.EMAIL_IS_EXIST, language);
-            throw new RuntimeException("Email is exist!");
+            messageHandler.set(HTTPMessage.EMAIL_IS_EXIST, language);
+            return null;
         } else if (
                 userRepository.findByUsername(createUserRequest.getUsername()).isPresent() &&
                 userRepository.findByEmail(createUserRequest.getEmail()).isPresent()
         ) {
-            messageHandler = HTTPMessageHandler.fromHTTPMessage(HTTPMessage.USER_IS_EXIST, language);
-            throw new RuntimeException("User is exist!");
+            messageHandler.set(HTTPMessage.USER_IS_EXIST, language);
+            return null;
         }
         else {
             emailService.send(host + "/api/v1/auth/confirm/" + generateToken(createUserRequest.getUsername()), createUserRequest.getEmail());
@@ -94,18 +94,18 @@ public class UserService implements UserDetailsService {
             } else {
                 image = createUserRequest.getImage().getBytes();
             }
-            messageHandler = HTTPMessageHandler.fromHTTPMessage(HTTPMessage.SUCCESSFULLY_REGISTERED, language);
+            messageHandler.set(HTTPMessage.SUCCESSFULLY_REGISTERED, language);
 
             return userRepository.save (
-                new User (
-                    createUserRequest.getUsername(),
-                    createUserRequest.getEmail(),
-                    passwordEncoder.encode(createUserRequest.getPassword()),
-                    generateToken(createUserRequest.getUsername()),
-                    List.of(UserRole.USER),
-                    image,
-                    false
-                )
+                    new User (
+                            createUserRequest.getUsername(),
+                            createUserRequest.getEmail(),
+                            passwordEncoder.encode(createUserRequest.getPassword()),
+                            generateToken(createUserRequest.getUsername()),
+                            List.of(UserRole.USER),
+                            image,
+                            false
+                    )
             );
         }
     }

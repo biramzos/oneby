@@ -3,24 +3,36 @@ package com.web.oneby.Controllers;
 import com.web.oneby.DTO.CreateUserRequest;
 import com.web.oneby.DTO.LoginUserRequest;
 import com.web.oneby.DTO.UserResponse;
+import com.web.oneby.Enums.HTTPMessage;
 import com.web.oneby.Enums.Language;
 import com.web.oneby.Handlers.HTTPMessageHandler;
 import com.web.oneby.Models.User;
 import com.web.oneby.Services.EmailService;
 import com.web.oneby.Services.UserService;
 import com.web.oneby.Utils.Response;
+import jakarta.servlet.ServletException;
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
+import org.springframework.security.core.AuthenticationException;
 import org.springframework.web.bind.annotation.*;
 
 import java.io.IOException;
+import java.net.http.HttpResponse;
+import java.nio.file.AccessDeniedException;
+
+import static jakarta.servlet.http.HttpServletResponse.*;
 
 @RestController
 @RequestMapping("/api/v1/auth")
+@ControllerAdvice
 public class AuthController {
 
     private UserService userService;
@@ -47,18 +59,21 @@ public class AuthController {
     ) throws IOException {
         Response response = new Response();
         HTTPMessageHandler messageHandler = new HTTPMessageHandler();
-        UserResponse user = UserResponse.fromUser(userService.create(createUserRequest, messageHandler, language.getId()), language.getId());
-        response.put("user", user);
+        User user = userService.create(createUserRequest, messageHandler, language.getId());
+        if (user != null){
+            response.put("user", UserResponse.fromUser(user, language.getId()));
+        }
         response.put("message", messageHandler);
         return response;
     }
     @ResponseBody
     @PostMapping("/login/{language}")
-    @PreAuthorize("isAnonymous()")
-    public Response loginUser(@RequestBody LoginUserRequest loginUserRequest, @PathVariable("language") String language){
+    @PreAuthorize("isAnonymous() or isAuthenticated()")
+    public Response loginUser(@RequestBody LoginUserRequest loginUserRequest, @PathVariable("language") Language language){
         Response response = new Response();
         Authentication auth = authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(loginUserRequest.getUsername(), loginUserRequest.getPassword()));
-        response.put("user", UserResponse.fromUser((User) auth.getPrincipal(), Language.valueOf(language).getId()));
+        response.put("user", UserResponse.fromUser((User) auth.getPrincipal(), language.getId()));
+        response.put("message", new HTTPMessageHandler(HTTPMessage.SUCCESSFULLY_LOGIN, language.getId()));
         return response;
     }
 
@@ -91,6 +106,17 @@ public class AuthController {
     @PreAuthorize("isAuthenticated() or isAnonymous()")
     public byte[] getImage(@PathVariable("userId") User user){
         return user.getImage();
+    }
+
+    @ExceptionHandler(BadCredentialsException.class)
+    public Response handleBadCredentialsException(HttpServletRequest request, HttpServletResponse response,
+                                                  AuthenticationException exception) throws IOException, ServletException {
+        Response res = new Response();
+        String[] urlParts = request.getRequestURI().split("/");
+        String language = urlParts[urlParts.length - 1];
+
+        res.put("message", new HTTPMessageHandler(HTTPMessage.USERNAME_OR_PASSWORD_IS_WRONG, Language.valueOf(language).getId()));
+        return res;
     }
 
 }
