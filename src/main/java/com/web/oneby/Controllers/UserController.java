@@ -25,7 +25,7 @@ public class UserController {
 
     @ResponseBody
     @PostMapping("/{pageNumber}/{countInPart}/{language}")
-    @PreAuthorize(value = "hasAuthority('ADMIN')")
+    @PreAuthorize(value = "hasAuthority('USER')")
     public Response findPageableUsers(
             @PathVariable("pageNumber") Integer pageNumber,
             @PathVariable("countInPart") Integer countInPart,

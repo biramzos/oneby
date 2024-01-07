@@ -32,7 +32,6 @@ import static jakarta.servlet.http.HttpServletResponse.*;
 
 @RestController
 @RequestMapping("/api/v1/auth")
-@ControllerAdvice
 public class AuthController {
 
     private UserService userService;
@@ -87,7 +86,7 @@ public class AuthController {
     }
 
     @ResponseBody
-    @GetMapping("/confirm/{language}/{token}")
+    @GetMapping("/confirm/{token}/{language}")
     @PreAuthorize("isAnonymous()")
     public Response confirm(
             @PathVariable("language") Language language,
@@ -106,17 +105,6 @@ public class AuthController {
     @PreAuthorize("isAuthenticated() or isAnonymous()")
     public byte[] getImage(@PathVariable("userId") User user){
         return user.getImage();
-    }
-
-    @ExceptionHandler(BadCredentialsException.class)
-    public Response handleBadCredentialsException(HttpServletRequest request, HttpServletResponse response,
-                                                  AuthenticationException exception) throws IOException, ServletException {
-        Response res = new Response();
-        String[] urlParts = request.getRequestURI().split("/");
-        String language = urlParts[urlParts.length - 1];
-
-        res.put("message", new HTTPMessageHandler(HTTPMessage.USERNAME_OR_PASSWORD_IS_WRONG, Language.valueOf(language).getId()));
-        return res;
     }
 
 }

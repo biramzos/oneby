@@ -12,7 +12,7 @@ import java.util.List;
 @AllArgsConstructor
 @NoArgsConstructor
 public class BookRequest {
-    @NotEmpty
+    @NotEmpty(message = "")
     private String nameKZ;
     private String nameRU;
     private String nameEN;

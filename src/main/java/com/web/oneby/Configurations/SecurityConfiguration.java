@@ -4,6 +4,7 @@ import com.web.oneby.Enums.HTTPMessage;
 import com.web.oneby.Enums.Language;
 import com.web.oneby.Filters.JWTFilter;
 import com.web.oneby.Handlers.HTTPMessageHandler;
+import com.web.oneby.Handlers.RestExceptionHandler;
 import com.web.oneby.Services.UserService;
 import com.web.oneby.Utils.Response;
 import jakarta.servlet.ServletException;
