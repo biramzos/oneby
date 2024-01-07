@@ -5,6 +5,7 @@ import com.web.oneby.DTO.PageObject;
 import com.web.oneby.DTO.UserResponse;
 import com.web.oneby.DTO.UserSearchFilterRequest;
 import com.web.oneby.Enums.HTTPMessage;
+import com.web.oneby.Enums.Language;
 import com.web.oneby.Enums.UserRole;
 import com.web.oneby.Handlers.HTTPMessageHandler;
 import com.web.oneby.Models.User;
@@ -83,7 +84,7 @@ public class UserService implements UserDetailsService {
             return null;
         }
         else {
-            emailService.send(host + "/api/v1/auth/confirm/" + generateToken(createUserRequest.getUsername()), createUserRequest.getEmail());
+            emailService.send(host + "/api/v1/auth/confirm/" + generateToken(createUserRequest.getUsername())  + "/" + Language.getLanguageById(language).name(), createUserRequest.getEmail());
 
             byte [] image = null;
             if (createUserRequest.getImage() == null) {
@@ -125,20 +126,20 @@ public class UserService implements UserDetailsService {
         return userRepository.findById(id).orElseThrow(() -> new UsernameNotFoundException("User '#" + id + "' not found!"));
     }
 
-    public boolean confirm(String token, HTTPMessageHandler messageHandler, int language){
+    public void confirm(String token, HTTPMessageHandler messageHandler, int language){
         Optional<User> user = userRepository.findByToken(token);
         if (user.isPresent()) {
             if (user.get().isActive()) {
                 messageHandler.set(HTTPMessage.USER_ALREADY_CONFIRMED, language);
-                return true;
+            } else {
+                user.get().setActive(true);
+                userRepository.save(user.get());
+                messageHandler.set(HTTPMessage.USER_CONFIRMED, language);
             }
-            user.get().setActive(true);
-            userRepository.save(user.get());
-            messageHandler.set(HTTPMessage.USER_CONFIRMED, language);
-            return true;
+
+        } else {
+            messageHandler.set(HTTPMessage.USER_NOT_CONFIRMED, language);
         }
-        messageHandler.set(HTTPMessage.USER_NOT_CONFIRMED, language);
-        return false;
     }
 
     public String getImage (Long userId) {

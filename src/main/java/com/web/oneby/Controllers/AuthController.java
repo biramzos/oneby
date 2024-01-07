@@ -91,7 +91,7 @@ public class AuthController {
     ){
         Response response = new Response();
         HTTPMessageHandler messageHandler = new HTTPMessageHandler();
-        response.put("result", userService.confirm(token, messageHandler, language.getId()));
+        userService.confirm(token, messageHandler, language.getId());
         response.put("message", messageHandler);
         return response;
     }
