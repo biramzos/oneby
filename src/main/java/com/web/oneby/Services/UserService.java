@@ -10,11 +10,15 @@ import com.web.oneby.Enums.UserRole;
 import com.web.oneby.Handlers.HTTPMessageHandler;
 import com.web.oneby.Models.User;
 import com.web.oneby.Repositories.UserRepository;
+import com.web.oneby.Utils.StringUtil;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
+import jakarta.persistence.criteria.Join;
+import jakarta.persistence.criteria.JoinType;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.jpa.domain.Specification;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
@@ -22,9 +26,11 @@ import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
+import jakarta.persistence.criteria.Predicate;
 import java.io.IOException;
 import java.io.InputStream;
 import java.sql.ResultSet;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
@@ -54,7 +60,7 @@ public class UserService implements UserDetailsService {
     }
 
     public PageObject<UserResponse> search(UserSearchFilterRequest request, Integer sizeInPart, Integer pageNumber, int language){
-        return new PageObject<>(userRepository.findAll(request, Pageable.ofSize(sizeInPart).withPage(pageNumber - 1)).map(user -> UserResponse.fromUser(user, language)));
+        return new PageObject<>(userRepository.findAll(UserService.filter(request), Pageable.ofSize(sizeInPart).withPage(pageNumber - 1)).map(user -> UserResponse.fromUser(user, language)));
     }
 
 
@@ -148,5 +154,26 @@ public class UserService implements UserDetailsService {
             return resultSet.getString("image");
         }).toString();
         return result;
+    }
+
+    public static Specification<User> filter(UserSearchFilterRequest request){
+        return ((root, query, criteriaBuilder) -> {
+            Predicate predication = criteriaBuilder.conjunction();
+            if (StringUtil.isNotEmpty(request.getName())) {
+                predication = criteriaBuilder.or(
+                    criteriaBuilder.like(
+                        root.get("username"), "%" + request.getName() + "%"
+                    ),
+                    criteriaBuilder.like(
+                        root.get("email"), "%" + request.getName() + "%"
+                    )
+                );
+            }
+            if (!request.getRoles().isEmpty()) {
+                Predicate rolePredicate = root.join("roles").in(request.getRoles());
+                predication = criteriaBuilder.and(predication, rolePredicate);
+            }
+            return predication;
+        });
     }
 }

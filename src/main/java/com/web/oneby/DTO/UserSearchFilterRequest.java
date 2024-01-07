@@ -8,4 +8,6 @@ import java.util.List;
 public class UserSearchFilterRequest {
     private String name;
     private List<String> roles;
+
+
 }
