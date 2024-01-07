@@ -128,12 +128,16 @@ public class UserService implements UserDetailsService {
     public boolean confirm(String token, HTTPMessageHandler messageHandler, int language){
         Optional<User> user = userRepository.findByToken(token);
         if (user.isPresent()) {
+            if (user.get().isActive()) {
+                messageHandler.set(HTTPMessage.USER_ALREADY_CONFIRMED, language);
+                return true;
+            }
             user.get().setActive(true);
             userRepository.save(user.get());
-            messageHandler = HTTPMessageHandler.fromHTTPMessage(HTTPMessage.USER_CONFIRMED, language);
+            messageHandler.set(HTTPMessage.USER_CONFIRMED, language);
             return true;
         }
-        messageHandler = HTTPMessageHandler.fromHTTPMessage(HTTPMessage.USER_NOT_CONFIRMED, language);
+        messageHandler.set(HTTPMessage.USER_NOT_CONFIRMED, language);
         return false;
     }
 

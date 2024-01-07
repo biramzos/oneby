@@ -4,7 +4,7 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonValue;
 
 public enum HTTPMessage {
-    //Register
+
     SUCCESSFULLY_REGISTERED(
             "Сәтті тіркелу!",
             "Успешная регистрация!",
@@ -15,10 +15,15 @@ public enum HTTPMessage {
             "Успешно подтверждено!",
             "Successfully confirmed!",
             HTTPStatus.SUCCESS),
+    USER_ALREADY_CONFIRMED(
+            "Пайдаланушы расталған!",
+            "Пользователь уже подтвержден!",
+            "User has been already confirmed!",
+            HTTPStatus.WARNING),
     USER_NOT_CONFIRMED(
-            "Жаңылыс!",
-            "Неудавшийся!",
-            "Failed!",
+            "Расталмады!",
+            "Не удалось подтвердить!",
+            "Failed to confirm!",
             HTTPStatus.ERROR),
     USERNAME_IS_EXIST(
             "Пайдаланушы аты бар!",
@@ -35,7 +40,6 @@ public enum HTTPMessage {
             "Пользователь существует!",
             "User is exist!",
             HTTPStatus.ERROR),
-    //Login
     SUCCESSFULLY_LOGIN(
             "Сәтті кірдіңіз!",
             "Успешно авторизовался!",
