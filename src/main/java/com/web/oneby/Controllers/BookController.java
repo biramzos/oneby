@@ -57,16 +57,16 @@ public class BookController {
     }
 
     @ResponseBody
-    @GetMapping("/image/{bookId}")
+    @GetMapping("/image/{bookId}/{language}")
     @PreAuthorize("isAuthenticated() or isAnonymous()")
-    public byte[] getBookImage (@PathVariable("bookId") Book book) {
+    public byte[] getBookImage (@PathVariable("bookId") Book book, @PathVariable("language") Language language) {
         return book.getImage();
     }
 
     @ResponseBody
-    @GetMapping("/file/{bookId}")
+    @GetMapping("/file/{bookId}/{language}")
     @PreAuthorize("isAuthenticated()")
-    public byte[] getBookFile (@PathVariable("bookId") Book book) {
+    public byte[] getBookFile (@PathVariable("bookId") Book book, @PathVariable("language") Language language) {
         return book.getContent();
     }
 

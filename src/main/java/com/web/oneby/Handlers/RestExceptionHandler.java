@@ -8,10 +8,13 @@ import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import org.springframework.security.access.AccessDeniedException;
 import org.springframework.security.authentication.BadCredentialsException;
+import org.springframework.security.core.Authentication;
 import org.springframework.security.core.AuthenticationException;
 import org.springframework.web.bind.MissingPathVariableException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
+import org.springframework.web.servlet.resource.NoResourceFoundException;
+
 import java.io.IOException;
 
 @RestControllerAdvice
@@ -19,31 +22,65 @@ public class RestExceptionHandler {
 
     @ExceptionHandler(AccessDeniedException.class)
     public static Response handleAccessDeniedException(HttpServletRequest request, HttpServletResponse response,
-                                                AccessDeniedException e) throws IOException, ServletException {
+                                    AccessDeniedException exception) throws IOException, ServletException {
         Response res = new Response();
         String[] urlParts = request.getRequestURI().split("/");
-        String language = urlParts[urlParts.length - 1];
-        res.put("message", new HTTPMessageHandler(HTTPMessage.ACCESS_DENIED, Language.valueOf(language).getId()));
+        int language = Language.contains(urlParts[urlParts.length - 1]) ? Language.valueOf(urlParts[urlParts.length - 1]).getId() : Language.en.getId();
+        res.put("message", new HTTPMessageHandler(HTTPMessage.ACCESS_DENIED, language));
         return res;
     }
 
     @ExceptionHandler(BadCredentialsException.class)
     public static Response handleBadCredentialsException(HttpServletRequest request, HttpServletResponse response,
-                                                  AuthenticationException exception) throws IOException, ServletException {
+                                      AuthenticationException exception) throws IOException, ServletException {
         Response res = new Response();
         String[] urlParts = request.getRequestURI().split("/");
-        String language = urlParts[urlParts.length - 1];
-        res.put("message", new HTTPMessageHandler(HTTPMessage.USERNAME_OR_PASSWORD_IS_WRONG, Language.valueOf(language).getId()));
+        int language = Language.contains(urlParts[urlParts.length - 1]) ? Language.valueOf(urlParts[urlParts.length - 1]).getId() : Language.en.getId();
+        res.put("message", new HTTPMessageHandler(HTTPMessage.USERNAME_OR_PASSWORD_IS_WRONG, language));
         return res;
     }
 
     @ExceptionHandler(MissingPathVariableException.class)
     public static Response handleMissingPathVariableException (HttpServletRequest request, HttpServletResponse response,
-                                                   MissingPathVariableException exception) throws IOException, ServletException {
+                                       MissingPathVariableException exception) throws IOException, ServletException {
         Response res = new Response();
         String[] urlParts = request.getRequestURI().split("/");
-        String language = urlParts[urlParts.length - 1];
-        res.put("message", new HTTPMessageHandler(HTTPMessage.ENTITY_IS_NOT_FOUND, Language.valueOf(language).getId()));
+        int language = Language.contains(urlParts[urlParts.length - 1]) ? Language.valueOf(urlParts[urlParts.length - 1]).getId() : Language.en.getId();
+        res.put("message", new HTTPMessageHandler(HTTPMessage.ENTITY_IS_NOT_FOUND,language));
+        return res;
+    }
+
+    @ExceptionHandler(NullPointerException.class)
+    public static Response handleNullPointerException (HttpServletRequest request, HttpServletResponse response,
+                                       NullPointerException exception) throws IOException, ServletException {
+        Response res = new Response();
+        String[] urlParts = request.getRequestURI().split("/");
+        int language = Language.contains(urlParts[urlParts.length - 1]) ? Language.valueOf(urlParts[urlParts.length - 1]).getId() : Language.en.getId();
+        if (exception.getMessage().contains(Authentication.class.getName())) {
+            res.put("message", new HTTPMessageHandler(HTTPMessage.FAILED_AUTHENTICATION, language));
+        } else {
+            res.put("message", new HTTPMessageHandler(HTTPMessage.NULL_POINTER, language));
+        }
+        return res;
+    }
+
+    @ExceptionHandler(NoResourceFoundException.class)
+    public static Response handleNoResourceFoundException (HttpServletRequest request, HttpServletResponse response,
+                                       NoResourceFoundException exception) throws IOException, ServletException {
+        Response res = new Response();
+        String[] urlParts = request.getRequestURI().split("/");
+        int language = Language.contains(urlParts[urlParts.length - 1]) ? Language.valueOf(urlParts[urlParts.length - 1]).getId() : Language.en.getId();
+        res.put("message", new HTTPMessageHandler(HTTPMessage.NO_RESOURCES_FOUND, language));
+        return res;
+    }
+
+    @ExceptionHandler(Exception.class)
+    public static Response handleException (HttpServletRequest request, HttpServletResponse response,
+                                       Exception exception) throws IOException, ServletException {
+        Response res = new Response();
+        String[] urlParts = request.getRequestURI().split("/");
+        int language = Language.contains(urlParts[urlParts.length - 1]) ? Language.valueOf(urlParts[urlParts.length - 1]).getId() : Language.en.getId();
+        res.put("message", new HTTPMessageHandler(HTTPMessage.ERROR, language));
         return res;
     }
 

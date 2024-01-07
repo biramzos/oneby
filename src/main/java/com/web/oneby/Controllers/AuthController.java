@@ -35,17 +35,14 @@ import static jakarta.servlet.http.HttpServletResponse.*;
 public class AuthController {
 
     private UserService userService;
-    private EmailService emailService;
     private AuthenticationManager authenticationManager;
 
     @Autowired
     public AuthController(
             UserService userService,
-            EmailService emailService,
             AuthenticationManager authenticationManager
     ){
         this.userService = userService;
-        this.emailService = emailService;
         this.authenticationManager = authenticationManager;
     }
 
@@ -78,7 +75,7 @@ public class AuthController {
 
     @ResponseBody
     @GetMapping("/info/{language}")
-    @PreAuthorize("isAuthenticated()")
+    @PreAuthorize("isAuthenticated() or isAnonymous()")
     public Response getInfo(Authentication auth, @PathVariable("language") Language language){
         Response response = new Response();
         response.put("user", UserResponse.fromUser((User) auth.getPrincipal(), language.getId()));
@@ -101,9 +98,9 @@ public class AuthController {
 
 
     @ResponseBody
-    @GetMapping(value = "/images/{userId}", produces = MediaType.IMAGE_JPEG_VALUE)
+    @GetMapping(value = "/images/{userId}/{language}", produces = MediaType.IMAGE_JPEG_VALUE)
     @PreAuthorize("isAuthenticated() or isAnonymous()")
-    public byte[] getImage(@PathVariable("userId") User user){
+    public byte[] getImage(@PathVariable("userId") User user, @PathVariable("language") Language language){
         return user.getImage();
     }
 

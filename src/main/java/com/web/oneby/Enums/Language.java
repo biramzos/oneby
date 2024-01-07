@@ -48,4 +48,16 @@ public enum Language {
             return Language.en;
         }
     }
+
+    public static boolean contains(String language) {
+        if (language.equals(Language.kz.name())) {
+            return true;
+        } else if (language.equals(Language.ru.name())) {
+            return true;
+        } else if (language.equals(Language.en.name())) {
+            return true;
+        } else {
+            return false;
+        }
+    }
 }

@@ -65,6 +65,26 @@ public enum HTTPMessage {
             "Не найдено!",
             "Not found!",
             HTTPStatus.ERROR),
+    FAILED_AUTHENTICATION(
+            "Аутентификациясы болмады!",
+            "Не удалось пройти аутентификацию!",
+            "Failed authentication!",
+            HTTPStatus.ERROR),
+    NULL_POINTER(
+            "Объект табылмады немесе танылмады!",
+            "Объект не найден или не распознан!",
+            "The object is not found or not recognized!",
+            HTTPStatus.ERROR),
+    NO_RESOURCES_FOUND(
+            "Ресурстар табылмады!",
+            "Не нашли ресурсов!",
+            "Not found the resources!",
+            HTTPStatus.ERROR),
+    ERROR(
+            "Ошибка!",
+            "Қате!",
+            "Error!",
+            HTTPStatus.ERROR),
     ;
 
 
