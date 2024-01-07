@@ -4,6 +4,7 @@ import com.web.oneby.DTO.PageObject;
 import com.web.oneby.DTO.UserResponse;
 import com.web.oneby.DTO.UserSearchFilterRequest;
 import com.web.oneby.Enums.Language;
+import com.web.oneby.Models.User;
 import com.web.oneby.Services.UserService;
 import com.web.oneby.Utils.Response;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -25,8 +26,8 @@ public class UserController {
 
     @ResponseBody
     @PostMapping("/{pageNumber}/{countInPart}/{language}")
-    @PreAuthorize(value = "hasAuthority('USER')")
-    public Response findPageableUsers(
+    @PreAuthorize(value = "hasAuthority('ADMIN')")
+    public Response findUsers(
             @PathVariable("pageNumber") Integer pageNumber,
             @PathVariable("countInPart") Integer countInPart,
             @PathVariable("language") Language language,
@@ -35,6 +36,19 @@ public class UserController {
         Response response = new Response();
         PageObject<UserResponse> users = userService.search(request, countInPart, pageNumber, language.getId());
         response.put("users", users);
+        return response;
+    }
+
+    @ResponseBody
+    @GetMapping("/{userId}/{language}")
+    @PreAuthorize(value = "hasAuthority('ADMIN')")
+    public Response getUser(
+            @PathVariable("userId") User user,
+            @PathVariable("language") Language language
+    ){
+        Response response = new Response();
+        UserResponse userResponse = UserResponse.fromUser(user, language.getId());
+        response.put("user", userResponse);
         return response;
     }
 

@@ -9,6 +9,7 @@ import jakarta.servlet.http.HttpServletResponse;
 import org.springframework.security.access.AccessDeniedException;
 import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.core.AuthenticationException;
+import org.springframework.web.bind.MissingPathVariableException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 
@@ -34,6 +35,16 @@ public class RestExceptionHandler {
         String[] urlParts = request.getRequestURI().split("/");
         String language = urlParts[urlParts.length - 1];
         res.put("message", new HTTPMessageHandler(HTTPMessage.USERNAME_OR_PASSWORD_IS_WRONG, Language.valueOf(language).getId()));
+        return res;
+    }
+
+    @ExceptionHandler(MissingPathVariableException.class)
+    public static Response handleMissingPathVariableException (HttpServletRequest request, HttpServletResponse response,
+                                                   MissingPathVariableException exception) throws IOException, ServletException {
+        Response res = new Response();
+        String[] urlParts = request.getRequestURI().split("/");
+        String language = urlParts[urlParts.length - 1];
+        res.put("message", new HTTPMessageHandler(HTTPMessage.ENTITY_IS_NOT_FOUND, Language.valueOf(language).getId()));
         return res;
     }
 

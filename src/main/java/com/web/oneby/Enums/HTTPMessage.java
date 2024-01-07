@@ -56,7 +56,14 @@ public enum HTTPMessage {
             "Доступ запрещен!",
             "Access denied!",
             HTTPStatus.ERROR),
+    ENTITY_IS_NOT_FOUND(
+            "Табылмады!",
+            "Не найдено!",
+            "Not found!",
+            HTTPStatus.ERROR),
     ;
+
+
     HTTPMessage(
         String messageKZ,
         String messageRU,
