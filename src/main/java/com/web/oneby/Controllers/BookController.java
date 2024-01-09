@@ -35,7 +35,7 @@ public class BookController {
     public Response getGenres (@PathVariable("language") Language language) {
         Response response = new Response();
         List<SimpleObject> genres = Arrays.stream(Genre.values())
-                .map((genre) -> new SimpleObject(genre.getId(), genre.getName(language.getId())))
+                .map((genre) -> new SimpleObject(genre.name(), genre.getName(language.getId())))
                 .toList();
         response.put("genres", genres);
         return response;

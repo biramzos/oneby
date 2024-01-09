@@ -44,7 +44,7 @@ public class Book {
     private User publisher;
     @Column(name = "year")
     private int year;
-    @ElementCollection(targetClass = Genre.class)
+    @ElementCollection(targetClass = Genre.class, fetch = FetchType.EAGER)
     @Enumerated(EnumType.STRING)
     @CollectionTable(name = "book_genres", joinColumns = @JoinColumn(name = "book_id"))
     private List<Genre> genres = new ArrayList<>();
