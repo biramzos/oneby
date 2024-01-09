@@ -80,6 +80,8 @@ public class Book {
             String authorEN,
             User publisher,
             int year,
+            List<Genre> genres,
+            int stars,
             byte[] image,
             byte[] content
     ){
@@ -94,6 +96,8 @@ public class Book {
         this.authorEN = authorEN;
         this.publisher = publisher;
         this.year = year;
+        this.genres = genres;
+        this.stars = stars;
         this.image = image;
         this.content = content;
     }

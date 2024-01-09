@@ -23,7 +23,7 @@ public class BookRequest {
     private String authorRU;
     private String authorEN;
     private int year;
-    private List<Integer> genres;
+    private List<String> genres;
     private MultipartFile image;
     private MultipartFile file;
 }
