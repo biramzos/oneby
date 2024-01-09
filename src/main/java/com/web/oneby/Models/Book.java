@@ -53,7 +53,7 @@ public class Book {
     @Column(name = "access")
     private AccessBook access;
     @Column(name = "stars")
-    private int stars;
+    private int stars = 0;
     @Lob
     @JsonIgnore
     @Column(name = "image", columnDefinition = "LONGBLOB")
@@ -85,7 +85,6 @@ public class Book {
             User publisher,
             int year,
             List<Genre> genres,
-            int stars,
             AccessBook access,
             byte[] image,
             byte[] content
@@ -102,7 +101,6 @@ public class Book {
         this.publisher = publisher;
         this.year = year;
         this.genres = genres;
-        this.stars = stars;
         this.access = access;
         this.image = image;
         this.content = content;

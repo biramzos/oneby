@@ -50,7 +50,6 @@ public class BookService {
                 publisher,
                 bookRequest.getYear(),
                 bookRequest.getGenres().stream().map(Genre::valueOf).toList(),
-                0,
                 AccessBook.valueOf(bookRequest.getAccess()),
                 bookRequest.getImage().getBytes(),
                 bookRequest.getFile().getBytes()
