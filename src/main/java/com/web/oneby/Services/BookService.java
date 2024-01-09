@@ -64,20 +64,24 @@ public class BookService {
 
     public static Specification<Book> filter (BookSearchFilterRequest request) {
         return ((root, query, criteriaBuilder) -> {
-            Predicate predicate = criteriaBuilder.conjunction();
+            Predicate predicate = criteriaBuilder.equal(root.get("access"), AccessBook.PUBLIC.name());
+
             if (StringUtil.isNotEmpty(request.getName())) {
-                predicate = criteriaBuilder.or(
-                    criteriaBuilder.like(root.get("name_kz"), "%" + request.getName() + "%"),
-                    criteriaBuilder.like(root.get("name_ru"), "%" + request.getName() + "%"),
-                    criteriaBuilder.like(root.get("name_en"), "%" + request.getName() + "%"),
-                    criteriaBuilder.like(root.get("description_kz"), "%" + request.getName() + "%"),
-                    criteriaBuilder.like(root.get("description_ru"), "%" + request.getName() + "%"),
-                    criteriaBuilder.like(root.get("description_en"), "%" + request.getName() + "%"),
-                    criteriaBuilder.like(root.get("author_kz"), "%" + request.getName() + "%"),
-                    criteriaBuilder.like(root.get("author_ru"), "%" + request.getName() + "%"),
-                    criteriaBuilder.like(root.get("author_en"), "%" + request.getName() + "%"),
-                    criteriaBuilder.like(root.join("users").get("username"), "%" + request.getName() + "%"),
-                    criteriaBuilder.like(root.join("users").get("email"), "%" + request.getName() + "%")
+                predicate = criteriaBuilder.and(
+                    predicate,
+                    criteriaBuilder.or(
+                        criteriaBuilder.like(root.get("name_kz"), "%" + request.getName() + "%"),
+                        criteriaBuilder.like(root.get("name_ru"), "%" + request.getName() + "%"),
+                        criteriaBuilder.like(root.get("name_en"), "%" + request.getName() + "%"),
+                        criteriaBuilder.like(root.get("description_kz"), "%" + request.getName() + "%"),
+                        criteriaBuilder.like(root.get("description_ru"), "%" + request.getName() + "%"),
+                        criteriaBuilder.like(root.get("description_en"), "%" + request.getName() + "%"),
+                        criteriaBuilder.like(root.get("author_kz"), "%" + request.getName() + "%"),
+                        criteriaBuilder.like(root.get("author_ru"), "%" + request.getName() + "%"),
+                        criteriaBuilder.like(root.get("author_en"), "%" + request.getName() + "%"),
+                        criteriaBuilder.like(root.join("users").get("username"), "%" + request.getName() + "%"),
+                        criteriaBuilder.like(root.join("users").get("email"), "%" + request.getName() + "%")
+                    )
                 );
             }
 
