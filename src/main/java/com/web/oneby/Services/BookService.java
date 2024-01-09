@@ -20,6 +20,8 @@ import org.springframework.data.jpa.domain.Specification;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Service;
 
+import java.io.IOException;
+
 @Service
 @Slf4j
 public class BookService {
@@ -33,8 +35,7 @@ public class BookService {
         this.bookRepository = bookRepository;
     }
 
-    @SneakyThrows
-    public Book add (BookRequest bookRequest, User publisher) {
+    public Book add (BookRequest bookRequest, User publisher) throws IOException {
         return bookRepository.save(
             new Book(
                 bookRequest.getNameKZ(),
@@ -50,7 +51,7 @@ public class BookService {
                 bookRequest.getYear(),
                 bookRequest.getGenres().stream().map(Genre::valueOf).toList(),
                 0,
-                AccessBook.PRIVATE,
+                AccessBook.valueOf(bookRequest.getAccess()),
                 bookRequest.getImage().getBytes(),
                 bookRequest.getFile().getBytes()
             )
