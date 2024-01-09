@@ -41,7 +41,7 @@ import java.util.logging.Logger;
 @Slf4j
 public class UserService implements UserDetailsService {
 
-    private final String SECRETKEY = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz";
+    private final String SECRET_KEY = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz";
     @Value("${env.url}")
     private String host;
 
@@ -132,7 +132,7 @@ public class UserService implements UserDetailsService {
                 .builder()
                 .claim("username", username)
                 .setSubject(username)
-                .signWith(SignatureAlgorithm.HS256, SECRETKEY)
+                .signWith(SignatureAlgorithm.HS256, SECRET_KEY)
                 .compact();
     }
 
