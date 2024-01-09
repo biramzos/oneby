@@ -28,12 +28,12 @@ public class JWTFilter extends OncePerRequestFilter {
         this.userService = userService;
     }
 
-    private final String SECRETKEY = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz";
+    private final String SECRET_KEY = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz";
 
     public String parseJwt(String token){
         return Jwts
                 .parser()
-                .setSigningKey(SECRETKEY)
+                .setSigningKey(SECRET_KEY)
                 .parseClaimsJws(token)
                 .getBody()
                 .getSubject();
@@ -41,7 +41,7 @@ public class JWTFilter extends OncePerRequestFilter {
 
     public boolean validation(String token){
         try{
-            Jwts.parser().setSigningKey(SECRETKEY).parseClaimsJws(token);
+            Jwts.parser().setSigningKey(SECRET_KEY).parseClaimsJws(token);
             return true;
         } catch (MalformedJwtException e) {
             log.error("Invalid token: " + e.getMessage());
