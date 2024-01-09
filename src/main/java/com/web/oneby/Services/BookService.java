@@ -5,12 +5,14 @@ import com.web.oneby.DTO.BookResponse;
 import com.web.oneby.DTO.BookSearchFilterRequest;
 import com.web.oneby.DTO.PageObject;
 import com.web.oneby.Enums.Genre;
+import com.web.oneby.Enums.HTTPMessage;
 import com.web.oneby.Models.Book;
 import com.web.oneby.Models.User;
 import com.web.oneby.Repositories.BookRepository;
 import com.web.oneby.Utils.StringUtil;
 import jakarta.persistence.criteria.Predicate;
 import lombok.SneakyThrows;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.domain.Specification;
@@ -18,6 +20,7 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Service;
 
 @Service
+@Slf4j
 public class BookService {
 
     private BookRepository bookRepository;
@@ -58,13 +61,6 @@ public class BookService {
     public static Specification<Book> filter (BookSearchFilterRequest request) {
         return ((root, query, criteriaBuilder) -> {
             Predicate predicate = criteriaBuilder.conjunction();
-//            @Query(value = "SELECT b.* FROM books b JOIN users u ON b.publisher = u.id JOIN book_genres bg on b.id = bg.book_id WHERE (:#{#filter.name} IS NULL " +
-//                    " OR (b.title_en LIKE %:#{#filter.name}% OR b.title_ru LIKE %:#{#filter.name}% OR b.title_kz LIKE %:#{#filter.name}%) " +
-//                    " OR (b.description_en LIKE %:#{#filter.name}% OR b.description_ru LIKE %:#{#filter.name}% OR b.description_kz LIKE %:#{#filter.name}%) " +
-//                    " OR (b.author_en LIKE %:#{#filter.name}% OR b.author_ru LIKE %:#{#filter.name}% OR b.author_kz LIKE %:#{#filter.name}%) " +
-//                    " OR (u.username LIKE %:#{#filter.name}% OR u.email LIKE %:#{#filter.name}%)) AND (:#{#filter.year} IS NULL OR (b.year = :#{#filter.year})) " +
-//                    " AND (:#{#filter.stars} IS NULL OR (:#{#filter.year} = b.stars)) AND (:#{#filter.genres.size()} = 0 OR (:#{#bg.genre_id} IN :#{#filter.genres}))",
-//                    nativeQuery = true)
             if (StringUtil.isNotEmpty(request.getName())) {
                 predicate = criteriaBuilder.or(
                     criteriaBuilder.like(root.get("name_kz"), "%" + request.getName() + "%"),

@@ -6,8 +6,10 @@ import com.web.oneby.Utils.Response;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.access.AccessDeniedException;
 import org.springframework.security.authentication.BadCredentialsException;
+import org.springframework.security.authentication.DisabledException;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.AuthenticationException;
 import org.springframework.web.bind.MissingPathVariableException;
@@ -18,6 +20,7 @@ import org.springframework.web.servlet.resource.NoResourceFoundException;
 import java.io.IOException;
 
 @RestControllerAdvice
+@Slf4j
 public class RestExceptionHandler {
 
     @ExceptionHandler(AccessDeniedException.class)
@@ -26,7 +29,19 @@ public class RestExceptionHandler {
         Response res = new Response();
         String[] urlParts = request.getRequestURI().split("/");
         int language = Language.contains(urlParts[urlParts.length - 1]) ? Language.valueOf(urlParts[urlParts.length - 1]).getId() : Language.en.getId();
+        log.error(exception.getMessage());
         res.put("message", new HTTPMessageHandler(HTTPMessage.ACCESS_DENIED, language));
+        return res;
+    }
+
+    @ExceptionHandler(DisabledException.class)
+    public static Response handleDisabledException(HttpServletRequest request, HttpServletResponse response,
+                                       DisabledException exception) throws IOException, ServletException {
+        Response res = new Response();
+        String[] urlParts = request.getRequestURI().split("/");
+        int language = Language.contains(urlParts[urlParts.length - 1]) ? Language.valueOf(urlParts[urlParts.length - 1]).getId() : Language.en.getId();
+        log.error(exception.getMessage());
+        res.put("message", new HTTPMessageHandler(HTTPMessage.USER_IS_DISABLED, language));
         return res;
     }
 
@@ -36,6 +51,7 @@ public class RestExceptionHandler {
         Response res = new Response();
         String[] urlParts = request.getRequestURI().split("/");
         int language = Language.contains(urlParts[urlParts.length - 1]) ? Language.valueOf(urlParts[urlParts.length - 1]).getId() : Language.en.getId();
+        log.error(exception.getMessage());
         res.put("message", new HTTPMessageHandler(HTTPMessage.USERNAME_OR_PASSWORD_IS_WRONG, language));
         return res;
     }
@@ -46,6 +62,7 @@ public class RestExceptionHandler {
         Response res = new Response();
         String[] urlParts = request.getRequestURI().split("/");
         int language = Language.contains(urlParts[urlParts.length - 1]) ? Language.valueOf(urlParts[urlParts.length - 1]).getId() : Language.en.getId();
+        log.error(exception.getMessage());
         res.put("message", new HTTPMessageHandler(HTTPMessage.ENTITY_IS_NOT_FOUND,language));
         return res;
     }
@@ -56,6 +73,7 @@ public class RestExceptionHandler {
         Response res = new Response();
         String[] urlParts = request.getRequestURI().split("/");
         int language = Language.contains(urlParts[urlParts.length - 1]) ? Language.valueOf(urlParts[urlParts.length - 1]).getId() : Language.en.getId();
+        log.error(exception.getMessage());
         if (exception.getMessage().contains(Authentication.class.getName())) {
             res.put("message", new HTTPMessageHandler(HTTPMessage.FAILED_AUTHENTICATION, language));
         } else {
@@ -70,6 +88,7 @@ public class RestExceptionHandler {
         Response res = new Response();
         String[] urlParts = request.getRequestURI().split("/");
         int language = Language.contains(urlParts[urlParts.length - 1]) ? Language.valueOf(urlParts[urlParts.length - 1]).getId() : Language.en.getId();
+        log.error(exception.getMessage());
         res.put("message", new HTTPMessageHandler(HTTPMessage.NO_RESOURCES_FOUND, language));
         return res;
     }
@@ -80,6 +99,7 @@ public class RestExceptionHandler {
         Response res = new Response();
         String[] urlParts = request.getRequestURI().split("/");
         int language = Language.contains(urlParts[urlParts.length - 1]) ? Language.valueOf(urlParts[urlParts.length - 1]).getId() : Language.en.getId();
+        log.error(exception.getMessage());
         res.put("message", new HTTPMessageHandler(HTTPMessage.ERROR, language));
         return res;
     }

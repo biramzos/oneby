@@ -47,7 +47,6 @@ public class Book {
     @ElementCollection(targetClass = Genre.class)
     @Enumerated(EnumType.STRING)
     @CollectionTable(name = "book_genres", joinColumns = @JoinColumn(name = "book_id"))
-    @Column(name = "genre")
     private List<Genre> genres = new ArrayList<>();
     @Column(name = "stars")
     private int stars;

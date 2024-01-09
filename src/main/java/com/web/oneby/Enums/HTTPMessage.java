@@ -60,6 +60,11 @@ public enum HTTPMessage {
             "Доступ запрещен!",
             "Access denied!",
             HTTPStatus.ERROR),
+    USER_IS_DISABLED(
+            "Тіркелгі ажыратылады. Оны белсендіруіңізді сұраймыз!",
+            "Учетная запись отключена. Пожалуйста, активируйте его!",
+            "Account is disabled. Please activate it!",
+            HTTPStatus.ERROR),
     ENTITY_IS_NOT_FOUND(
             "Табылмады!",
             "Не найдено!",

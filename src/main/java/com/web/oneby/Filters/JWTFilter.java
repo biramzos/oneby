@@ -7,6 +7,7 @@ import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -16,6 +17,7 @@ import org.springframework.web.filter.OncePerRequestFilter;
 import java.io.IOException;
 
 @Component
+@Slf4j
 public class JWTFilter extends OncePerRequestFilter {
     private UserService userService;
 
@@ -42,13 +44,13 @@ public class JWTFilter extends OncePerRequestFilter {
             Jwts.parser().setSigningKey(SECRETKEY).parseClaimsJws(token);
             return true;
         } catch (MalformedJwtException e) {
-            System.err.println("Invalid token: " + e.getMessage());
+            log.error("Invalid token: " + e.getMessage());
         } catch (ExpiredJwtException e) {
-            System.err.println("Token is expired: " + e.getMessage());
+            log.error("Token is expired: " + e.getMessage());
         } catch (UnsupportedJwtException e) {
-            System.err.println("Token is unsupported: " + e.getMessage());
+            log.error("Token is unsupported: " + e.getMessage());
         } catch (IllegalArgumentException e) {
-            System.err.println("Token claims string is empty: " + e.getMessage());
+            log.error("Token claims string is empty: " + e.getMessage());
         }
         return false;
     }
@@ -70,9 +72,8 @@ public class JWTFilter extends OncePerRequestFilter {
                 UsernamePasswordAuthenticationToken authentication = new UsernamePasswordAuthenticationToken(user, user.getUsername(), user.getAuthorities());
                 SecurityContextHolder.getContext().setAuthentication(authentication);
             }
-        }
-        catch (Exception e){
-            System.err.println("Error " + e.getMessage());
+        } catch (Exception e) {
+            log.error("Error: " + e.getMessage());
         }
         filterChain.doFilter(request,response);
     }

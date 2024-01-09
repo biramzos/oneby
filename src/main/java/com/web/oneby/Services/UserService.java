@@ -9,12 +9,14 @@ import com.web.oneby.Enums.Language;
 import com.web.oneby.Enums.UserRole;
 import com.web.oneby.Handlers.HTTPMessageHandler;
 import com.web.oneby.Models.User;
+import com.web.oneby.OnebyDevApplication;
 import com.web.oneby.Repositories.UserRepository;
 import com.web.oneby.Utils.StringUtil;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
 import jakarta.persistence.criteria.Join;
 import jakarta.persistence.criteria.JoinType;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.domain.Pageable;
@@ -33,8 +35,10 @@ import java.sql.ResultSet;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
+import java.util.logging.Logger;
 
 @Service
+@Slf4j
 public class UserService implements UserDetailsService {
 
     private final String SECRETKEY = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz";
@@ -74,18 +78,21 @@ public class UserService implements UserDetailsService {
                 userRepository.findByUsername(createUserRequest.getUsername()).isPresent() &&
                 userRepository.findByEmail(createUserRequest.getEmail()).isEmpty()
         ) {
+            log.error(HTTPMessage.USERNAME_IS_EXIST.getMessageEN());
             messageHandler.set(HTTPMessage.USERNAME_IS_EXIST, language);
             return null;
         } else if (
                 userRepository.findByUsername(createUserRequest.getUsername()).isEmpty() &&
                 userRepository.findByEmail(createUserRequest.getEmail()).isPresent()
         ) {
+            log.error(HTTPMessage.EMAIL_IS_EXIST.getMessageEN());
             messageHandler.set(HTTPMessage.EMAIL_IS_EXIST, language);
             return null;
         } else if (
                 userRepository.findByUsername(createUserRequest.getUsername()).isPresent() &&
                 userRepository.findByEmail(createUserRequest.getEmail()).isPresent()
         ) {
+            log.error(HTTPMessage.USER_IS_EXIST.getMessageEN());
             messageHandler.set(HTTPMessage.USER_IS_EXIST, language);
             return null;
         }
@@ -101,6 +108,7 @@ public class UserService implements UserDetailsService {
             } else {
                 image = createUserRequest.getImage().getBytes();
             }
+            log.info(HTTPMessage.SUCCESSFULLY_REGISTERED.getMessageEN());
             messageHandler.set(HTTPMessage.SUCCESSFULLY_REGISTERED, language);
 
             return userRepository.save (
@@ -136,24 +144,18 @@ public class UserService implements UserDetailsService {
         Optional<User> user = userRepository.findByToken(token);
         if (user.isPresent()) {
             if (user.get().isActive()) {
+                log.info(HTTPMessage.USER_ALREADY_CONFIRMED.getMessageEN());
                 messageHandler.set(HTTPMessage.USER_ALREADY_CONFIRMED, language);
             } else {
                 user.get().setActive(true);
                 userRepository.save(user.get());
+                log.info(HTTPMessage.USER_CONFIRMED.getMessageEN());
                 messageHandler.set(HTTPMessage.USER_CONFIRMED, language);
             }
-
         } else {
+            log.info(HTTPMessage.USER_NOT_CONFIRMED.getMessageEN());
             messageHandler.set(HTTPMessage.USER_NOT_CONFIRMED, language);
         }
-    }
-
-    public String getImage (Long userId) {
-        String sql = "SELECT image FROM users WHERE id = " + userId;
-        String result = jdbcTemplate.query(sql, (ResultSet resultSet,  int index) -> {
-            return resultSet.getString("image");
-        }).toString();
-        return result;
     }
 
     public static Specification<User> filter(UserSearchFilterRequest request){
