@@ -4,6 +4,7 @@ import com.web.oneby.DTO.BookRequest;
 import com.web.oneby.DTO.BookResponse;
 import com.web.oneby.DTO.BookSearchFilterRequest;
 import com.web.oneby.DTO.PageObject;
+import com.web.oneby.Enums.AccessBook;
 import com.web.oneby.Enums.Genre;
 import com.web.oneby.Enums.HTTPMessage;
 import com.web.oneby.Models.Book;
@@ -49,6 +50,7 @@ public class BookService {
                 bookRequest.getYear(),
                 bookRequest.getGenres().stream().map(Genre::valueOf).toList(),
                 0,
+                AccessBook.PRIVATE,
                 bookRequest.getImage().getBytes(),
                 bookRequest.getFile().getBytes()
             )

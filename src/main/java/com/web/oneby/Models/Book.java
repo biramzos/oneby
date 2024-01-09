@@ -1,6 +1,7 @@
 package com.web.oneby.Models;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.web.oneby.Enums.AccessBook;
 import com.web.oneby.Enums.Genre;
 import com.web.oneby.Enums.Language;
 import jakarta.persistence.*;
@@ -48,6 +49,9 @@ public class Book {
     @Enumerated(EnumType.STRING)
     @CollectionTable(name = "book_genres", joinColumns = @JoinColumn(name = "book_id"))
     private List<Genre> genres = new ArrayList<>();
+    @Enumerated(EnumType.STRING)
+    @Column(name = "access")
+    private AccessBook access;
     @Column(name = "stars")
     private int stars;
     @Lob
@@ -82,6 +86,7 @@ public class Book {
             int year,
             List<Genre> genres,
             int stars,
+            AccessBook access,
             byte[] image,
             byte[] content
     ){
@@ -98,6 +103,7 @@ public class Book {
         this.year = year;
         this.genres = genres;
         this.stars = stars;
+        this.access = access;
         this.image = image;
         this.content = content;
     }
