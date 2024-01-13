@@ -27,8 +27,7 @@ public class RestExceptionHandler {
     public static Response handleAccessDeniedException(HttpServletRequest request, HttpServletResponse response,
                                     AccessDeniedException exception) throws IOException, ServletException {
         Response res = new Response();
-        String[] urlParts = request.getRequestURI().split("/");
-        int language = Language.contains(urlParts[urlParts.length - 1]) ? Language.valueOf(urlParts[urlParts.length - 1]).getId() : Language.en.getId();
+        int language = Language.valueOf(request.getHeader("Accept-Language")).getId();
         log.error(exception.getMessage());
         res.put("message", new HTTPMessageHandler(HTTPMessage.ACCESS_DENIED, language));
         return res;
@@ -38,8 +37,7 @@ public class RestExceptionHandler {
     public static Response handleDisabledException(HttpServletRequest request, HttpServletResponse response,
                                        DisabledException exception) throws IOException, ServletException {
         Response res = new Response();
-        String[] urlParts = request.getRequestURI().split("/");
-        int language = Language.contains(urlParts[urlParts.length - 1]) ? Language.valueOf(urlParts[urlParts.length - 1]).getId() : Language.en.getId();
+        int language = Language.valueOf(request.getHeader("Accept-Language")).getId();
         log.error(exception.getMessage());
         res.put("message", new HTTPMessageHandler(HTTPMessage.USER_IS_DISABLED, language));
         return res;
@@ -49,8 +47,7 @@ public class RestExceptionHandler {
     public static Response handleBadCredentialsException(HttpServletRequest request, HttpServletResponse response,
                                       AuthenticationException exception) throws IOException, ServletException {
         Response res = new Response();
-        String[] urlParts = request.getRequestURI().split("/");
-        int language = Language.contains(urlParts[urlParts.length - 1]) ? Language.valueOf(urlParts[urlParts.length - 1]).getId() : Language.en.getId();
+        int language = Language.valueOf(request.getHeader("Accept-Language")).getId();
         log.error(exception.getMessage());
         res.put("message", new HTTPMessageHandler(HTTPMessage.USERNAME_OR_PASSWORD_IS_WRONG, language));
         return res;
@@ -60,8 +57,7 @@ public class RestExceptionHandler {
     public static Response handleMissingPathVariableException (HttpServletRequest request, HttpServletResponse response,
                                        MissingPathVariableException exception) throws IOException, ServletException {
         Response res = new Response();
-        String[] urlParts = request.getRequestURI().split("/");
-        int language = Language.contains(urlParts[urlParts.length - 1]) ? Language.valueOf(urlParts[urlParts.length - 1]).getId() : Language.en.getId();
+        int language = Language.valueOf(request.getHeader("Accept-Language")).getId();
         log.error(exception.getMessage());
         res.put("message", new HTTPMessageHandler(HTTPMessage.ENTITY_IS_NOT_FOUND,language));
         return res;
@@ -71,8 +67,7 @@ public class RestExceptionHandler {
     public static Response handleNullPointerException (HttpServletRequest request, HttpServletResponse response,
                                        NullPointerException exception) throws IOException, ServletException {
         Response res = new Response();
-        String[] urlParts = request.getRequestURI().split("/");
-        int language = Language.contains(urlParts[urlParts.length - 1]) ? Language.valueOf(urlParts[urlParts.length - 1]).getId() : Language.en.getId();
+        int language = Language.valueOf(request.getHeader("Accept-Language")).getId();
         log.error(exception.getMessage());
         if (exception.getMessage().contains(Authentication.class.getName())) {
             res.put("message", new HTTPMessageHandler(HTTPMessage.FAILED_AUTHENTICATION, language));
@@ -86,8 +81,7 @@ public class RestExceptionHandler {
     public static Response handleNoResourceFoundException (HttpServletRequest request, HttpServletResponse response,
                                        NoResourceFoundException exception) throws IOException, ServletException {
         Response res = new Response();
-        String[] urlParts = request.getRequestURI().split("/");
-        int language = Language.contains(urlParts[urlParts.length - 1]) ? Language.valueOf(urlParts[urlParts.length - 1]).getId() : Language.en.getId();
+        int language = Language.valueOf(request.getHeader("Accept-Language")).getId();
         log.error(exception.getMessage());
         res.put("message", new HTTPMessageHandler(HTTPMessage.NO_RESOURCES_FOUND, language));
         return res;
@@ -97,8 +91,7 @@ public class RestExceptionHandler {
     public static Response handleException (HttpServletRequest request, HttpServletResponse response,
                                        Exception exception) throws IOException, ServletException {
         Response res = new Response();
-        String[] urlParts = request.getRequestURI().split("/");
-        int language = Language.contains(urlParts[urlParts.length - 1]) ? Language.valueOf(urlParts[urlParts.length - 1]).getId() : Language.en.getId();
+        int language = Language.valueOf(request.getHeader("Accept-Language")).getId();
         log.error(exception.getMessage());
         res.put("message", new HTTPMessageHandler(HTTPMessage.ERROR, language));
         return res;

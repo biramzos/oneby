@@ -47,11 +47,11 @@ public class AuthController {
     }
 
     @ResponseBody
-    @PostMapping(value = "/register/{language}", consumes = {MediaType.MULTIPART_FORM_DATA_VALUE})
+    @PostMapping(value = "/register", consumes = {MediaType.MULTIPART_FORM_DATA_VALUE})
     @PreAuthorize("isAnonymous()")
     public Response registerUser(
             @ModelAttribute CreateUserRequest createUserRequest,
-            @PathVariable("language") Language language
+            @RequestHeader("Accept-Language") Language language
     ) throws IOException {
         Response response = new Response();
         HTTPMessageHandler messageHandler = new HTTPMessageHandler();
@@ -63,9 +63,9 @@ public class AuthController {
         return response;
     }
     @ResponseBody
-    @PostMapping("/login/{language}")
+    @PostMapping("/login")
     @PreAuthorize("isAnonymous() or isAuthenticated()")
-    public Response loginUser(@RequestBody LoginUserRequest loginUserRequest, @PathVariable("language") Language language){
+    public Response loginUser(@RequestBody LoginUserRequest loginUserRequest, @RequestHeader("Accept-Language") Language language){
         Response response = new Response();
         Authentication auth = authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(loginUserRequest.getUsername(), loginUserRequest.getPassword()));
         response.put("user", UserResponse.fromUser((User) auth.getPrincipal(), language.getId()));
@@ -74,19 +74,19 @@ public class AuthController {
     }
 
     @ResponseBody
-    @GetMapping("/info/{language}")
+    @GetMapping("/info")
     @PreAuthorize("isAuthenticated() or isAnonymous()")
-    public Response getInfo(Authentication auth, @PathVariable("language") Language language){
+    public Response getInfo(Authentication auth, @RequestHeader("Accept-Language") Language language){
         Response response = new Response();
         response.put("user", UserResponse.fromUser((User) auth.getPrincipal(), language.getId()));
         return response;
     }
 
     @ResponseBody
-    @GetMapping("/confirm/{token}/{language}")
+    @GetMapping("/confirm/{token}")
     @PreAuthorize("isAnonymous()")
     public Response confirm(
-            @PathVariable("language") Language language,
+            @RequestHeader("Accept-Language") Language language,
             @PathVariable("token") String token
     ){
         Response response = new Response();
@@ -98,9 +98,9 @@ public class AuthController {
 
 
     @ResponseBody
-    @GetMapping(value = "/images/{userId}/{language}", produces = MediaType.IMAGE_JPEG_VALUE)
+    @GetMapping(value = "/images/{userId}", produces = MediaType.IMAGE_JPEG_VALUE)
     @PreAuthorize("isAuthenticated() or isAnonymous()")
-    public byte[] getImage(@PathVariable("userId") User user, @PathVariable("language") Language language){
+    public byte[] getImage(@PathVariable("userId") User user, @RequestHeader("Accept-Language") Language language){
         return user.getImage();
     }
 

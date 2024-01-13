@@ -30,9 +30,9 @@ public class BookController {
     }
 
     @ResponseBody
-    @GetMapping("/genres/{language}")
+    @GetMapping("/genres")
     @PreAuthorize("isAuthenticated() or isAnonymous()")
-    public Response getGenres (@PathVariable("language") Language language) {
+    public Response getGenres (@RequestHeader("Accept-Language") Language language) {
         Response response = new Response();
         List<SimpleObject> genres = Arrays.stream(Genre.values())
                 .map((genre) -> new SimpleObject(genre.name(), genre.getName(language.getId())))
@@ -42,12 +42,12 @@ public class BookController {
     }
 
     @ResponseBody
-    @PostMapping("/{pageNumber}/{countInPart}/{language}")
+    @PostMapping("/{pageNumber}/{countInPart}")
     @PreAuthorize("isAuthenticated()")
     public Response findBooks(
             @PathVariable("pageNumber") Integer pageNumber,
             @PathVariable("countInPart") Integer countInPart,
-            @PathVariable("language") Language language,
+            @RequestHeader("Accept-Language") Language language,
             @RequestBody BookSearchFilterRequest request
     ){
         Response response = new Response();
@@ -57,16 +57,16 @@ public class BookController {
     }
 
     @ResponseBody
-    @GetMapping("/image/{bookId}/{language}")
+    @GetMapping("/image/{bookId}")
     @PreAuthorize("isAuthenticated() or isAnonymous()")
-    public byte[] getBookImage (@PathVariable("bookId") Book book, @PathVariable("language") Language language) {
+    public byte[] getBookImage (@PathVariable("bookId") Book book, @RequestHeader("Accept-Language") Language language) {
         return book.getImage();
     }
 
     @ResponseBody
-    @GetMapping("/file/{bookId}/{language}")
+    @GetMapping("/file/{bookId}")
     @PreAuthorize("isAuthenticated()")
-    public byte[] getBookFile (@PathVariable("bookId") Book book, @PathVariable("language") Language language) {
+    public byte[] getBookFile (@PathVariable("bookId") Book book, @RequestHeader("Accept-Language") Language language) {
         return book.getContent();
     }
 

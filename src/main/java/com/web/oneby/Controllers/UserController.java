@@ -32,12 +32,12 @@ public class UserController {
     }
 
     @ResponseBody
-    @PostMapping("/{pageNumber}/{countInPart}/{language}")
+    @PostMapping("/{pageNumber}/{countInPart}")
     @PreAuthorize(value = "hasAuthority('ADMIN')")
     public Response findUsers(
             @PathVariable("pageNumber") Integer pageNumber,
             @PathVariable("countInPart") Integer countInPart,
-            @PathVariable("language") Language language,
+            @RequestHeader("Accept-Language") Language language,
             @RequestBody UserSearchFilterRequest request
     ){
         Response response = new Response();
@@ -47,11 +47,11 @@ public class UserController {
     }
 
     @ResponseBody
-    @GetMapping("/{userId}/{language}")
+    @GetMapping("/{userId}")
     @PreAuthorize(value = "hasAuthority('ADMIN')")
     public Response getUser(
             @PathVariable("userId") User user,
-            @PathVariable("language") Language language
+            @RequestHeader("Accept-Language") Language language
     ){
         Response response = new Response();
         UserResponse userResponse = UserResponse.fromUser(user, language.getId());
@@ -60,12 +60,12 @@ public class UserController {
     }
 
     @ResponseBody
-    @GetMapping("/favourites/{userId}/{language}")
+    @GetMapping("/favourites/{userId}")
     @PreAuthorize(value = "isAuthenticated()")
     public Response getUserFavourites(
             Authentication auth,
             @PathVariable("userId") User user,
-            @PathVariable("language") Language language
+            @RequestHeader("Accept-Language") Language language
     ){
         Response response = new Response();
         if (((User) auth.getPrincipal()) == user || ((User) auth.getPrincipal()).getRoles().contains(UserRole.ADMIN)) {
