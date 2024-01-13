@@ -1,9 +1,6 @@
 package com.web.oneby.Services;
 
-import com.web.oneby.DTO.CreateUserRequest;
-import com.web.oneby.DTO.PageObject;
-import com.web.oneby.DTO.UserResponse;
-import com.web.oneby.DTO.UserSearchFilterRequest;
+import com.web.oneby.DTO.*;
 import com.web.oneby.Enums.HTTPMessage;
 import com.web.oneby.Enums.Language;
 import com.web.oneby.Enums.UserRole;
@@ -11,6 +8,7 @@ import com.web.oneby.Handlers.HTTPMessageHandler;
 import com.web.oneby.Models.User;
 import com.web.oneby.OnebyDevApplication;
 import com.web.oneby.Repositories.UserRepository;
+import com.web.oneby.Utils.SortingUtils;
 import com.web.oneby.Utils.StringUtil;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
@@ -19,7 +17,9 @@ import jakarta.persistence.criteria.JoinType;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -34,6 +34,7 @@ import java.io.InputStream;
 import java.sql.ResultSet;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 import java.util.logging.Logger;
 
@@ -63,8 +64,15 @@ public class UserService implements UserDetailsService {
         this.jdbcTemplate = jdbcTemplate;
     }
 
-    public PageObject<UserResponse> search(UserSearchFilterRequest request, Integer sizeInPart, Integer pageNumber, int language){
-        return new PageObject<>(userRepository.findAll(UserService.filter(request), Pageable.ofSize(sizeInPart).withPage(pageNumber - 1)).map(user -> UserResponse.fromUser(user, language)));
+    public PageObject<UserResponse> search(SearchFilter request, int language) {
+        List<Sort.Order> orders = SortingUtils.getSoringOrders(request.getSort());
+        Pageable pageable = PageRequest.of(
+                request.getPageNumber() - 1,
+                request.getCountInPart(),
+                Sort.by(orders));
+        return new PageObject<>(userRepository
+                .findAll(UserService.filter(request.getFilter()), pageable)
+                .map(user -> UserResponse.fromUser(user, language)));
     }
 
 
@@ -158,22 +166,25 @@ public class UserService implements UserDetailsService {
         }
     }
 
-    public static Specification<User> filter(UserSearchFilterRequest request){
+    public static Specification<User> filter(Map<String, Object> filter){
         return ((root, query, criteriaBuilder) -> {
             Predicate predication = criteriaBuilder.conjunction();
-            if (StringUtil.isNotEmpty(request.getName())) {
-                predication = criteriaBuilder.or(
-                    criteriaBuilder.like(
-                        root.get("username"), "%" + request.getName() + "%"
-                    ),
-                    criteriaBuilder.like(
-                        root.get("email"), "%" + request.getName() + "%"
-                    )
-                );
-            }
-            if (!request.getRoles().isEmpty()) {
-                Predicate rolePredicate = root.join("roles").in(request.getRoles());
-                predication = criteriaBuilder.and(predication, rolePredicate);
+            for (String key: filter.keySet()) {
+                Object value = filter.get(key);
+                if (key.equals("name") && StringUtil.isNotEmpty((String) value)) {
+                    predication = criteriaBuilder.or(
+                            criteriaBuilder.like(
+                                    root.get("username"), "%" + (String) value + "%"
+                            ),
+                            criteriaBuilder.like(
+                                    root.get("email"), "%" + (String) value + "%"
+                            )
+                    );
+                }
+                if (key.equals("roles") && !((List<String>) value).isEmpty()) {
+                    Predicate rolePredicate = root.join("roles").in((List<String>) value);
+                    predication = criteriaBuilder.and(predication, rolePredicate);
+                }
             }
             return predication;
         });

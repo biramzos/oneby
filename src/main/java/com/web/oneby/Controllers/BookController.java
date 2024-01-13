@@ -1,9 +1,6 @@
 package com.web.oneby.Controllers;
 
-import com.web.oneby.DTO.BookResponse;
-import com.web.oneby.DTO.BookSearchFilterRequest;
-import com.web.oneby.DTO.PageObject;
-import com.web.oneby.DTO.SimpleObject;
+import com.web.oneby.DTO.*;
 import com.web.oneby.Enums.Genre;
 import com.web.oneby.Enums.Language;
 import com.web.oneby.Models.Book;
@@ -42,16 +39,14 @@ public class BookController {
     }
 
     @ResponseBody
-    @PostMapping("/{pageNumber}/{countInPart}")
+    @PostMapping("/")
     @PreAuthorize("isAuthenticated()")
     public Response findBooks(
-            @PathVariable("pageNumber") Integer pageNumber,
-            @PathVariable("countInPart") Integer countInPart,
             @RequestHeader("Accept-Language") Language language,
-            @RequestBody BookSearchFilterRequest request
+            @RequestBody SearchFilter request
     ){
         Response response = new Response();
-        PageObject<BookResponse> books = bookService.findAll(request, countInPart, pageNumber, language.getId());
+        PageObject<BookResponse> books = bookService.findAll(request, language.getId());
         response.put("books", books);
         return response;
     }
