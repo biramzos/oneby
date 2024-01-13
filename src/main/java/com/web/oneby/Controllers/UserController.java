@@ -1,6 +1,7 @@
 package com.web.oneby.Controllers;
 
 import com.web.oneby.DTO.*;
+import com.web.oneby.Enums.Genre;
 import com.web.oneby.Enums.HTTPMessage;
 import com.web.oneby.Enums.Language;
 import com.web.oneby.Enums.UserRole;
@@ -14,6 +15,7 @@ import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.Objects;
 
 @RestController
 @RequestMapping("/api/v1/users")
@@ -63,7 +65,7 @@ public class UserController {
             @RequestHeader("Accept-Language") Language language
     ){
         Response response = new Response();
-        if (((User) auth.getPrincipal()) == user || ((User) auth.getPrincipal()).getRoles().contains(UserRole.ADMIN)) {
+        if (Objects.equals(((User) auth.getPrincipal()).getId(), user.getId()) || ((User) auth.getPrincipal()).getRoles().contains(UserRole.ADMIN)) {
             List<BookResponse> favourites = user.getFavourites().stream().map(book -> BookResponse.fromBook(book, language.getId())).toList();
             response.put("favourites", favourites);
         } else {

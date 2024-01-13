@@ -85,6 +85,11 @@ public enum HTTPMessage {
             "Не нашли ресурсов!",
             "Not found the resources!",
             HTTPStatus.ERROR),
+    CANNOT_PARSE_DATA(
+            "Деректерді талдау мүмкін емес!",
+            "Невозможно проанализировать данные!",
+            "Cannot parse the data!",
+            HTTPStatus.ERROR),
     ERROR(
             "Ошибка!",
             "Қате!",

@@ -1,5 +1,7 @@
 package com.web.oneby.DTO;
 
+import com.web.oneby.Enums.AccessBook;
+import com.web.oneby.Enums.Genre;
 import jakarta.validation.constraints.NotEmpty;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -23,8 +25,8 @@ public class BookRequest {
     private String authorRU;
     private String authorEN;
     private int year;
-    private String access;
-    private List<String> genres;
+    private AccessBook access;
+    private List<Genre> genres;
     private MultipartFile image;
     private MultipartFile file;
 }

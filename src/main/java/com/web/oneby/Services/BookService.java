@@ -47,8 +47,8 @@ public class BookService {
                 bookRequest.getAuthorEN(),
                 publisher,
                 bookRequest.getYear(),
-                bookRequest.getGenres().stream().map(Genre::valueOf).toList(),
-                AccessBook.valueOf(bookRequest.getAccess()),
+                bookRequest.getGenres(),
+                bookRequest.getAccess(),
                 bookRequest.getImage().getBytes(),
                 bookRequest.getFile().getBytes()
             )

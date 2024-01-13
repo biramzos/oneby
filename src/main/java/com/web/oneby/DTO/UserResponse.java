@@ -5,6 +5,8 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.util.List;
+
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
@@ -12,7 +14,7 @@ public class UserResponse {
     private Long id;
     private String username;
     private String email;
-    private String roles;
+    private List<String> roles;
     private String token;
     private String image;
 
@@ -22,7 +24,7 @@ public class UserResponse {
         userResponse.username = user.getUsername();
         userResponse.email = user.getEmail();
         userResponse.token = user.getToken();
-        userResponse.roles = String.join(", ", user.getRoles().stream().map(role -> role.getName(language)).toList());
+        userResponse.roles = user.getRoles().stream().map(role -> role.getName(language)).toList();
         userResponse.image = "/api/v1/auth/images/" + user.getId();
         return userResponse;
     }

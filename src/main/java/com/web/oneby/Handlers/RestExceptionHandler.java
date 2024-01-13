@@ -7,6 +7,7 @@ import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.http.converter.HttpMessageNotReadableException;
 import org.springframework.security.access.AccessDeniedException;
 import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.authentication.DisabledException;
@@ -84,6 +85,16 @@ public class RestExceptionHandler {
         int language = Language.valueOf(request.getHeader("Accept-Language")).getId();
         log.error(exception.getMessage());
         res.put("message", new HTTPMessageHandler(HTTPMessage.NO_RESOURCES_FOUND, language));
+        return res;
+    }
+
+    @ExceptionHandler(HttpMessageNotReadableException.class)
+    public static Response handleHttpMessageNotReadableException (HttpServletRequest request, HttpServletResponse response,
+                                      HttpMessageNotReadableException exception) throws IOException, ServletException {
+        Response res = new Response();
+        int language = Language.valueOf(request.getHeader("Accept-Language")).getId();
+        log.error(exception.getMessage());
+        res.put("message", new HTTPMessageHandler(HTTPMessage.CANNOT_PARSE_DATA, language));
         return res;
     }
 
