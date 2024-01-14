@@ -1,6 +1,7 @@
 package com.web.oneby.DTO;
 
 import lombok.Data;
+import org.springframework.data.domain.Sort.Direction;
 
 import java.util.Map;
 
@@ -9,5 +10,5 @@ public class SearchFilter {
     private int pageNumber;
     private int countInPart;
     private Map<String, Object> filter;
-    private Map<String, String> sort;
+    private Map<String, Direction> sort;
 }
