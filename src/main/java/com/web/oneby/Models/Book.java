@@ -52,6 +52,8 @@ public class Book {
     @Enumerated(EnumType.STRING)
     @Column(name = "access")
     private AccessBook access;
+    @Column(name = "cost")
+    private int cost;
     @Column(name = "stars")
     private int stars = 0;
     @Lob
@@ -86,6 +88,7 @@ public class Book {
             int year,
             List<Genre> genres,
             AccessBook access,
+            int cost,
             byte[] image,
             byte[] content
     ){
@@ -102,6 +105,7 @@ public class Book {
         this.year = year;
         this.genres = genres;
         this.access = access;
+        this.cost = cost;
         this.image = image;
         this.content = content;
     }

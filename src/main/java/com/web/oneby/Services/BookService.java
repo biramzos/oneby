@@ -49,6 +49,7 @@ public class BookService {
                 bookRequest.getYear(),
                 bookRequest.getGenres(),
                 bookRequest.getAccess(),
+                bookRequest.getCost(),
                 bookRequest.getImage().getBytes(),
                 bookRequest.getFile().getBytes()
             )

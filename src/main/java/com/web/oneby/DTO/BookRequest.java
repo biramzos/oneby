@@ -26,6 +26,7 @@ public class BookRequest {
     private String authorEN;
     private int year;
     private AccessBook access;
+    private int cost;
     private List<Genre> genres;
     private MultipartFile image;
     private MultipartFile file;
