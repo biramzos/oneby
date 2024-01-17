@@ -5,9 +5,9 @@ import org.springframework.data.domain.Sort.Order;
 import java.util.List;
 import java.util.Map;
 
-public class SortingUtils {
+public class SortingUtil {
 
-    public static List<Order> getSoringOrders(Map<String, Direction> sorts){
+    public static List<Order> getSortingOrders(Map<String, Direction> sorts){
         return sorts
                 .entrySet()
                 .stream()

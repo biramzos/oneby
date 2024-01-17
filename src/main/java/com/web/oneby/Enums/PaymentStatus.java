@@ -1,12 +1,10 @@
 package com.web.oneby.Enums;
 
-public enum BasketStatus {
-    CREATED("", "", "Created!"),
-    PAYED("", "", "Payed!"),
-    REMOVED("", "", "Removed!");
+public enum PaymentStatus {
+    SUCCESS("", "", "Successfully payed!"),
+    ERROR("", "", "Error while paying!");
 
-
-    BasketStatus(String nameKZ, String nameRU, String nameEN){
+    PaymentStatus(String nameKZ, String nameRU, String nameEN){
         this.nameKZ = nameKZ;
         this.nameRU = nameRU;
         this.nameEN = nameEN;

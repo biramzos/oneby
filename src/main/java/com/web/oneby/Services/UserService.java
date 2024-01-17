@@ -6,14 +6,11 @@ import com.web.oneby.Enums.Language;
 import com.web.oneby.Enums.UserRole;
 import com.web.oneby.Handlers.HTTPMessageHandler;
 import com.web.oneby.Models.User;
-import com.web.oneby.OnebyDevApplication;
 import com.web.oneby.Repositories.UserRepository;
-import com.web.oneby.Utils.SortingUtils;
+import com.web.oneby.Utils.SortingUtil;
 import com.web.oneby.Utils.StringUtil;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
-import jakarta.persistence.criteria.Join;
-import jakarta.persistence.criteria.JoinType;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
@@ -31,12 +28,9 @@ import org.springframework.stereotype.Service;
 import jakarta.persistence.criteria.Predicate;
 import java.io.IOException;
 import java.io.InputStream;
-import java.sql.ResultSet;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
-import java.util.logging.Logger;
 
 @Service
 @Slf4j
@@ -65,7 +59,7 @@ public class UserService implements UserDetailsService {
     }
 
     public PageObject<UserResponse> search(SearchFilter request, int language) {
-        List<Sort.Order> orders = SortingUtils.getSoringOrders(request.getSort());
+        List<Sort.Order> orders = SortingUtil.getSortingOrders(request.getSort());
         Pageable pageable = PageRequest.of(
                 request.getPageNumber() - 1,
                 request.getCountInPart(),

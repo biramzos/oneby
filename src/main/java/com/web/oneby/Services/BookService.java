@@ -2,11 +2,10 @@ package com.web.oneby.Services;
 
 import com.web.oneby.DTO.*;
 import com.web.oneby.Enums.AccessBook;
-import com.web.oneby.Enums.Genre;
 import com.web.oneby.Models.Book;
 import com.web.oneby.Models.User;
 import com.web.oneby.Repositories.BookRepository;
-import com.web.oneby.Utils.SortingUtils;
+import com.web.oneby.Utils.SortingUtil;
 import com.web.oneby.Utils.StringUtil;
 import jakarta.persistence.criteria.Predicate;
 import lombok.extern.slf4j.Slf4j;
@@ -57,7 +56,7 @@ public class BookService {
     }
 
     public PageObject<BookResponse> findAll(SearchFilter request, int language) {
-        List<Sort.Order> orders = SortingUtils.getSoringOrders(request.getSort());
+        List<Sort.Order> orders = SortingUtil.getSortingOrders(request.getSort());
         Pageable pageable = PageRequest.of(
                 request.getPageNumber() - 1,
                 request.getCountInPart(),
