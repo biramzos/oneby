@@ -45,6 +45,16 @@ public enum HTTPMessage {
             "Успешно авторизовался!",
             "Successfully signed in!",
             HTTPStatus.SUCCESS),
+    BOOK_IS_DELETED(
+            "Кітап жойылды!",
+            "Книга удалена!",
+            "Book is deleted!",
+            HTTPStatus.SUCCESS),
+    BOOK_IS_NOT_DELETED(
+            "Кітап жойылмайды!",
+            "Книга не удалена!",
+            "Book is not deleted!",
+            HTTPStatus.ERROR),
     USER_IS_NOT_EXIST(
             "Пайдаланушы жоқ!",
             "Пользователя не существует!",
@@ -89,6 +99,16 @@ public enum HTTPMessage {
             "Деректерді талдау мүмкін емес!",
             "Невозможно проанализировать данные!",
             "Cannot parse the data!",
+            HTTPStatus.ERROR),
+    ORGANIZATION_IS_EXIST(
+            "Ұйым бұрыннан бар!",
+            "Организация уже существует!",
+            "Organization has already exist!",
+            HTTPStatus.ERROR),
+    USER_IS_NOT_SELLER(
+            "Пайдаланушы сатушы емес!",
+            "Пользователь не является продавцом!",
+            "User is not seller!",
             HTTPStatus.ERROR),
     ERROR(
             "Ошибка!",

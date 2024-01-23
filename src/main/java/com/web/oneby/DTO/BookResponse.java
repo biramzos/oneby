@@ -1,5 +1,6 @@
 package com.web.oneby.DTO;
 
+import com.web.oneby.Enums.AccessBook;
 import com.web.oneby.Models.Book;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -16,6 +17,7 @@ public class BookResponse {
     private String title;
     private String description;
     private String author;
+    private String access;
     private List<String> genres = new ArrayList<>();
     private UserResponse publisher;
 
@@ -25,6 +27,7 @@ public class BookResponse {
         bookResponse.title = book.getTitle(language);
         bookResponse.description = book.getDescription(language);
         bookResponse.author = book.getAuthor(language);
+        bookResponse.access = book.getAccess().getName(language);
         bookResponse.genres = book.getGenres().stream().map((genre) -> genre.getName(language)).toList();
         bookResponse.publisher = UserResponse.fromUser(book.getPublisher(), language);
         return bookResponse;

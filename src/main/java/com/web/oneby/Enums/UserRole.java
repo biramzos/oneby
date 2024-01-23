@@ -4,6 +4,7 @@ import org.springframework.security.core.GrantedAuthority;
 
 public enum UserRole implements GrantedAuthority {
     ADMIN(1, "Әкімші", "Администратор", "Administrator"),
+    SELLER(2, "Сатушы", "Продавец", "Seller"),
     PREMIUM(2, "Премиум пайдаланушы", "Премиум пользователь", "Premium user"),
     USER(3, "Пайдаланушы", "Пользователь", "User");
 

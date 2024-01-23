@@ -4,10 +4,12 @@ import com.web.oneby.DTO.*;
 import com.web.oneby.Enums.Genre;
 import com.web.oneby.Enums.Language;
 import com.web.oneby.Models.Book;
+import com.web.oneby.Models.User;
 import com.web.oneby.Services.BookService;
 import com.web.oneby.Utils.Response;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.Arrays;
@@ -42,11 +44,12 @@ public class BookController {
     @PostMapping("/")
     @PreAuthorize("isAuthenticated()")
     public Response findBooks(
+            Authentication auth,
             @RequestHeader("Accept-Language") Language language,
             @RequestBody SearchFilter request
     ){
         Response response = new Response();
-        PageObject<BookResponse> books = bookService.findAll(request, language.getId());
+        PageObject<BookResponse> books = bookService.findAll(request,(User) auth.getPrincipal(), language.getId());
         response.put("books", books);
         return response;
     }

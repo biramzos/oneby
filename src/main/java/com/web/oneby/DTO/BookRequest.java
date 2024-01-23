@@ -14,7 +14,7 @@ import java.util.List;
 @AllArgsConstructor
 @NoArgsConstructor
 public class BookRequest {
-    @NotEmpty(message = "")
+    private Long id;
     private String nameKZ;
     private String nameRU;
     private String nameEN;
