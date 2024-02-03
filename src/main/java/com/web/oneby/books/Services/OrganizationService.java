@@ -1,18 +1,17 @@
 package com.web.oneby.books.Services;
 
-import com.web.oneby.DTO.BookRequest;
-import com.web.oneby.DTO.CreateOrganizationRequest;
-import com.web.oneby.Enums.HTTPMessage;
-import com.web.oneby.Enums.UserRole;
-import com.web.oneby.Handlers.HTTPMessageHandler;
-import com.web.oneby.Models.Book;
-import com.web.oneby.Models.Organization;
-import com.web.oneby.Models.User;
-import com.web.oneby.Repositories.OrganizationRepository;
-import com.web.oneby.Services.UserService;
+import com.web.oneby.books.DTOs.BookRequest;
+import com.web.oneby.books.DTOs.CreateOrganizationRequest;
+import com.web.oneby.commons.Enums.HTTPMessage;
+import com.web.oneby.commons.Enums.UserRole;
+import com.web.oneby.commons.Handlers.HTTPMessageHandler;
+import com.web.oneby.books.Models.Book;
+import com.web.oneby.books.Models.Organization;
+import com.web.oneby.commons.Models.User;
+import com.web.oneby.books.Repositories.OrganizationRepository;
+import com.web.oneby.commons.Services.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-
 import java.io.IOException;
 
 @Service
