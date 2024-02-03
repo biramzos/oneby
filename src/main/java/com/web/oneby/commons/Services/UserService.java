@@ -121,7 +121,7 @@ public class UserService implements UserDetailsService {
                             createUserRequest.getEmail(),
                             passwordEncoder.encode(createUserRequest.getPassword()),
                             generateToken(createUserRequest.getUsername()),
-                            List.of(UserRole.USER),
+                            UserRole.USER,
                             image,
                             false
                     )

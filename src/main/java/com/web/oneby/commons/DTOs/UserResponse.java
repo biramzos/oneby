@@ -13,7 +13,7 @@ public class UserResponse {
     private Long id;
     private String username;
     private String email;
-    private List<String> roles;
+    private String roles;
     private String token;
     private String image;
 
@@ -23,7 +23,7 @@ public class UserResponse {
         userResponse.username = user.getUsername();
         userResponse.email = user.getEmail();
         userResponse.token = user.getToken();
-        userResponse.roles = user.getRoles().stream().map(role -> role.getName(language)).toList();
+        userResponse.roles = user.getRole().getName(language);
         userResponse.image = "/api/v1/auth/images/" + user.getId();
         return userResponse;
     }

@@ -37,7 +37,7 @@ public class OrganizationService {
             messageHandler.set(HTTPMessage.ORGANIZATION_IS_EXIST, language);
             return null;
         }
-        if (request.getUser().getRoles().contains(UserRole.SELLER)) {
+        if (request.getUser().getRole().equals(UserRole.SELLER)) {
             organization = organizationRepository.save(
                 new Organization(
                     request.getName(),

@@ -66,9 +66,8 @@ public class UserController {
             @RequestHeader("Accept-Language") Language language
     ){
         Response response = new Response();
-        if (Objects.equals(((User) auth.getPrincipal()).getId(), user.getId()) || ((User) auth.getPrincipal()).getRoles().contains(UserRole.ADMIN)) {
+        if (Objects.equals(((User) auth.getPrincipal()).getId(), user.getId()) || ((User) auth.getPrincipal()).getRole().equals(UserRole.ADMIN)) {
             List<BookResponse> favourites = user.getFavourites().stream().map(book -> BookResponse.fromBook(book, language.getId())).toList();
-            response.put("user", UserResponse.fromUser(user, language.getId()));
             response.put("favourites", favourites);
         } else {
             response.put("message", HTTPMessageHandler.fromHTTPMessage(HTTPMessage.ACCESS_DENIED, language.getId()));

@@ -6,6 +6,8 @@ import com.web.oneby.commons.Enums.UserRole;
 import jakarta.persistence.*;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import org.hibernate.annotations.Fetch;
+import org.hibernate.annotations.FetchMode;
 import org.hibernate.annotations.JdbcTypeCode;
 import org.hibernate.type.SqlTypes;
 import org.springframework.security.core.GrantedAuthority;
@@ -34,9 +36,8 @@ public class User implements UserDetails {
     private String token;
     @JsonIgnore
     @Enumerated(EnumType.STRING)
-    @ElementCollection(targetClass = UserRole.class, fetch = FetchType.EAGER)
-    @CollectionTable(name = "user_roles", joinColumns = @JoinColumn(name = "user_id"))
-    private List<UserRole> roles;
+    @Column(name = "role")
+    private UserRole role;
     @JsonIgnore
     @Lob
     @Column(columnDefinition = "LONGBLOB")
@@ -58,7 +59,7 @@ public class User implements UserDetails {
             String email,
             String password,
             String token,
-            List<UserRole> roles,
+            UserRole role,
             byte[] image,
             boolean isActive
     ){
@@ -66,7 +67,7 @@ public class User implements UserDetails {
         this.email = email;
         this.password = password;
         this.token = token;
-        this.roles = roles;
+        this.role = role;
         this.image = image;
         this.isActive = isActive;
     }
@@ -74,7 +75,7 @@ public class User implements UserDetails {
     @JsonIgnore
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
-        return roles;
+        return List.of(role);
     }
 
     @JsonIgnore
