@@ -68,7 +68,7 @@ public class JWTFilter extends OncePerRequestFilter {
         } else {
             token = null;
         }
-        try{
+        try {
             if(token != null && validation(token)){
                 String username = parseJwt(token);
                 User user = (User) userService.loadUserByUsername(username);

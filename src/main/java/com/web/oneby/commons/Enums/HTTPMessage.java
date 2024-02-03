@@ -110,6 +110,11 @@ public enum HTTPMessage {
             "Пользователь не является продавцом!",
             "User is not seller!",
             HTTPStatus.ERROR),
+    MISSING_REQUEST_HEADER(
+            "Сұрау тақырыбы жіберіп алды!",
+            "Заголовок запроса пропущен!",
+            "Request header is missed!",
+            HTTPStatus.ERROR),
     ERROR(
             "Ошибка!",
             "Қате!",

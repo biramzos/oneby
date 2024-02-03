@@ -101,7 +101,7 @@ public class UserService implements UserDetailsService {
             return null;
         }
         else {
-            emailService.send(host + "/api/v1/auth/confirm/" + generateToken(createUserRequest.getUsername())  + "/" + Language.getLanguageById(language).name(), createUserRequest.getEmail());
+            emailService.send(host + "/api/v1/auth/confirm/" + generateToken(createUserRequest.getUsername()), createUserRequest.getEmail());
 
             byte [] image = null;
             if (createUserRequest.getImage() == null) {
