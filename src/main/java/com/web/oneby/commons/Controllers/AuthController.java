@@ -50,10 +50,11 @@ public class AuthController {
         response.put("message", messageHandler);
         return response;
     }
+
     @ResponseBody
     @PostMapping("/login")
-    @PreAuthorize("isAnonymous() or isAuthenticated()")
-    public Response loginUser(@RequestBody LoginUserRequest loginUserRequest, @RequestHeader("Accept-Language") Language language){
+    @PreAuthorize("isAnonymous()")
+    public Response loginUserPost(@RequestBody LoginUserRequest loginUserRequest, @RequestHeader("Accept-Language") Language language){
         Response response = new Response();
         Authentication auth = authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(loginUserRequest.getUsername(), loginUserRequest.getPassword()));
         response.put("user", UserResponse.fromUser((User) auth.getPrincipal(), language.getId()));
@@ -62,11 +63,12 @@ public class AuthController {
     }
 
     @ResponseBody
-    @GetMapping("/info")
-    @PreAuthorize("isAuthenticated() or isAnonymous()")
-    public Response getInfo(Authentication auth, @RequestHeader("Accept-Language") Language language){
+    @GetMapping("/login")
+    @PreAuthorize("isAuthenticated()")
+    public Response loginUserGet(Authentication auth, @RequestHeader("Accept-Language") Language language){
         Response response = new Response();
         response.put("user", UserResponse.fromUser((User) auth.getPrincipal(), language.getId()));
+        response.put("message", new HTTPMessageHandler(HTTPMessage.SUCCESSFULLY_LOGIN, language.getId()));
         return response;
     }
 
