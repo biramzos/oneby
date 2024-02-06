@@ -10,4 +10,8 @@ public class StringUtil {
         return !(isEmpty(s));
     }
 
+    public static String firstCapitalLetter(String s){
+        return s.toUpperCase().charAt(0) + s.toLowerCase().substring(1);
+    }
+
 }

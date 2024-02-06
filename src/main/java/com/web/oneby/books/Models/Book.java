@@ -40,9 +40,6 @@ public class Book {
     private String authorRU;
     @Column(name = "author_en")
     private String authorEN;
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "publisher_id")
-    private User publisher;
     @Column(name = "year")
     private int year;
     @ElementCollection(targetClass = Genre.class, fetch = FetchType.EAGER)
@@ -84,7 +81,6 @@ public class Book {
             String authorKZ,
             String authorRU,
             String authorEN,
-            User publisher,
             int year,
             List<Genre> genres,
             AccessBook access,
@@ -101,7 +97,6 @@ public class Book {
         this.authorKZ = authorKZ;
         this.authorRU = authorRU;
         this.authorEN = authorEN;
-        this.publisher = publisher;
         this.year = year;
         this.genres = genres;
         this.access = access;
@@ -120,6 +115,16 @@ public class Book {
         }
     }
 
+    public String getTitle(Language language) {
+        if (language == Language.kz) {
+            return titleKZ;
+        } else if (language == Language.ru) {
+            return titleRU;
+        } else {
+            return titleEN;
+        }
+    }
+
     public String getDescription(int language) {
         if (language == Language.kz.getId()) {
             return descriptionKZ;
@@ -130,10 +135,30 @@ public class Book {
         }
     }
 
+    public String getDescription(Language language) {
+        if (language == Language.kz) {
+            return descriptionKZ;
+        } else if (language == Language.ru) {
+            return descriptionRU;
+        } else {
+            return descriptionEN;
+        }
+    }
+
     public String getAuthor(int language) {
         if (language == Language.kz.getId()) {
             return authorKZ;
         } else if (language == Language.ru.getId()) {
+            return authorRU;
+        } else {
+            return authorEN;
+        }
+    }
+
+    public String getAuthor(Language language) {
+        if (language == Language.kz) {
+            return authorKZ;
+        } else if (language == Language.ru) {
             return authorRU;
         } else {
             return authorEN;

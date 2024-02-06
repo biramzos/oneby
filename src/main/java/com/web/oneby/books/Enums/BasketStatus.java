@@ -28,4 +28,14 @@ public enum BasketStatus {
             return nameEN;
         }
     }
+
+    public String getName(Language language){
+        if (language == Language.kz) {
+            return nameKZ;
+        } else if (language == Language.ru) {
+            return nameRU;
+        } else {
+            return nameEN;
+        }
+    }
 }

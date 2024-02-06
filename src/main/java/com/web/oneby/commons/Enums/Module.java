@@ -5,7 +5,8 @@ import java.util.Objects;
 public enum Module {
     BOOK_MARKET(1, "book_market", "", "", "", false),
     ROOM_DISCUSSING(2, "room_discussing", "", "", "", true),
-    MY_MARKET(3, "my_market", "", "", "", true),
+    SPORT_MARKET(3, "sport_market", "", "", "", true),
+    ACADEMY(4, "academy", "", "", "", false, true),
     ;
     private int id;
     private String code;
@@ -13,6 +14,7 @@ public enum Module {
     private String nameRU;
     private String nameEN;
     private boolean forPremium;
+    private boolean isStudy;
 
     Module(
             int id,
@@ -28,6 +30,25 @@ public enum Module {
         this.nameRU = nameRU;
         this.nameEN = nameEN;
         this.forPremium = forPremium;
+        this.isStudy = false;
+    }
+
+    Module(
+            int id,
+            String code,
+            String nameKZ,
+            String nameRU,
+            String nameEN,
+            boolean forPremium,
+            boolean isStudy
+    ){
+        this.id = id;
+        this.code = code;
+        this.nameKZ = nameKZ;
+        this.nameRU = nameRU;
+        this.nameEN = nameEN;
+        this.forPremium = forPremium;
+        this.isStudy = isStudy;
     }
 
     public static Module getModuleByCode(String code){

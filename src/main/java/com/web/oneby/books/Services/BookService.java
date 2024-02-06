@@ -38,6 +38,10 @@ public class BookService {
         this.bookRepository = bookRepository;
     }
 
+    public Book getById(Long bookId){
+        return bookRepository.getById(bookId);
+    }
+
     public Book save (BookRequest bookRequest, User publisher) throws IOException {
         Book book;
         if (bookRequest.getId() > 0) {

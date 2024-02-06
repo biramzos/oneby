@@ -39,6 +39,26 @@ public enum Language {
         return nameRU;
     }
 
+    public String getName(int language) {
+        if (language == Language.kz.getId()) {
+            return nameKZ;
+        } else if (language == Language.ru.getId()) {
+            return nameRU;
+        } else {
+            return nameEN;
+        }
+    }
+
+    public String getName(Language language) {
+        if (language == Language.kz) {
+            return nameKZ;
+        } else if (language == Language.ru) {
+            return nameRU;
+        } else {
+            return nameEN;
+        }
+    }
+
     public static Language getLanguageById(int language) {
         if (language == Language.kz.getId()) {
             return Language.kz;

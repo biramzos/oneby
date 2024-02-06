@@ -29,6 +29,8 @@ import java.io.InputStream;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
+import java.util.Set;
+
 import com.web.oneby.commons.DTOs.SearchFilter;
 import com.web.oneby.commons.Utils.SortingUtil;
 import com.web.oneby.commons.Models.User;
@@ -117,11 +119,17 @@ public class UserService implements UserDetailsService {
 
             return userRepository.save (
                     new User (
+                            createUserRequest.getNameKZ(),
+                            createUserRequest.getNameRU(),
+                            createUserRequest.getNameEN(),
+                            createUserRequest.getLastnameKZ(),
+                            createUserRequest.getLastnameRU(),
+                            createUserRequest.getLastnameEN(),
                             createUserRequest.getUsername(),
                             createUserRequest.getEmail(),
                             passwordEncoder.encode(createUserRequest.getPassword()),
                             generateToken(createUserRequest.getUsername()),
-                            UserRole.USER,
+                            Set.of(UserRole.USER),
                             image,
                             false
                     )

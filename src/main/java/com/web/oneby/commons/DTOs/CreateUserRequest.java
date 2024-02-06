@@ -9,6 +9,12 @@ import org.springframework.web.multipart.MultipartFile;
 @AllArgsConstructor
 @NoArgsConstructor
 public class CreateUserRequest {
+    private String nameKZ;
+    private String nameRU;
+    private String nameEN;
+    private String lastnameKZ;
+    private String lastnameRU;
+    private String lastnameEN;
     private String username;
     private String email;
     private String password;

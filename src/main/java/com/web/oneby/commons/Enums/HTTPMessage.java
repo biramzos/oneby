@@ -165,6 +165,16 @@ public enum HTTPMessage {
         }
     }
 
+    public String getMessage(Language language) {
+        if (language == Language.kz) {
+            return messageKZ;
+        } else if (language == Language.ru) {
+            return messageRU;
+        } else {
+            return messageEN;
+        }
+    }
+
     @JsonValue
     public Object serialize() {
         return new Object() {
