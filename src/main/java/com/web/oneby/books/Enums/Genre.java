@@ -22,7 +22,6 @@ public enum Genre {
     POETRY("Поэзия", "Поэзия", "Poetry"),
     EDUCATIONAL("Білім біру", "Учебные", "Educational"),
     OTHER("Баскалары", "Другие", "Others"),
-
     ;
     Genre(String nameKZ, String nameRU, String nameEN){
         this.nameKZ = nameKZ;
