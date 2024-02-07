@@ -40,12 +40,12 @@ import com.web.oneby.commons.Enums.UserRole;
 @Slf4j
 public class UserService implements UserDetailsService {
 
-    private final String SECRET_KEY = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz";
+    private static final String SECRET_KEY = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz";
     @Value("${env.url}")
     private String host;
 
-    private UserRepository userRepository;
-    private PasswordEncoder passwordEncoder;
+    private static UserRepository userRepository;
+    private static PasswordEncoder passwordEncoder;
     private EmailService emailService;
     private JdbcTemplate jdbcTemplate;
 
@@ -137,9 +137,37 @@ public class UserService implements UserDetailsService {
         }
     }
 
+    public boolean onInit() throws IOException {
+        boolean isAdminExist = UserService.userRepository.countAllByRolesContaining(UserRole.ADMIN) > 0;
+        byte [] image = null;
+        InputStream inputStream = UserService.class.getResourceAsStream("/static/userDefault.png");
+        if (inputStream != null) {
+            image = inputStream.readAllBytes();
+        }
+        User user = new User(
+                "",
+                "",
+                "",
+                "",
+                "",
+                "",
+                "",
+                "",
+                passwordEncoder.encode(""),
+                generateToken(""),
+                Set.of(UserRole.ADMIN),
+                image,
+                true
+        );
 
+        if (!isAdminExist) {
+            userRepository.save(user);
+            return true;
+        }
+        return false;
+    }
 
-    public String generateToken(String username){
+    private static String generateToken(String username){
         return Jwts
                 .builder()
                 .claim("username", username)

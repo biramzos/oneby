@@ -1,5 +1,6 @@
 package com.web.oneby.commons.Repositories;
 
+import com.web.oneby.commons.Enums.UserRole;
 import com.web.oneby.commons.Models.User;
 import jakarta.transaction.Transactional;
 import org.springframework.data.domain.Page;
@@ -20,4 +21,5 @@ public interface UserRepository extends JpaRepository<User, Long> {
     Optional<User> findByEmail(String email);
     Optional<User> findByToken(String token);
     Page<User> findAll(Specification<User> specification, Pageable pageable);
+    Integer countAllByRolesContaining(UserRole role);
 }
