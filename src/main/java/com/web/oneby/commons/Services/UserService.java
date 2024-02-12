@@ -201,6 +201,24 @@ public class UserService implements UserDetailsService {
                 if (key.equals("name") && StringUtil.isNotEmpty((String) value)) {
                     predication = criteriaBuilder.or(
                             criteriaBuilder.like(
+                                    root.get("nameKZ"), "%" + (String) value + "%"
+                            ),
+                            criteriaBuilder.like(
+                                    root.get("nameRU"), "%" + (String) value + "%"
+                            ),
+                            criteriaBuilder.like(
+                                    root.get("nameEN"), "%" + (String) value + "%"
+                            ),
+                            criteriaBuilder.like(
+                                    root.get("lastnameKZ"), "%" + (String) value + "%"
+                            ),
+                            criteriaBuilder.like(
+                                    root.get("lastnameRU"), "%" + (String) value + "%"
+                            ),
+                            criteriaBuilder.like(
+                                    root.get("lastnameEN"), "%" + (String) value + "%"
+                            ),
+                            criteriaBuilder.like(
                                     root.get("username"), "%" + (String) value + "%"
                             ),
                             criteriaBuilder.like(
