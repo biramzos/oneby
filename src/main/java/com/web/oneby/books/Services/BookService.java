@@ -100,11 +100,10 @@ public class BookService {
 
 
     public PageObject<BookResponse> findAll(SearchFilter request, User user, int language) {
-        List<Sort.Order> orders = SortingUtil.getSortingOrders(request.getSort());
         Pageable pageable = PageRequest.of(
                 request.getPageNumber() - 1,
                 request.getCountInPart(),
-                Sort.by(orders));
+                Sort.by(SortingUtil.getSortingOrders(request.getSort())));
         return new PageObject<>(bookRepository
                 .findAll(BookService.filter(request.getFilter(), user), pageable)
                 .map(book -> BookResponse.fromBook(book, language)));
