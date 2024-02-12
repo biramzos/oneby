@@ -138,28 +138,28 @@ public class UserService implements UserDetailsService {
 
     public boolean onInit() throws IOException {
         boolean isAdminExist = UserService.userRepository.countAllByRolesContaining(UserRole.ADMIN) > 0;
-        byte [] image = null;
-        InputStream inputStream = UserService.class.getResourceAsStream("/static/userDefault.png");
-        if (inputStream != null) {
-            image = inputStream.readAllBytes();
-        }
-        User user = new User(
-                ConstantsUtil.ADMIN_NAME_KZ,
-                ConstantsUtil.ADMIN_NAME_RU,
-                ConstantsUtil.ADMIN_NAME_EN,
-                ConstantsUtil.ADMIN_LASTNAME_KZ,
-                ConstantsUtil.ADMIN_LASTNAME_RU,
-                ConstantsUtil.ADMIN_LASTNAME_EN,
-                ConstantsUtil.ADMIN_USERNAME,
-                ConstantsUtil.ADMIN_EMAIL,
-                passwordEncoder.encode(ConstantsUtil.ADMIN_PASSWORD),
-                generateToken(ConstantsUtil.ADMIN_USERNAME),
-                Set.of(UserRole.ADMIN),
-                image,
-                true
-        );
-
         if (!isAdminExist) {
+            byte [] image = null;
+            InputStream inputStream = UserService.class.getResourceAsStream("/static/userDefault.png");
+            if (inputStream != null) {
+                image = inputStream.readAllBytes();
+            }
+            System.out.println(ConstantsUtil.HOST);
+            User user = new User(
+                    ConstantsUtil.ADMIN_NAME_KZ,
+                    ConstantsUtil.ADMIN_NAME_RU,
+                    ConstantsUtil.ADMIN_NAME_EN,
+                    ConstantsUtil.ADMIN_LASTNAME_KZ,
+                    ConstantsUtil.ADMIN_LASTNAME_RU,
+                    ConstantsUtil.ADMIN_LASTNAME_EN,
+                    ConstantsUtil.ADMIN_USERNAME,
+                    ConstantsUtil.ADMIN_EMAIL,
+                    passwordEncoder.encode(ConstantsUtil.ADMIN_PASSWORD),
+                    generateToken(ConstantsUtil.ADMIN_USERNAME),
+                    Set.of(UserRole.ADMIN),
+                    image,
+                    true
+            );
             userRepository.save(user);
             return true;
         }
