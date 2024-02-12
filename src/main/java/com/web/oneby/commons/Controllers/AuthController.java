@@ -41,7 +41,7 @@ public class AuthController {
     @PreAuthorize("isAnonymous()")
     public Response registerUser(
             @ModelAttribute CreateUserRequest createUserRequest,
-            @RequestHeader("Accept-Language") Language language
+            @RequestHeader(value = "Current-Language", defaultValue = "ru") Language language
     ) throws IOException {
         Response response = new Response();
         HTTPMessageHandler messageHandler = new HTTPMessageHandler();
@@ -56,7 +56,7 @@ public class AuthController {
     @ResponseBody
     @PostMapping("/login")
     @PreAuthorize("isAnonymous()")
-    public Response loginUserPost(HttpServletResponse resp, @RequestBody LoginUserRequest loginUserRequest, @RequestHeader("Accept-Language") Language language){
+    public Response loginUserPost(HttpServletResponse resp, @RequestBody LoginUserRequest loginUserRequest, @RequestHeader(value = "Current-Language", defaultValue = "ru") Language language){
         Response response = new Response();
         Authentication auth = authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(loginUserRequest.getUsername(), loginUserRequest.getPassword()));
         resp.addCookie(new Cookie("role", String.join(",", ((User)auth.getPrincipal()).getRoles().stream().map(Enum::name).toList())));
@@ -68,7 +68,8 @@ public class AuthController {
     @ResponseBody
     @GetMapping("/login")
     @PreAuthorize("isAuthenticated()")
-    public Response loginUserGet(Authentication auth, @RequestHeader("Accept-Language") Language language){
+    public Response loginUserGet(Authentication auth,
+             @RequestHeader(value = "Current-Language", defaultValue = "ru") Language language){
         Response response = new Response();
         response.put("user", UserResponse.fromUser((User) auth.getPrincipal(), language.getId()));
         response.put("message", new HTTPMessageHandler(HTTPMessage.SUCCESSFULLY_LOGIN, language.getId()));
@@ -79,11 +80,14 @@ public class AuthController {
     @GetMapping("/confirm/{token}")
     @PreAuthorize("isAnonymous()")
     public Response confirm(
-            @RequestHeader("Accept-Language") Language language,
+            @RequestHeader(value = "Current-Language", defaultValue = "ru") Language language,
             @PathVariable("token") String token
     ){
         Response response = new Response();
         HTTPMessageHandler messageHandler = new HTTPMessageHandler();
+        if (language == null) {
+            language = Language.ru;
+        }
         userService.confirm(token, messageHandler, language.getId());
         response.put("message", messageHandler);
         return response;
@@ -93,7 +97,7 @@ public class AuthController {
     @ResponseBody
     @GetMapping(value = "/images/{userId}", produces = MediaType.IMAGE_JPEG_VALUE)
     @PreAuthorize("isAuthenticated() or isAnonymous()")
-    public byte[] getImage(@PathVariable("userId") User user, @RequestHeader("Accept-Language") Language language){
+    public byte[] getImage(@PathVariable("userId") User user, @RequestHeader(value = "Current-Language", defaultValue = "ru") Language language){
         return user.getImage();
     }
 

@@ -35,7 +35,7 @@ public class UserController {
     @PostMapping("/")
     @PreAuthorize(value = "hasAuthority('ADMIN')")
     public Response findUsers(
-            @RequestHeader("Accept-Language") Language language,
+            @RequestHeader(value = "Current-Language", defaultValue = "ru") Language language,
             @RequestBody SearchFilter request
     ){
         Response response = new Response();
@@ -49,7 +49,7 @@ public class UserController {
     @PreAuthorize(value = "hasAuthority('ADMIN')")
     public Response getUser(
             @PathVariable("userId") User user,
-            @RequestHeader("Accept-Language") Language language
+            @RequestHeader(value = "Current-Language", defaultValue = "ru") Language language
     ){
         Response response = new Response();
         UserResponse userResponse = UserResponse.fromUser(user, language.getId());
@@ -63,7 +63,7 @@ public class UserController {
     public Response getUserFavourites(
             Authentication auth,
             @PathVariable("userId") User user,
-            @RequestHeader("Accept-Language") Language language
+            @RequestHeader(value = "Current-Language", defaultValue = "ru") Language language
     ){
         Response response = new Response();
         if (Objects.equals(((User) auth.getPrincipal()).getId(), user.getId()) || ((User) auth.getPrincipal()).getRoles().contains(UserRole.ADMIN)) {

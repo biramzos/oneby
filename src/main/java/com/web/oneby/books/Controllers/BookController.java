@@ -33,7 +33,7 @@ public class BookController {
     @ResponseBody
     @GetMapping("/genres")
     @PreAuthorize("isAuthenticated() or isAnonymous()")
-    public Response getGenres (@RequestHeader("Accept-Language") Language language) {
+    public Response getGenres (@RequestHeader(value = "Current-Language", defaultValue = "ru") Language language) {
         Response response = new Response();
         List<SimpleObject> genres = Arrays.stream(Genre.values())
                 .map((genre) -> new SimpleObject(genre.name(), genre.getName(language.getId())))
@@ -47,7 +47,7 @@ public class BookController {
     @PreAuthorize("isAuthenticated()")
     public Response findBooks(
             Authentication auth,
-            @RequestHeader("Accept-Language") Language language,
+            @RequestHeader(value = "Current-Language", defaultValue = "ru") Language language,
             @RequestBody SearchFilter request
     ){
         Response response = new Response();
@@ -59,14 +59,14 @@ public class BookController {
     @ResponseBody
     @GetMapping("/image/{bookId}")
     @PreAuthorize("isAuthenticated() or isAnonymous()")
-    public byte[] getBookImage (@PathVariable("bookId") Book book, @RequestHeader("Accept-Language") Language language) {
+    public byte[] getBookImage (@PathVariable("bookId") Book book, @RequestHeader(value = "Current-Language", defaultValue = "ru") Language language) {
         return book.getImage();
     }
 
     @ResponseBody
     @GetMapping("/file/{bookId}")
     @PreAuthorize("isAuthenticated()")
-    public byte[] getBookFile (@PathVariable("bookId") Book book, @RequestHeader("Accept-Language") Language language) {
+    public byte[] getBookFile (@PathVariable("bookId") Book book, @RequestHeader(value = "Current-Language", defaultValue = "ru") Language language) {
         return book.getContent();
     }
 
