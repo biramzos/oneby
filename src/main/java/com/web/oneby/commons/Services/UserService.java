@@ -7,6 +7,7 @@ import com.web.oneby.commons.Enums.HTTPMessage;
 import com.web.oneby.commons.Enums.Language;
 import com.web.oneby.commons.Handlers.HTTPMessageHandler;
 import com.web.oneby.commons.Repositories.UserRepository;
+import com.web.oneby.commons.Utils.ConstantsUtil;
 import com.web.oneby.commons.Utils.StringUtil;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
@@ -41,8 +42,6 @@ import com.web.oneby.commons.Enums.UserRole;
 public class UserService implements UserDetailsService {
 
     private static final String SECRET_KEY = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz";
-    @Value("${env.url}")
-    private String host;
 
     private static UserRepository userRepository;
     private static PasswordEncoder passwordEncoder;
@@ -103,7 +102,7 @@ public class UserService implements UserDetailsService {
             return null;
         }
         else {
-            emailService.send(host + "/api/v1/auth/confirm/" + generateToken(createUserRequest.getUsername()), createUserRequest.getEmail());
+            emailService.send(ConstantsUtil.HOST + "/api/v1/auth/confirm/" + generateToken(createUserRequest.getUsername()), createUserRequest.getEmail());
 
             byte [] image = null;
             if (createUserRequest.getImage() == null) {
@@ -145,16 +144,16 @@ public class UserService implements UserDetailsService {
             image = inputStream.readAllBytes();
         }
         User user = new User(
-                "",
-                "",
-                "",
-                "",
-                "",
-                "",
-                "",
-                "",
-                passwordEncoder.encode(""),
-                generateToken(""),
+                ConstantsUtil.ADMIN_NAME_KZ,
+                ConstantsUtil.ADMIN_NAME_RU,
+                ConstantsUtil.ADMIN_NAME_EN,
+                ConstantsUtil.ADMIN_LASTNAME_KZ,
+                ConstantsUtil.ADMIN_LASTNAME_RU,
+                ConstantsUtil.ADMIN_LASTNAME_EN,
+                ConstantsUtil.ADMIN_USERNAME,
+                ConstantsUtil.ADMIN_EMAIL,
+                passwordEncoder.encode(ConstantsUtil.ADMIN_PASSWORD),
+                generateToken(ConstantsUtil.ADMIN_USERNAME),
                 Set.of(UserRole.ADMIN),
                 image,
                 true
