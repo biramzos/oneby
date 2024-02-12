@@ -144,7 +144,6 @@ public class UserService implements UserDetailsService {
             if (inputStream != null) {
                 image = inputStream.readAllBytes();
             }
-            System.out.println(ConstantsUtil.HOST);
             User user = new User(
                     ConstantsUtil.ADMIN_NAME_KZ,
                     ConstantsUtil.ADMIN_NAME_RU,
