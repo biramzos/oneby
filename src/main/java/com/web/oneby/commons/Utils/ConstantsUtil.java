@@ -1,10 +1,7 @@
 package com.web.oneby.commons.Utils;
 
-import org.springframework.beans.factory.annotation.Value;
-
 public class ConstantsUtil {
-    @Value("${env.url}")
-    public static String HOST;
+    public static final String HOST = "http://localhost:8000";
 
     //ADMIN info
     public static final String ADMIN_NAME_KZ = "Әкімші";
