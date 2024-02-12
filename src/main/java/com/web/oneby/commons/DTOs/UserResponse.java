@@ -20,7 +20,6 @@ public class UserResponse {
     private List<String> roles;
     private String token;
     private String image;
-    private String lastnameEN;
 
     public static UserResponse fromUser(User user, int language) {
         UserResponse userResponse = new UserResponse();
@@ -28,7 +27,7 @@ public class UserResponse {
         userResponse.fullname = StringUtil.firstCapitalLetter(user.getLastname(language))
                 + " " + StringUtil.firstCapitalLetter(user.getName(language));
         userResponse.shortname = StringUtil.firstCapitalLetter(user.getLastname(language))
-                + " " + user.getName(language).toUpperCase().charAt(1) + ".";
+                + " " + user.getName(language).toUpperCase().charAt(0) + ".";
         userResponse.username = user.getUsername();
         userResponse.email = user.getEmail();
         userResponse.token = user.getToken();
