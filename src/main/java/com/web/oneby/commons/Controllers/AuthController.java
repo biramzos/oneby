@@ -9,6 +9,8 @@ import com.web.oneby.commons.Handlers.HTTPMessageHandler;
 import com.web.oneby.commons.Models.User;
 import com.web.oneby.commons.Services.UserService;
 import com.web.oneby.commons.Utils.Response;
+import jakarta.servlet.http.Cookie;
+import jakarta.servlet.http.HttpServletResponse;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -54,9 +56,10 @@ public class AuthController {
     @ResponseBody
     @PostMapping("/login")
     @PreAuthorize("isAnonymous()")
-    public Response loginUserPost(@RequestBody LoginUserRequest loginUserRequest, @RequestHeader("Accept-Language") Language language){
+    public Response loginUserPost(HttpServletResponse resp, @RequestBody LoginUserRequest loginUserRequest, @RequestHeader("Accept-Language") Language language){
         Response response = new Response();
         Authentication auth = authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(loginUserRequest.getUsername(), loginUserRequest.getPassword()));
+        resp.addCookie(new Cookie("role", String.join(",", ((User)auth.getPrincipal()).getRoles().stream().map(Enum::name).toList())));
         response.put("user", UserResponse.fromUser((User) auth.getPrincipal(), language.getId()));
         response.put("message", new HTTPMessageHandler(HTTPMessage.SUCCESSFULLY_LOGIN, language.getId()));
         return response;

@@ -47,7 +47,7 @@ public class User implements UserDetails {
     @Column(name = "token")
     private String token;
     @JsonIgnore
-    @ElementCollection(targetClass = UserRole.class, fetch = FetchType.EAGER)
+    @ElementCollection(targetClass = UserRole.class, fetch = FetchType.LAZY)
     @Enumerated(EnumType.STRING)
     @CollectionTable(name = "user_roles", joinColumns = @JoinColumn(name = "user_id"))
     private Set<UserRole> roles = new HashSet<>();

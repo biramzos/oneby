@@ -11,6 +11,7 @@ import com.web.oneby.commons.Models.User;
 import com.web.oneby.books.Repositories.OrganizationRepository;
 import com.web.oneby.commons.Services.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Lazy;
 import org.springframework.stereotype.Service;
 import java.io.IOException;
 
@@ -23,12 +24,16 @@ public class OrganizationService {
     @Autowired
     public OrganizationService (
             OrganizationRepository organizationRepository,
-            UserService userService,
-            BookService bookService
+            @Lazy UserService userService,
+            @Lazy BookService bookService
     ) {
         this.organizationRepository = organizationRepository;
         this.userService = userService;
         this.bookService = bookService;
+    }
+
+    public Organization getByEmployee(User employee){
+        return organizationRepository.findOrganizationByEmployeesContains(employee).orElse(null);
     }
 
     public Organization create(CreateOrganizationRequest request, HTTPMessageHandler messageHandler, int language) throws IOException {
@@ -37,7 +42,7 @@ public class OrganizationService {
             messageHandler.set(HTTPMessage.ORGANIZATION_IS_EXIST, language);
             return null;
         }
-        if (request.getUser().getRole().equals(UserRole.SELLER)) {
+        if (request.getUser().getRoles().contains(UserRole.SELLER)) {
             organization = organizationRepository.save(
                 new Organization(
                     request.getName(),

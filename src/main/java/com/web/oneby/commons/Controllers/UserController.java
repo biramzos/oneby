@@ -66,7 +66,7 @@ public class UserController {
             @RequestHeader("Accept-Language") Language language
     ){
         Response response = new Response();
-        if (Objects.equals(((User) auth.getPrincipal()).getId(), user.getId()) || ((User) auth.getPrincipal()).getRole().equals(UserRole.ADMIN)) {
+        if (Objects.equals(((User) auth.getPrincipal()).getId(), user.getId()) || ((User) auth.getPrincipal()).getRoles().contains(UserRole.ADMIN)) {
             List<BookResponse> favourites = user.getFavourites().stream().map(book -> BookResponse.fromBook(book, language.getId())).toList();
             response.put("favourites", favourites);
         } else {

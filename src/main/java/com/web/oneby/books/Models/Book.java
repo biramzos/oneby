@@ -51,6 +51,9 @@ public class Book {
     private AccessBook access;
     @Column(name = "cost")
     private int cost;
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "organization_id")
+    private Organization organization;
     @Column(name = "stars")
     private int stars = 0;
     @Lob
@@ -81,6 +84,7 @@ public class Book {
             String authorKZ,
             String authorRU,
             String authorEN,
+            Organization organization,
             int year,
             List<Genre> genres,
             AccessBook access,
@@ -97,6 +101,7 @@ public class Book {
         this.authorKZ = authorKZ;
         this.authorRU = authorRU;
         this.authorEN = authorEN;
+        this.organization = organization;
         this.year = year;
         this.genres = genres;
         this.access = access;

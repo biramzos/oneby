@@ -30,12 +30,15 @@ import java.util.Map;
 public class BookService {
 
     private BookRepository bookRepository;
+    private OrganizationService organizationService;
 
     @Autowired
     public BookService (
-            BookRepository bookRepository
+            BookRepository bookRepository,
+            OrganizationService organizationService
     ) {
         this.bookRepository = bookRepository;
+        this.organizationService = organizationService;
     }
 
     public Book getById(Long bookId){
@@ -46,7 +49,7 @@ public class BookService {
         Book book;
         if (bookRequest.getId() > 0) {
             book = bookRepository.getById(bookRequest.getId());
-            if (book.getPublisher().equals(publisher)) {
+            if (book.getOrganization().getEmployees().contains(publisher)) {
                 book.setTitleKZ(bookRequest.getNameKZ());
                 book.setTitleRU(bookRequest.getNameRU());
                 book.setTitleEN(bookRequest.getNameEN());
@@ -66,24 +69,28 @@ public class BookService {
                 throw new AccessDeniedException("User '" + publisher.getUsername() + "' can not access to edit this book!");
             }
         } else {
-            book = new Book(
-                    bookRequest.getNameKZ(),
-                    bookRequest.getNameRU(),
-                    bookRequest.getNameEN(),
-                    bookRequest.getDescriptionKZ(),
-                    bookRequest.getDescriptionRU(),
-                    bookRequest.getDescriptionEN(),
-                    bookRequest.getAuthorKZ(),
-                    bookRequest.getAuthorRU(),
-                    bookRequest.getAuthorEN(),
-                    publisher,
-                    bookRequest.getYear(),
-                    bookRequest.getGenres(),
-                    bookRequest.getAccess(),
-                    bookRequest.getCost(),
-                    bookRequest.getImage().getBytes(),
-                    bookRequest.getFile().getBytes()
-            );
+            if (organizationService.getOrganizationByUser(publisher) != null){
+                book = new Book(
+                        bookRequest.getNameKZ(),
+                        bookRequest.getNameRU(),
+                        bookRequest.getNameEN(),
+                        bookRequest.getDescriptionKZ(),
+                        bookRequest.getDescriptionRU(),
+                        bookRequest.getDescriptionEN(),
+                        bookRequest.getAuthorKZ(),
+                        bookRequest.getAuthorRU(),
+                        bookRequest.getAuthorEN(),
+                        organizationService.getOrganizationByUser(publisher),
+                        bookRequest.getYear(),
+                        bookRequest.getGenres(),
+                        bookRequest.getAccess(),
+                        bookRequest.getCost(),
+                        bookRequest.getImage().getBytes(),
+                        bookRequest.getFile().getBytes()
+                );
+            } else {
+                throw new AccessDeniedException("User '" + publisher.getUsername() + "' is not employee!");
+            }
         }
         return bookRepository.save(
             book

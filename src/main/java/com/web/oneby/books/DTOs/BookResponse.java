@@ -19,7 +19,7 @@ public class BookResponse {
     private String author;
     private String access;
     private List<String> genres = new ArrayList<>();
-    private UserResponse publisher;
+    private OrganizationResponse organization;
 
     public static BookResponse fromBook(Book book, int language){
         BookResponse bookResponse = new BookResponse();
@@ -29,7 +29,7 @@ public class BookResponse {
         bookResponse.author = book.getAuthor(language);
         bookResponse.access = book.getAccess().getName(language);
         bookResponse.genres = book.getGenres().stream().map((genre) -> genre.getName(language)).toList();
-        bookResponse.publisher = UserResponse.fromUser(book.getPublisher(), language);
+        bookResponse.organization = OrganizationResponse.fromOrganization(book.getOrganization());
         return bookResponse;
     }
 

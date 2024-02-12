@@ -12,7 +12,9 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 import java.util.Set;
 
 @SpringBootApplication
-public class OnebyDevApplication implements CommandLineRunner {
+public class OnebyDevApplication
+        implements CommandLineRunner
+{
 
     @Autowired
     public OnebyDevApplication(UserService userService) {

@@ -30,14 +30,17 @@ public class Organization {
     @OneToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "user_id")
     private User user;
-    @JsonIgnore
     @JdbcTypeCode(SqlTypes.JSON)
     @OneToMany(fetch = FetchType.LAZY)
     @JoinTable(
-            name = "organization_books",
-            joinColumns = @JoinColumn(name = "organization_id"),
-            inverseJoinColumns = @JoinColumn(name = "book_id")
+        name = "organization_employees",
+        joinColumns = @JoinColumn(name = "organization_id"),
+        inverseJoinColumns = @JoinColumn(name = "employee_id")
     )
+    private List<User> employees;
+    @JsonIgnore
+    @JdbcTypeCode(SqlTypes.JSON)
+    @OneToMany(fetch = FetchType.EAGER, mappedBy = "organization")
     private List<Book> books = new ArrayList<>();
     @JsonIgnore
     @Lob
