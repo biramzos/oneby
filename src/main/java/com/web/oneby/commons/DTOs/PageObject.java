@@ -8,7 +8,6 @@ import org.springframework.data.domain.Page;
 import java.util.List;
 
 @Data
-@Builder
 @NoArgsConstructor
 public class PageObject<T> {
     private List<T> pageContent;

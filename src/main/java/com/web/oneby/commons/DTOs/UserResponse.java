@@ -20,6 +20,8 @@ public class UserResponse {
     private List<String> roles;
     private String token;
     private String image;
+    private boolean isActivated;
+
 
     public static UserResponse fromUser(User user, int language) {
         UserResponse userResponse = new UserResponse();
@@ -34,6 +36,7 @@ public class UserResponse {
         userResponse.roles = user.getRoles().stream()
                 .map((role) -> role.getName(language)).toList();
         userResponse.image = "/api/v1/auth/images/" + user.getId();
+        userResponse.isActivated = user.isActive();
         return userResponse;
     }
 }
