@@ -53,8 +53,8 @@ public class UserService implements UserDetailsService {
             EmailService emailService,
             JdbcTemplate jdbcTemplate
     ){
-        this.userRepository = userRepository;
-        this.passwordEncoder = passwordEncoder;
+        UserService.userRepository = userRepository;
+        UserService.passwordEncoder = passwordEncoder;
         this.emailService = emailService;
         this.jdbcTemplate = jdbcTemplate;
     }

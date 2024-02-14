@@ -12,6 +12,7 @@ import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpMethod;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Component;
@@ -22,7 +23,7 @@ import java.io.IOException;
 @Component
 @Slf4j
 public class JWTFilter extends OncePerRequestFilter {
-    private UserService userService;
+    private final UserService userService;
 
     @Autowired
     public JWTFilter(
@@ -33,13 +34,14 @@ public class JWTFilter extends OncePerRequestFilter {
 
     private final String SECRET_KEY = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz";
 
-    public String parseJwt(String token){
-        return Jwts
+    public User parseUser(String token){
+        String username = Jwts
                 .parser()
                 .setSigningKey(SECRET_KEY)
                 .parseClaimsJws(token)
                 .getBody()
                 .getSubject();
+        return (User) userService.loadUserByUsername(username);
     }
 
     public boolean validation(String token){
@@ -60,24 +62,31 @@ public class JWTFilter extends OncePerRequestFilter {
 
     @Override
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain) throws ServletException, IOException {
-        String token = "";
-        if(request.getHeader("Authorization") != null &&
-                request.getHeader("Authorization").length() > 7 &&
-                request.getHeader("Authorization").startsWith("Bearer ")){
-            token = request.getHeader("Authorization").substring(7);
+        if (request.getServletPath().contains("/api/v1/auth/confirm") ||
+            request.getServletPath().equals("/api/v1/auth/register") ||
+            (
+                request.getServletPath().equals("/api/v1/auth/login") &&
+                request.getMethod().equals(HttpMethod.POST.name())
+            )
+        ) {
+            filterChain.doFilter(request,response);
         } else {
-            token = null;
-        }
-        try {
-            if(token != null && validation(token)){
-                String username = parseJwt(token);
-                User user = (User) userService.loadUserByUsername(username);
-                UsernamePasswordAuthenticationToken authentication = new UsernamePasswordAuthenticationToken(user, user.getUsername(), user.getAuthorities());
-                SecurityContextHolder.getContext().setAuthentication(authentication);
+            String token = "";
+            if (request.getHeader("Authorization") != null &&
+                    request.getHeader("Authorization").length() > 7 &&
+                    request.getHeader("Authorization").startsWith("Bearer ")) {
+                token = request.getHeader("Authorization").substring(7);
             }
-        } catch (Exception e) {
-            log.error("Error: " + e.getMessage());
+            try {
+                if (!token.isEmpty() && validation(token)) {
+                    User user = parseUser(token);
+                    SecurityContextHolder.getContext()
+                            .setAuthentication(new UsernamePasswordAuthenticationToken(user, user.getUsername(), user.getRoles()));
+                }
+            } catch (Exception e) {
+                log.error("Error: " + e.getMessage());
+            }
+            filterChain.doFilter(request, response);
         }
-        filterChain.doFilter(request,response);
     }
 }

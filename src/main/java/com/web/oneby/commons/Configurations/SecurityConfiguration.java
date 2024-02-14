@@ -24,6 +24,7 @@ import org.springframework.web.cors.CorsConfiguration;
 import org.springframework.web.cors.CorsConfigurationSource;
 import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 import java.util.Arrays;
+import java.util.List;
 import java.util.Properties;
 
 @EnableWebSecurity
@@ -42,9 +43,9 @@ public class SecurityConfiguration {
     @Bean
     CorsConfigurationSource corsConfigurationSource() {
         CorsConfiguration configuration = new CorsConfiguration();
-        configuration.setAllowedOrigins(Arrays.asList("*"));
-        configuration.setAllowedMethods(Arrays.asList("*"));
-        configuration.setAllowedHeaders(Arrays.asList("*"));
+        configuration.setAllowedOrigins(List.of("*"));
+        configuration.setAllowedMethods(List.of("*"));
+        configuration.setAllowedHeaders(List.of("*"));
         configuration.setAllowCredentials(false);
         UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
         source.registerCorsConfiguration("*/*", configuration);
@@ -59,7 +60,7 @@ public class SecurityConfiguration {
     @Bean
     public AuthenticationManager authManager(){
         DaoAuthenticationProvider provider = new DaoAuthenticationProvider();
-        provider.setUserDetailsService((UserDetailsService) SecurityConfiguration.userService);
+        provider.setUserDetailsService(SecurityConfiguration.userService);
         provider.setPasswordEncoder(passwordEncoder());
         return new ProviderManager(provider);
     }
@@ -89,13 +90,6 @@ public class SecurityConfiguration {
         return http.cors().and().csrf().disable()
                 .authenticationManager(authManager())
                 .authorizeRequests().anyRequest().permitAll()
-                .and()
-                .userDetailsService(userService)
-                .logout()
-                .logoutRequestMatcher(new AntPathRequestMatcher("/logout", HttpMethod.GET.toString()))
-                .deleteCookies("Authorization")
-                .clearAuthentication(true)
-                .permitAll()
                 .and()
                 .addFilterBefore(authTokenFilter(), UsernamePasswordAuthenticationFilter.class)
                 .build();

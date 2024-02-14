@@ -45,6 +45,11 @@ public enum HTTPMessage {
             "Успешно авторизовался!",
             "Successfully signed in!",
             HTTPStatus.SUCCESS),
+    SUCCESSFULLY_LOGOUT(
+            "Жүйеден сәтті шықтыңыз!",
+            "Успешно вышли из системы!",
+            "Successfully logged out!",
+            HTTPStatus.SUCCESS),
     BOOK_IS_DELETED(
             "Кітап жойылды!",
             "Книга удалена!",
