@@ -139,6 +139,10 @@ public class User implements UserDetails {
         }
     }
 
+    public boolean isPremium(){
+        return this.roles.contains(UserRole.PREMIUM);
+    }
+
     @JsonIgnore
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {

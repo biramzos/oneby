@@ -8,13 +8,13 @@ public enum Module {
     SPORT_MARKET(3, "sport_market", "", "", "", true),
     ACADEMY(4, "academy", "", "", "", false, true),
     ;
-    private int id;
-    private String code;
-    private String nameKZ;
-    private String nameRU;
-    private String nameEN;
-    private boolean forPremium;
-    private boolean isStudy;
+    private final int id;
+    private final String code;
+    private final String nameKZ;
+    private final String nameRU;
+    private final String nameEN;
+    private final boolean forPremium;
+    private final boolean isStudy;
 
     Module(
             int id,

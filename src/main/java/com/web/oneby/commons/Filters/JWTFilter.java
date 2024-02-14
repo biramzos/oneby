@@ -33,6 +33,7 @@ public class JWTFilter extends OncePerRequestFilter {
     }
 
     private final String SECRET_KEY = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz";
+    //private final String SECRET = Byte.decode("SecretKey").toString();
 
     public User parseUser(String token){
         String username = Jwts
