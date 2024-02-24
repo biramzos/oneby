@@ -8,22 +8,22 @@ public enum OrganizationStatus {
     VERIFIED("", "", "Verified");
 
     OrganizationStatus (
-            String nameKZ,
+            String nameKK,
             String nameRU,
             String nameEN
     ) {
-        this.nameKZ = nameKZ;
+        this.nameKK = nameKK;
         this.nameRU = nameRU;
         this.nameEN = nameEN;
     }
 
-    private String nameKZ;
+    private String nameKK;
     private String nameRU;
     private String nameEN;
 
     private String getName(int language) {
         if (language == Language.kk.getId()) {
-            return nameKZ;
+            return nameKK;
         } else if (language == Language.ru.getId()) {
             return nameRU;
         } else {
@@ -33,7 +33,7 @@ public enum OrganizationStatus {
 
     private String getName(Language language) {
         if (language == Language.kk) {
-            return nameKZ;
+            return nameKK;
         } else if (language == Language.ru) {
             return nameRU;
         } else {

@@ -18,11 +18,11 @@ public enum Month {
     private int id;
     private String nameEN;
     private String nameRU;
-    private String nameKZ;
+    private String nameKK;
 
-    Month (int id, String nameKZ, String nameRU, String nameEN) {
+    Month (int id, String nameKK, String nameRU, String nameEN) {
         this.id = id;
-        this.nameKZ = nameKZ;
+        this.nameKK = nameKK;
         this.nameRU = nameRU;
         this.nameEN = nameEN;
     }
@@ -50,13 +50,13 @@ public enum Month {
         return nameRU;
     }
 
-    public String getNameKZ() {
-        return nameKZ;
+    public String getNameKK() {
+        return nameKK;
     }
 
     public String getName(int language) {
         if (language == Language.kk.getId()) {
-            return nameKZ;
+            return nameKK;
         } else if (language == Language.ru.getId()) {
             return nameRU;
         } else {
@@ -66,7 +66,7 @@ public enum Month {
 
     public String getName(Language language) {
         if (language == Language.kk) {
-            return nameKZ;
+            return nameKK;
         } else if (language == Language.ru) {
             return nameRU;
         } else {

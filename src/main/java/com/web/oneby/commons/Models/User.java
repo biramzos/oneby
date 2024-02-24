@@ -29,9 +29,9 @@ public class User implements UserDetails {
     @Column(name = "lastname_ru")
     private String lastnameRU;
     @Column(name = "name_kz")
-    private String nameKZ;
+    private String nameKK;
     @Column(name = "lastname_kz")
-    private String lastnameKZ;
+    private String lastnameKK;
     @Column(name = "name_en")
     private String nameEN;
     @Column(name = "lastname_en")
@@ -67,10 +67,10 @@ public class User implements UserDetails {
     private List<Book> favourites = new ArrayList<>();
 
     public User(
-            String nameKZ,
+            String nameKK,
             String nameRU,
             String nameEN,
-            String lastnameKZ,
+            String lastnameKK,
             String lastnameRU,
             String lastnameEN,
             String username,
@@ -81,10 +81,10 @@ public class User implements UserDetails {
             byte[] image,
             boolean isActive
     ){
-        this.nameKZ = nameKZ;
+        this.nameKK = nameKK;
         this.nameRU = nameRU;
         this.nameEN = nameEN;
-        this.lastnameKZ = lastnameKZ;
+        this.lastnameKK = lastnameKK;
         this.lastnameRU = lastnameRU;
         this.lastnameEN = lastnameEN;
         this.username = username;
@@ -98,7 +98,7 @@ public class User implements UserDetails {
 
     public String getName(int language) {
         if (language == Language.kk.getId()) {
-            return nameKZ;
+            return nameKK;
         } else if (language == Language.ru.getId()) {
             return nameRU;
         } else {
@@ -108,7 +108,7 @@ public class User implements UserDetails {
 
     public String getName(Language language) {
         if (language == Language.kk) {
-            return nameKZ;
+            return nameKK;
         } else if (language == Language.ru) {
             return nameRU;
         } else {
@@ -118,7 +118,7 @@ public class User implements UserDetails {
 
     public String getLastname(int language) {
         if (language == Language.kk.getId()) {
-            return lastnameKZ;
+            return lastnameKK;
         } else if (language == Language.ru.getId()) {
             return lastnameRU;
         } else {
@@ -128,7 +128,7 @@ public class User implements UserDetails {
 
     public String getLastname(Language language) {
         if (language == Language.kk) {
-            return lastnameKZ;
+            return lastnameKK;
         } else if (language == Language.ru) {
             return lastnameRU;
         } else {

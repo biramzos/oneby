@@ -16,7 +16,7 @@ public class Setting {
     @Column(name = "code")
     private String code;
     @Column(name = "name_kz")
-    private String nameKZ;
+    private String nameKK;
     @Column(name = "name_ru")
     private String nameRU;
     @Column(name = "name_en")
@@ -29,14 +29,14 @@ public class Setting {
 
     public Setting (
             String code,
-            String nameKZ,
+            String nameKK,
             String nameRU,
             String nameEN,
             Module module,
             String value
     ) {
         this.code = code;
-        this.nameKZ = nameKZ;
+        this.nameKK = nameKK;
         this.nameRU = nameRU;
         this.nameEN = nameEN;
         this.module = module;
@@ -45,7 +45,7 @@ public class Setting {
 
     public String getName(int language){
         if (language == Language.kk.getId()) {
-            return nameKZ;
+            return nameKK;
         } else if (language == Language.ru.getId()) {
             return nameRU;
         } else {
@@ -55,7 +55,7 @@ public class Setting {
 
     public String getName(Language language){
         if (language == Language.kk) {
-            return nameKZ;
+            return nameKK;
         } else if (language == Language.ru) {
             return nameRU;
         } else {

@@ -115,10 +115,10 @@ public class UserService implements UserDetailsService {
 
             return userRepository.save (
                     new User (
-                            createUserRequest.getNameKZ(),
+                            createUserRequest.getNameKK(),
                             createUserRequest.getNameRU(),
                             createUserRequest.getNameEN(),
-                            createUserRequest.getLastnameKZ(),
+                            createUserRequest.getLastnameKK(),
                             createUserRequest.getLastnameRU(),
                             createUserRequest.getLastnameEN(),
                             createUserRequest.getUsername(),
@@ -201,7 +201,7 @@ public class UserService implements UserDetailsService {
                 if (key.equals("name") && StringUtil.isNotEmpty((String) value)) {
                     predication = criteriaBuilder.or(
                             criteriaBuilder.like(
-                                    root.get("nameKZ"), "%" + (String) value + "%"
+                                    root.get("nameKK"), "%" + (String) value + "%"
                             ),
                             criteriaBuilder.like(
                                     root.get("nameRU"), "%" + (String) value + "%"
@@ -210,7 +210,7 @@ public class UserService implements UserDetailsService {
                                     root.get("nameEN"), "%" + (String) value + "%"
                             ),
                             criteriaBuilder.like(
-                                    root.get("lastnameKZ"), "%" + (String) value + "%"
+                                    root.get("lastnameKK"), "%" + (String) value + "%"
                             ),
                             criteriaBuilder.like(
                                     root.get("lastnameRU"), "%" + (String) value + "%"

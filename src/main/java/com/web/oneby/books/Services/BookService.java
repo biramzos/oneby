@@ -50,7 +50,7 @@ public class BookService {
         if (bookRequest.getId() > 0) {
             book = bookRepository.getById(bookRequest.getId());
             if (book.getOrganization().getEmployees().contains(publisher)) {
-                book.setTitleKZ(bookRequest.getNameKZ());
+                book.setTitleKZ(bookRequest.getNameKK());
                 book.setTitleRU(bookRequest.getNameRU());
                 book.setTitleEN(bookRequest.getNameEN());
                 book.setDescriptionKZ(bookRequest.getDescriptionKZ());
@@ -71,7 +71,7 @@ public class BookService {
         } else {
             if (organizationService.getOrganizationByUser(publisher) != null){
                 book = new Book(
-                        bookRequest.getNameKZ(),
+                        bookRequest.getNameKK(),
                         bookRequest.getNameRU(),
                         bookRequest.getNameEN(),
                         bookRequest.getDescriptionKZ(),

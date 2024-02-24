@@ -14,18 +14,18 @@ public enum UserRole implements GrantedAuthority {
     }
 
     private int id;
-    private String nameKZ;
+    private String nameKK;
     private String nameRU;
     private String nameEN;
 
     UserRole(
             int id,
-            String nameKZ,
+            String nameKK,
             String nameRU,
             String nameEN
     ){
         this.id = id;
-        this.nameKZ = nameKZ;
+        this.nameKK = nameKK;
         this.nameRU = nameRU;
         this.nameEN = nameEN;
     }
@@ -45,8 +45,8 @@ public enum UserRole implements GrantedAuthority {
         return id;
     }
 
-    public String getNameKZ() {
-        return nameKZ;
+    public String getNameKK() {
+        return nameKK;
     }
 
     public String getNameRU() {
@@ -59,7 +59,7 @@ public enum UserRole implements GrantedAuthority {
 
     public String getName(int language) {
         if (language == Language.kk.getId()) {
-            return nameKZ;
+            return nameKK;
         } else if (language == Language.ru.getId()) {
             return nameRU;
         } else {
@@ -69,7 +69,7 @@ public enum UserRole implements GrantedAuthority {
 
     public String getName(Language language) {
         if (language == Language.kk) {
-            return nameKZ;
+            return nameKK;
         } else if (language == Language.ru) {
             return nameRU;
         } else {

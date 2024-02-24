@@ -20,7 +20,7 @@ public class Room {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
     @Column(name = "name_kz")
-    private String nameKZ;
+    private String nameKK;
     @Column(name = "name_ru")
     private String nameRU;
     @Column(name = "name_en")
@@ -46,7 +46,7 @@ public class Room {
     private Set<User> participants = new HashSet<>();
 
     public Room (
-            String nameKZ,
+            String nameKK,
             String nameRU,
             String nameEN,
             Book book,
@@ -54,7 +54,7 @@ public class Room {
             String password,
             User creator
     ) {
-        this.nameKZ = nameKZ;
+        this.nameKK = nameKK;
         this.nameRU = nameRU;
         this.nameEN = nameEN;
         this.book = book;
@@ -65,7 +65,7 @@ public class Room {
 
     public String getName(int language){
         if (language == Language.kk.getId()) {
-            return nameKZ;
+            return nameKK;
         } else if (language == Language.ru.getId()) {
             return nameRU;
         } else {
@@ -75,7 +75,7 @@ public class Room {
 
     public String getName(Language language){
         if (language == Language.kk) {
-            return nameKZ;
+            return nameKK;
         } else if (language == Language.ru) {
             return nameRU;
         } else {

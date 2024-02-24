@@ -10,7 +10,7 @@ public enum Module {
     ;
     private final int id;
     private final String code;
-    private final String nameKZ;
+    private final String nameKK;
     private final String nameRU;
     private final String nameEN;
     private final boolean forPremium;
@@ -19,14 +19,14 @@ public enum Module {
     Module(
             int id,
             String code,
-            String nameKZ,
+            String nameKK,
             String nameRU,
             String nameEN,
             boolean forPremium
     ){
         this.id = id;
         this.code = code;
-        this.nameKZ = nameKZ;
+        this.nameKK = nameKK;
         this.nameRU = nameRU;
         this.nameEN = nameEN;
         this.forPremium = forPremium;
@@ -36,7 +36,7 @@ public enum Module {
     Module(
             int id,
             String code,
-            String nameKZ,
+            String nameKK,
             String nameRU,
             String nameEN,
             boolean forPremium,
@@ -44,7 +44,7 @@ public enum Module {
     ){
         this.id = id;
         this.code = code;
-        this.nameKZ = nameKZ;
+        this.nameKK = nameKK;
         this.nameRU = nameRU;
         this.nameEN = nameEN;
         this.forPremium = forPremium;
@@ -73,8 +73,8 @@ public enum Module {
         return code;
     }
 
-    public String getNameKZ() {
-        return nameKZ;
+    public String getNameKK() {
+        return nameKK;
     }
 
     public String getNameRU() {
@@ -87,7 +87,7 @@ public enum Module {
 
     public String getName(int language){
         if (language == Language.kk.getId()) {
-            return nameKZ;
+            return nameKK;
         } else if (language == Language.ru.getId()) {
             return nameRU;
         } else {

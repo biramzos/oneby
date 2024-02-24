@@ -13,7 +13,7 @@ import java.util.List;
 @NoArgsConstructor
 public class BookRequest {
     private Long id;
-    private String nameKZ;
+    private String nameKK;
     private String nameRU;
     private String nameEN;
     private String descriptionKZ;

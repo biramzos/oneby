@@ -23,18 +23,18 @@ public enum Genre {
     EDUCATIONAL("Білім біру", "Учебные", "Educational"),
     OTHER("Баскалары", "Другие", "Others"),
     ;
-    Genre(String nameKZ, String nameRU, String nameEN){
-        this.nameKZ = nameKZ;
+    Genre(String nameKK, String nameRU, String nameEN){
+        this.nameKK = nameKK;
         this.nameRU = nameRU;
         this.nameEN = nameEN;
     }
 
-    private String nameKZ;
+    private String nameKK;
     private String nameRU;
     private String nameEN;
 
-    public String getNameKZ() {
-        return nameKZ;
+    public String getNameKK() {
+        return nameKK;
     }
 
     public String getNameRU() {
@@ -47,7 +47,7 @@ public enum Genre {
 
     public String getName(int language) {
         if (language == Language.kk.getId()) {
-            return nameKZ;
+            return nameKK;
         } else if (language == Language.ru.getId()) {
             return nameRU;
         } else {
@@ -57,7 +57,7 @@ public enum Genre {
 
     public String getName(Language language) {
         if (language == Language.kk) {
-            return nameKZ;
+            return nameKK;
         } else if (language == Language.ru) {
             return nameRU;
         } else {

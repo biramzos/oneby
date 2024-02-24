@@ -9,19 +9,19 @@ public enum BasketStatus {
     REMOVED("", "", "Removed!");
 
 
-    BasketStatus(String nameKZ, String nameRU, String nameEN){
-        this.nameKZ = nameKZ;
+    BasketStatus(String nameKK, String nameRU, String nameEN){
+        this.nameKK = nameKK;
         this.nameRU = nameRU;
         this.nameEN = nameEN;
     }
 
-    private String nameKZ;
+    private String nameKK;
     private String nameRU;
     private String nameEN;
 
     public String getName(int language){
         if (language == Language.kk.getId()) {
-            return nameKZ;
+            return nameKK;
         } else if (language == Language.ru.getId()) {
             return nameRU;
         } else {
@@ -31,7 +31,7 @@ public enum BasketStatus {
 
     public String getName(Language language){
         if (language == Language.kk) {
-            return nameKZ;
+            return nameKK;
         } else if (language == Language.ru) {
             return nameRU;
         } else {
