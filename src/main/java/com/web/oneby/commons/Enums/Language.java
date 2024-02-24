@@ -1,7 +1,7 @@
 package com.web.oneby.commons.Enums;
 
 public enum Language {
-    kz(1, "Қазақша", "Казахский", "Kazakh"),
+    kk(1, "Қазақша", "Казахский", "Kazakh"),
     ru(2, "Орысша", "Русский", "Russian"),
     en(3, "Ағылшынша", "Английский", "English");
 
@@ -40,7 +40,7 @@ public enum Language {
     }
 
     public String getName(int language) {
-        if (language == Language.kz.getId()) {
+        if (language == Language.kk.getId()) {
             return nameKZ;
         } else if (language == Language.ru.getId()) {
             return nameRU;
@@ -50,7 +50,7 @@ public enum Language {
     }
 
     public String getName(Language language) {
-        if (language == Language.kz) {
+        if (language == Language.kk) {
             return nameKZ;
         } else if (language == Language.ru) {
             return nameRU;
@@ -60,8 +60,8 @@ public enum Language {
     }
 
     public static Language getLanguageById(int language) {
-        if (language == Language.kz.getId()) {
-            return Language.kz;
+        if (language == Language.kk.getId()) {
+            return Language.kk;
         } else if (language == Language.ru.getId()) {
             return Language.ru;
         } else {
@@ -70,7 +70,7 @@ public enum Language {
     }
 
     public static boolean contains(String language) {
-        if (language.equals(Language.kz.name())) {
+        if (language.equals(Language.kk.name())) {
             return true;
         } else if (language.equals(Language.ru.name())) {
             return true;

@@ -46,7 +46,7 @@ public enum Genre {
     }
 
     public String getName(int language) {
-        if (language == Language.kz.getId()) {
+        if (language == Language.kk.getId()) {
             return nameKZ;
         } else if (language == Language.ru.getId()) {
             return nameRU;
@@ -56,7 +56,7 @@ public enum Genre {
     }
 
     public String getName(Language language) {
-        if (language == Language.kz) {
+        if (language == Language.kk) {
             return nameKZ;
         } else if (language == Language.ru) {
             return nameRU;

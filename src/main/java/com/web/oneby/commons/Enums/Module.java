@@ -86,7 +86,7 @@ public enum Module {
     }
 
     public String getName(int language){
-        if (language == Language.kz.getId()) {
+        if (language == Language.kk.getId()) {
             return nameKZ;
         } else if (language == Language.ru.getId()) {
             return nameRU;

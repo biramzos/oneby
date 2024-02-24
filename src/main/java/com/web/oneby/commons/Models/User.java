@@ -1,7 +1,6 @@
 package com.web.oneby.commons.Models;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
-import com.web.oneby.books.Enums.Genre;
 import com.web.oneby.books.Models.Book;
 import com.web.oneby.commons.Enums.Language;
 import com.web.oneby.commons.Enums.UserRole;
@@ -9,8 +8,6 @@ import jakarta.persistence.*;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import lombok.ToString;
-import org.hibernate.annotations.Fetch;
-import org.hibernate.annotations.FetchMode;
 import org.hibernate.annotations.JdbcTypeCode;
 import org.hibernate.type.SqlTypes;
 import org.springframework.security.core.GrantedAuthority;
@@ -100,7 +97,7 @@ public class User implements UserDetails {
     }
 
     public String getName(int language) {
-        if (language == Language.kz.getId()) {
+        if (language == Language.kk.getId()) {
             return nameKZ;
         } else if (language == Language.ru.getId()) {
             return nameRU;
@@ -110,7 +107,7 @@ public class User implements UserDetails {
     }
 
     public String getName(Language language) {
-        if (language == Language.kz) {
+        if (language == Language.kk) {
             return nameKZ;
         } else if (language == Language.ru) {
             return nameRU;
@@ -120,7 +117,7 @@ public class User implements UserDetails {
     }
 
     public String getLastname(int language) {
-        if (language == Language.kz.getId()) {
+        if (language == Language.kk.getId()) {
             return lastnameKZ;
         } else if (language == Language.ru.getId()) {
             return lastnameRU;
@@ -130,7 +127,7 @@ public class User implements UserDetails {
     }
 
     public String getLastname(Language language) {
-        if (language == Language.kz) {
+        if (language == Language.kk) {
             return lastnameKZ;
         } else if (language == Language.ru) {
             return lastnameRU;

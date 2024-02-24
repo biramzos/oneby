@@ -4,7 +4,6 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.web.oneby.books.Enums.AccessBook;
 import com.web.oneby.books.Enums.Genre;
 import com.web.oneby.commons.Enums.Language;
-import com.web.oneby.commons.Models.User;
 import jakarta.persistence.*;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -111,7 +110,7 @@ public class Book {
     }
 
     public String getTitle(int language) {
-        if (language == Language.kz.getId()) {
+        if (language == Language.kk.getId()) {
             return titleKZ;
         } else if (language == Language.ru.getId()) {
             return titleRU;
@@ -121,7 +120,7 @@ public class Book {
     }
 
     public String getTitle(Language language) {
-        if (language == Language.kz) {
+        if (language == Language.kk) {
             return titleKZ;
         } else if (language == Language.ru) {
             return titleRU;
@@ -131,7 +130,7 @@ public class Book {
     }
 
     public String getDescription(int language) {
-        if (language == Language.kz.getId()) {
+        if (language == Language.kk.getId()) {
             return descriptionKZ;
         } else if (language == Language.ru.getId()) {
             return descriptionRU;
@@ -141,7 +140,7 @@ public class Book {
     }
 
     public String getDescription(Language language) {
-        if (language == Language.kz) {
+        if (language == Language.kk) {
             return descriptionKZ;
         } else if (language == Language.ru) {
             return descriptionRU;
@@ -151,7 +150,7 @@ public class Book {
     }
 
     public String getAuthor(int language) {
-        if (language == Language.kz.getId()) {
+        if (language == Language.kk.getId()) {
             return authorKZ;
         } else if (language == Language.ru.getId()) {
             return authorRU;
@@ -161,7 +160,7 @@ public class Book {
     }
 
     public String getAuthor(Language language) {
-        if (language == Language.kz) {
+        if (language == Language.kk) {
             return authorKZ;
         } else if (language == Language.ru) {
             return authorRU;

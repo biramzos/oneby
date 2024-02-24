@@ -161,7 +161,7 @@ public enum HTTPMessage {
     }
 
     public String getMessage(int language) {
-        if (language == Language.kz.getId()) {
+        if (language == Language.kk.getId()) {
             return messageKZ;
         } else if (language == Language.ru.getId()) {
             return messageRU;
@@ -171,7 +171,7 @@ public enum HTTPMessage {
     }
 
     public String getMessage(Language language) {
-        if (language == Language.kz) {
+        if (language == Language.kk) {
             return messageKZ;
         } else if (language == Language.ru) {
             return messageRU;
