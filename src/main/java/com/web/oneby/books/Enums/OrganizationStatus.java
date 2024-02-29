@@ -3,6 +3,9 @@ package com.web.oneby.books.Enums;
 
 import com.web.oneby.commons.Enums.Language;
 
+import java.util.HashMap;
+import java.util.Map;
+
 public enum OrganizationStatus {
     APPLIED("", "", "Applied"),
     VERIFIED("", "", "Verified");
@@ -21,23 +24,21 @@ public enum OrganizationStatus {
     private String nameRU;
     private String nameEN;
 
-    private String getName(int language) {
-        if (language == Language.kk.getId()) {
-            return nameKK;
-        } else if (language == Language.ru.getId()) {
-            return nameRU;
-        } else {
-            return nameEN;
-        }
+    public String getName(int language) {
+        Map<String, String> names = new HashMap<>() {{
+            put("nameKK", nameKK);
+            put("nameRU", nameRU);
+            put("nameEN", nameEN);
+        }};
+        return names.get("name" + Language.getLanguageById(language).suffix());
     }
 
-    private String getName(Language language) {
-        if (language == Language.kk) {
-            return nameKK;
-        } else if (language == Language.ru) {
-            return nameRU;
-        } else {
-            return nameEN;
-        }
+    public String getName(Language language) {
+        Map<String, String> names = new HashMap<>() {{
+            put("nameKK", nameKK);
+            put("nameRU", nameRU);
+            put("nameEN", nameEN);
+        }};
+        return names.get("name" + language.suffix());
     }
 }

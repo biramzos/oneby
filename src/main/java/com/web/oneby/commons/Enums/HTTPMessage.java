@@ -3,6 +3,9 @@ package com.web.oneby.commons.Enums;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonValue;
 
+import java.util.HashMap;
+import java.util.Map;
+
 public enum HTTPMessage {
 
     SUCCESSFULLY_REGISTERED(
@@ -129,23 +132,23 @@ public enum HTTPMessage {
 
 
     HTTPMessage(
-        String messageKZ,
+        String messageKK,
         String messageRU,
         String messageEN,
         HTTPStatus status
     ){
-        this.messageKZ = messageKZ;
+        this.messageKK = messageKK;
         this.messageRU = messageRU;
         this.messageEN = messageEN;
         this.status = status;
     }
-    private String messageKZ;
+    private String messageKK;
     private String messageRU;
     private String messageEN;
     private HTTPStatus status;
 
     public String getMessageKZ() {
-        return messageKZ;
+        return messageKK;
     }
 
     public String getMessageRU() {
@@ -161,23 +164,21 @@ public enum HTTPMessage {
     }
 
     public String getMessage(int language) {
-        if (language == Language.kk.getId()) {
-            return messageKZ;
-        } else if (language == Language.ru.getId()) {
-            return messageRU;
-        } else {
-            return messageEN;
-        }
+        Map<String, String> names = new HashMap<>() {{
+            put("messageKZ", messageKK);
+            put("messageRU", messageRU);
+            put("messageEN", messageEN);
+        }};
+        return names.get("name" + Language.getLanguageById(language).suffix());
     }
 
     public String getMessage(Language language) {
-        if (language == Language.kk) {
-            return messageKZ;
-        } else if (language == Language.ru) {
-            return messageRU;
-        } else {
-            return messageEN;
-        }
+        Map<String, String> names = new HashMap<>() {{
+            put("messageKZ", messageKK);
+            put("messageRU", messageRU);
+            put("messageEN", messageEN);
+        }};
+        return names.get("message" + language.suffix());
     }
 
     @JsonValue

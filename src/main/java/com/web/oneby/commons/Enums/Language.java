@@ -80,4 +80,8 @@ public enum Language {
             return false;
         }
     }
+
+    public String suffix() {
+        return this.name().toUpperCase();
+    }
 }

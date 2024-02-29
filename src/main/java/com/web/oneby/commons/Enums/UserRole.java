@@ -2,6 +2,9 @@ package com.web.oneby.commons.Enums;
 
 import org.springframework.security.core.GrantedAuthority;
 
+import java.util.HashMap;
+import java.util.Map;
+
 public enum UserRole implements GrantedAuthority {
     ADMIN(1, "Әкімші", "Администратор", "Administrator"),
     SELLER(2, "Сатушы", "Продавец", "Seller"),
@@ -58,22 +61,20 @@ public enum UserRole implements GrantedAuthority {
     }
 
     public String getName(int language) {
-        if (language == Language.kk.getId()) {
-            return nameKK;
-        } else if (language == Language.ru.getId()) {
-            return nameRU;
-        } else {
-            return nameEN;
-        }
+        Map<String, String> names = new HashMap<>() {{
+            put("nameKK", nameKK);
+            put("nameRU", nameRU);
+            put("nameEN", nameEN);
+        }};
+        return names.get("name" + Language.getLanguageById(language).suffix());
     }
 
     public String getName(Language language) {
-        if (language == Language.kk) {
-            return nameKK;
-        } else if (language == Language.ru) {
-            return nameRU;
-        } else {
-            return nameEN;
-        }
+        Map<String, String> names = new HashMap<>() {{
+            put("nameKK", nameKK);
+            put("nameRU", nameRU);
+            put("nameEN", nameEN);
+        }};
+        return names.get("name" + language.suffix());
     }
 }
