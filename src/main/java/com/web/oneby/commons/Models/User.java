@@ -97,43 +97,39 @@ public class User implements UserDetails {
     }
 
     public String getName(int language) {
-        if (language == Language.kk.getId()) {
-            return nameKK;
-        } else if (language == Language.ru.getId()) {
-            return nameRU;
-        } else {
-            return nameEN;
-        }
+        Map<String, String> names = new HashMap<>() {{
+            put("nameKK", nameKK);
+            put("nameRU", nameRU);
+            put("nameEN", nameEN);
+        }};
+        return names.get("name" + Language.getLanguageById(language).suffix());
     }
 
     public String getName(Language language) {
-        if (language == Language.kk) {
-            return nameKK;
-        } else if (language == Language.ru) {
-            return nameRU;
-        } else {
-            return nameEN;
-        }
+        Map<String, String> names = new HashMap<>() {{
+            put("nameKK", nameKK);
+            put("nameRU", nameRU);
+            put("nameEN", nameEN);
+        }};
+        return names.get("name" + language.suffix());
     }
 
     public String getLastname(int language) {
-        if (language == Language.kk.getId()) {
-            return lastnameKK;
-        } else if (language == Language.ru.getId()) {
-            return lastnameRU;
-        } else {
-            return lastnameEN;
-        }
+        Map<String, String> lastnames = new HashMap<>() {{
+            put("lastnameKK", lastnameKK);
+            put("lastnameRU", lastnameRU);
+            put("lastnameEN", lastnameEN);
+        }};
+        return lastnames.get("lastname" + Language.getLanguageById(language).suffix());
     }
 
     public String getLastname(Language language) {
-        if (language == Language.kk) {
-            return lastnameKK;
-        } else if (language == Language.ru) {
-            return lastnameRU;
-        } else {
-            return lastnameEN;
-        }
+        Map<String, String> lastnames = new HashMap<>() {{
+            put("lastnameKK", lastnameKK);
+            put("lastnameRU", lastnameRU);
+            put("lastnameEN", lastnameEN);
+        }};
+        return lastnames.get("lastname" + language.suffix());
     }
 
     public boolean isPremium(){

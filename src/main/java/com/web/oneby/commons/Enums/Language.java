@@ -1,5 +1,8 @@
 package com.web.oneby.commons.Enums;
 
+import java.util.HashMap;
+import java.util.Map;
+
 public enum Language {
     kk(1, "Қазақша", "Казахский", "Kazakh"),
     ru(2, "Орысша", "Русский", "Russian"),
@@ -40,45 +43,43 @@ public enum Language {
     }
 
     public String getName(int language) {
-        if (language == Language.kk.getId()) {
-            return nameKK;
-        } else if (language == Language.ru.getId()) {
-            return nameRU;
-        } else {
-            return nameEN;
-        }
+        Map<String, String> names = new HashMap<>() {{
+            put("nameKK", nameKK);
+            put("nameRU", nameRU);
+            put("nameEN", nameEN);
+        }};
+        return names.get("name" + getLanguageById(language).suffix());
     }
 
     public String getName(Language language) {
-        if (language == Language.kk) {
-            return nameKK;
-        } else if (language == Language.ru) {
-            return nameRU;
-        } else {
-            return nameEN;
-        }
+        Map<String, String> names = new HashMap<>() {{
+            put("nameKK", nameKK);
+            put("nameRU", nameRU);
+            put("nameEN", nameEN);
+        }};
+        return names.get("name" + language.suffix());
     }
 
-    public static Language getLanguageById(int language) {
-        if (language == Language.kk.getId()) {
-            return Language.kk;
-        } else if (language == Language.ru.getId()) {
-            return Language.ru;
-        } else {
-            return Language.en;
+    public static Language getLanguageById(int languageID) {
+        Language language = null;
+        for (Language l: values()) {
+            if (languageID == l.getId()) {
+                language = l;
+                break;
+            }
         }
+        return language;
     }
 
     public static boolean contains(String language) {
-        if (language.equals(Language.kk.name())) {
-            return true;
-        } else if (language.equals(Language.ru.name())) {
-            return true;
-        } else if (language.equals(Language.en.name())) {
-            return true;
-        } else {
-            return false;
+        boolean isExist = false;
+        for (Language l: values()) {
+            if (l.name().equals(language.toLowerCase())) {
+                isExist = true;
+                break;
+            }
         }
+        return isExist;
     }
 
     public String suffix() {
