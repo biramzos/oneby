@@ -62,7 +62,7 @@ public class UserService implements UserDetailsService {
     public PageObject<UserResponse> search(SearchFilter request, int language) {
         Pageable pageable = PageRequest.of(
                 request.getPageNumber() - 1,
-                request.getCountInPart(),
+                request.getCountInPage(),
                 Sort.by(SortingUtil.getSortingOrders(request.getSort())));
         return new PageObject<>(userRepository
                 .findAll(UserService.filter(request.getFilter()), pageable)

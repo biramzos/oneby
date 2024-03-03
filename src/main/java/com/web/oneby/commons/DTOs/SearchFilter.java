@@ -8,7 +8,7 @@ import java.util.Map;
 @Data
 public class SearchFilter {
     private int pageNumber;
-    private int countInPart;
+    private int countInPage;
     private Map<String, Object> filter;
     private Map<String, Direction> sort;
 }

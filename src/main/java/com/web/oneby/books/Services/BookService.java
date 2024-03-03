@@ -102,7 +102,7 @@ public class BookService {
     public PageObject<BookResponse> findAll(SearchFilter request, User user, int language) {
         Pageable pageable = PageRequest.of(
                 request.getPageNumber() - 1,
-                request.getCountInPart(),
+                request.getCountInPage(),
                 Sort.by(SortingUtil.getSortingOrders(request.getSort())));
         return new PageObject<>(bookRepository
                 .findAll(BookService.filter(request.getFilter(), user), pageable)
