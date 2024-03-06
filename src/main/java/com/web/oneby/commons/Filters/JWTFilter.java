@@ -1,7 +1,5 @@
 package com.web.oneby.commons.Filters;
 
-import com.web.oneby.commons.Models.User;
-import com.web.oneby.commons.Services.UserService;
 import io.jsonwebtoken.ExpiredJwtException;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.MalformedJwtException;
