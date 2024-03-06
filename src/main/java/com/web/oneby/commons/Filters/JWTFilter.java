@@ -1,5 +1,7 @@
 package com.web.oneby.commons.Filters;
 
+import com.web.oneby.modules.users.Models.User;
+import com.web.oneby.modules.users.Services.UserService;
 import io.jsonwebtoken.ExpiredJwtException;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.MalformedJwtException;
@@ -10,6 +12,7 @@ import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Lazy;
 import org.springframework.http.HttpMethod;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -25,7 +28,7 @@ public class JWTFilter extends OncePerRequestFilter {
 
     @Autowired
     public JWTFilter(
-            UserService userService
+            @Lazy UserService userService
     ){
         this.userService = userService;
     }

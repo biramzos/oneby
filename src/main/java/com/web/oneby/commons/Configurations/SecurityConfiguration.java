@@ -1,6 +1,7 @@
 package com.web.oneby.commons.Configurations;
 
 import com.web.oneby.commons.Filters.JWTFilter;
+import com.web.oneby.modules.users.Services.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -31,7 +32,7 @@ public class SecurityConfiguration {
 
     @Autowired
     public SecurityConfiguration(
-            @Lazy UserService userService
+        UserService userService
     ){
         SecurityConfiguration.userService = userService;
     }
