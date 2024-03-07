@@ -50,7 +50,7 @@ public class PDFUtil {
     }
 
     public static byte[] generateDocument(Map<String, String> contractData, int templateId, int lang)  {
-        try (InputStream inputStream = new ClassPathResource("template_" + Template.getById(templateId).name() + "_" + Language.getLanguageById(lang).suffix() + ".docx").getInputStream();
+        try (InputStream inputStream = new ClassPathResource("/static/templates/" + "Template_" + Template.getById(templateId).name() + "_" + Language.getLanguageById(lang).suffix() + ".docx").getInputStream();
              XWPFDocument document = new XWPFDocument(inputStream);
              ByteArrayOutputStream outputStream = new ByteArrayOutputStream()) {
             for (XWPFParagraph paragraph : document.getParagraphs()) {
