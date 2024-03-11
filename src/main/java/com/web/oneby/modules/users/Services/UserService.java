@@ -104,7 +104,7 @@ public class UserService implements UserDetailsService {
 
             byte [] image = null;
             if (createUserRequest.getImage() == null) {
-                InputStream inputStream = getClass().getResourceAsStream("/static/userDefault.png");
+                InputStream inputStream = getClass().getResourceAsStream("/static/images/userDefault.png");
                 if (inputStream != null) {
                     image = inputStream.readAllBytes();
                 }
@@ -138,7 +138,7 @@ public class UserService implements UserDetailsService {
         boolean isAdminExist = UserService.userRepository.countAllByRolesContaining(UserRole.ADMIN) > 0;
         if (!isAdminExist) {
             byte [] image = null;
-            InputStream inputStream = UserService.class.getResourceAsStream("/static/userDefault.png");
+            InputStream inputStream = UserService.class.getResourceAsStream("/static/images/userDefault.png");
             if (inputStream != null) {
                 image = inputStream.readAllBytes();
             }

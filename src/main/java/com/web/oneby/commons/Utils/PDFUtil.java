@@ -1,104 +1,101 @@
 package com.web.oneby.commons.Utils;
 
+import com.lowagie.text.*;
+import com.lowagie.text.Document;
+import com.lowagie.text.Font;
+import com.lowagie.text.Image;
+import com.lowagie.text.Rectangle;
+import com.lowagie.text.pdf.*;
 import com.web.oneby.commons.Enums.Language;
 import com.web.oneby.commons.Enums.Template;
+import com.web.oneby.commons.Services.OBFileService;
+import fr.opensagres.poi.xwpf.converter.pdf.PdfConverter;
+import fr.opensagres.poi.xwpf.converter.pdf.PdfOptions;
 import lombok.extern.slf4j.Slf4j;
-import org.apache.pdfbox.pdmodel.PDDocument;
-import org.apache.pdfbox.pdmodel.PDPage;
-import org.apache.pdfbox.pdmodel.PDPageContentStream;
-import org.apache.pdfbox.pdmodel.common.PDRectangle;
-import org.apache.pdfbox.pdmodel.font.PDType1Font;
-import org.apache.poi.xwpf.usermodel.XWPFDocument;
-import org.apache.poi.xwpf.usermodel.XWPFParagraph;
+import org.apache.poi.xwpf.usermodel.*;
+import org.docx4j.Docx4J;
+import org.docx4j.model.datastorage.migration.VariablePrepare;
+import org.docx4j.openpackaging.exceptions.Docx4JException;
+import org.docx4j.openpackaging.packages.WordprocessingMLPackage;
+import org.docx4j.openpackaging.parts.WordprocessingML.MainDocumentPart;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.ClassPathResource;
+import org.springframework.stereotype.Service;
 
-import java.io.ByteArrayInputStream;
-import java.io.ByteArrayOutputStream;
-import java.io.IOException;
-import java.io.InputStream;
-import java.util.Map;
+import javax.xml.bind.JAXBException;
+import java.io.*;
+import java.util.*;
 
 @Slf4j
+@Service
 public class PDFUtil {
 
+    @Autowired
+    private static OBFileService fileService;
+
     public static byte[] generateBill() {
-        try (PDDocument document = new PDDocument()) {
-            PDPage page = new PDPage(PDRectangle.A6);
-            document.addPage(page);
-
-            try (PDPageContentStream contentStream = new PDPageContentStream(document, page)) {
-                contentStream.beginText();
-                contentStream.setFont(PDType1Font.HELVETICA, 8);
-                contentStream.newLineAtOffset(10, 90); // Adjust position as needed
-                contentStream.showText("Bill Content Here"); // Customize with your bill content
-                contentStream.endText();
-
-                contentStream.beginText();
-                contentStream.setFont(PDType1Font.TIMES_ROMAN, 8);
-                contentStream.newLineAtOffset(10, 90); // Adjust position as needed
-                contentStream.showText("Bill Content Here"); // Customize with your bill content
-                contentStream.endText();
-            }
-
-            ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
-            document.save(byteArrayOutputStream);
-            return byteArrayOutputStream.toByteArray();
+        try (ByteArrayOutputStream baos = new ByteArrayOutputStream();
+             Document document = new Document(new Rectangle(210.0F, 300F))) {
+            Font font = FontFactory.getFont(new ClassPathResource("/static/fonts/Monoscape/font.ttf")
+                    .getPath(), BaseFont.IDENTITY_H, true, 8, 0);
+            PdfWriter.getInstance(document, baos);
+            document.setMargins(10f,10f, 10f,10f);
+            document.open();
+            Image image = Image.getInstance(new ClassPathResource("/static/images/userDefault.png").getContentAsByteArray());
+            image.scaleToFit(40, 40);
+            document.add(image);
+            document.add(new Paragraph("OneBy                                 № 1 \n", font));
+            document.add(new Paragraph("------------------------------------------\n", font));
+            document.add(new Paragraph("Customer\n\n", font));
+            document.add(new Paragraph("Full name: Ramis Beishembiyev", font));
+            document.add(new Paragraph("Email: b.ramis.2002@gmail.com", font));
+            document.add(new Paragraph("Username: imramo00", font));
+            document.add(new Paragraph("------------------------------------------\n", font));
+            document.add(new Paragraph("Products\n\n", font));
+            PdfPTable table = new PdfPTable(2);
+            table.setWidthPercentage(100);
+            table.addCell(new Paragraph("Title", font));
+            table.addCell(new Paragraph("Price", font));
+            table.addCell(new Paragraph("Book1 (BookAuthor)", font));
+            table.addCell(new Paragraph("100 T.", font));
+            document.add(table);
+            document.close();
+            return baos.toByteArray();
         } catch (IOException e) {
-            log.error(e.getMessage());
+            log.error("Error generating bill: {}", e.getMessage());
             return null;
         }
     }
 
-    public static byte[] generateDocument(Map<String, String> contractData, int templateId, int lang)  {
-        try (InputStream inputStream = new ClassPathResource("/static/templates/" + "Template_" + Template.getById(templateId).name() + "_" + Language.getLanguageById(lang).suffix() + ".docx").getInputStream();
-             XWPFDocument document = new XWPFDocument(inputStream);
+    public static byte[] convertDocxToPdf(byte[] docxBytes) {
+        try (ByteArrayInputStream inputStream = new ByteArrayInputStream(docxBytes);
              ByteArrayOutputStream outputStream = new ByteArrayOutputStream()) {
-            for (XWPFParagraph paragraph : document.getParagraphs()) {
-                for (Map.Entry<String, String> entry : contractData.entrySet()) {
-                    String placeholder = entry.getKey();
-                    String replacement = entry.getValue();
-                    for (int i = 0; i < paragraph.getRuns().size(); i++) {
-                        if (paragraph.getRuns().get(i).getText(0).contains("${" + placeholder + "}")) {
-                            paragraph.getRuns().get(i).setText(paragraph.getRuns().get(i).getText(0).replace("${" + placeholder + "}", replacement), 0);
-                        }
-                    }
-                }
-            }
-            document.write(outputStream);
-            return convertWordToPdf(outputStream.toByteArray());
+            XWPFDocument document = new XWPFDocument(inputStream);
+            PdfOptions options = PdfOptions.create();
+            options.fontProvider(FontUtil.getFontProvider());
+            PdfConverter.getInstance().convert(document, outputStream, options);
+            return outputStream.toByteArray();
         } catch (IOException e) {
-            log.error(e.getMessage());
+            log.error("Error generating document: {}", e.getMessage());
             return null;
         }
     }
 
-    public static byte[] convertWordToPdf(byte[] wordBytes)  {
-        try (InputStream inputStream = new ByteArrayInputStream(wordBytes);
-             XWPFDocument document = new XWPFDocument(inputStream);
-             ByteArrayOutputStream pdfOutputStream = new ByteArrayOutputStream()) {
 
-            PDDocument pdfDocument = new PDDocument();
-            PDPage page = new PDPage();
-            pdfDocument.addPage(page);
-
-            try (PDPageContentStream contentStream = new PDPageContentStream(pdfDocument, page)) {
-                contentStream.beginText();
-                contentStream.setFont(PDType1Font.HELVETICA, 12);
-                contentStream.newLineAtOffset(100, 700);
-                for (XWPFParagraph paragraph : document.getParagraphs()) {
-                    contentStream.showText(paragraph.getText());
-                    contentStream.newLine();
-                }
-
-                contentStream.endText();
-            }
-            pdfDocument.save(pdfOutputStream);
-            pdfDocument.close();
-            return pdfOutputStream.toByteArray();
-        } catch (IOException e) {
-            log.error(e.getMessage());
+    public static byte[] generateDocument(Template template, Map<String, String> replacements, int lang) {
+        try (InputStream inputStream = new ClassPathResource(template.getFileByLanguage(lang)).getInputStream()) {
+            WordprocessingMLPackage wordMLPackage = WordprocessingMLPackage.load(inputStream);
+            MainDocumentPart documentPart = wordMLPackage.getMainDocumentPart();
+            documentPart.variableReplace(replacements);
+            ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
+            wordMLPackage.save(outputStream);
+            return convertDocxToPdf(outputStream.toByteArray());
+        } catch (Exception e) {
+            e.printStackTrace();
             return null;
         }
     }
+
+
 
 }

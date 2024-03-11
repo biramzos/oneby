@@ -6,7 +6,6 @@ import com.web.oneby.commons.Enums.HTTPMessage;
 import com.web.oneby.commons.Enums.Language;
 import com.web.oneby.commons.Handlers.HTTPMessageHandler;
 import com.web.oneby.commons.Utils.Response;
-import com.web.oneby.modules.books.DTOs.BookResponse;
 import com.web.oneby.modules.users.DTOs.UserResponse;
 import com.web.oneby.modules.users.Enums.UserRole;
 import com.web.oneby.modules.users.Models.User;
@@ -58,24 +57,24 @@ public class UserController {
         return response;
     }
 
-    @ResponseBody
-    @GetMapping("/favourites/{userId}")
-    @PreAuthorize(value = "isAuthenticated()")
-    public Response getUserFavourites(
-            Authentication auth,
-            @PathVariable("userId") User user,
-            @RequestHeader(value = "Current-Language", defaultValue = "ru") Language language
-    ){
-        Response response = new Response();
-        if (Objects.equals(((User) auth.getPrincipal()).getId(), user.getId()) || ((User) auth.getPrincipal()).getRoles().contains(UserRole.ADMIN)) {
-            List<BookResponse> favourites = user.getFavourites().stream().map(book -> BookResponse.fromBook(book, language.getId())).toList();
-            response.put("favourites", favourites);
-        } else {
-            response.put("message", HTTPMessageHandler.fromHTTPMessage(HTTPMessage.ACCESS_DENIED, language.getId()));
-        }
-
-        return response;
-    }
+//    @ResponseBody
+//    @GetMapping("/favourites/{userId}")
+//    @PreAuthorize(value = "isAuthenticated()")
+//    public Response getUserFavourites(
+//            Authentication auth,
+//            @PathVariable("userId") User user,
+//            @RequestHeader(value = "Current-Language", defaultValue = "ru") Language language
+//    ){
+//        Response response = new Response();
+//        if (Objects.equals(((User) auth.getPrincipal()).getId(), user.getId()) || ((User) auth.getPrincipal()).getRoles().contains(UserRole.ADMIN)) {
+//            List<BookResponse> favourites = user.getFavourites().stream().map(book -> BookResponse.fromBook(book, language.getId())).toList();
+//            response.put("favourites", favourites);
+//        } else {
+//            response.put("message", HTTPMessageHandler.fromHTTPMessage(HTTPMessage.ACCESS_DENIED, language.getId()));
+//        }
+//
+//        return response;
+//    }
 
 
 }

@@ -1,10 +1,36 @@
 package com.web.oneby.commons.Enums;
 
+import java.util.HashMap;
+import java.util.Map;
+
 public enum Template {
-    CONTRACT_WORK_TOGETHER(1, "", "", ""),
-    CONTRACT_EMPLOYEE(2, "", "", ""),
-    CONTRACT_WITH_SHOPS(3, "", "", ""),
-    CONTRACT_DEFAULT(4, "", "", ""),
+    CONTRACT_DEFAULT(
+            -1,
+            "Әдепкі шарт",
+            "Контракт по умолчанию",
+            "Default contract",
+            "/static/templates/Template_KK.docx",
+            "/static/templates/Template_RU.docx",
+            "/static/templates/Template_EN.docx"
+    ),
+    CONTRACT_WORK_TOGETHER(
+            1,
+            "Бірлесіп жұмыс істеу шарты",
+            "Договор о совместной работе",
+            "Contract of working together",
+            "/static/templates/Template_1_KK.docx",
+            "/static/templates/Template_1_RU.docx",
+            "/static/templates/Template_1_EN.docx"
+    ),
+    CONTRACT_EMPLOYEE(
+            2,
+            "Қызметкерлерге арналған шарт",
+            "Трудовой договор для сотрудников",
+            "Contract for employees",
+            "/static/templates/Template_2_KK.docx",
+            "/static/templates/Template_2_RU.docx",
+            "/static/templates/Template_2_EN.docx"
+    ),
     ;
 
     private int id;
@@ -12,22 +38,54 @@ public enum Template {
     private String templateRU;
     private String templateEN;
 
-    Template (int id, String templateKK, String templateRU, String templateEN) {
+    private String fileKK;
+    private String fileRU;
+    private String fileEN;
+
+    Template (int id, String templateKK, String templateRU, String templateEN, String fileKK, String fileRU, String fileEN) {
         this.id = id;
         this.templateKK = templateKK;
         this.templateRU = templateRU;
         this.templateEN = templateEN;
+        this.fileKK = fileKK;
+        this.fileRU = fileRU;
+        this.fileEN = fileEN;
     }
 
     public static Template getById (int id) {
-        Template template = null;
-        for (Template t: values()) {
-            if (t.getId() == id) {
-                template = t;
-                break;
+        for (Template template: values()) {
+            if (template.getId() == id) {
+                return template;
             }
         }
-        return template;
+        return null;
+    }
+
+    public String getTemplateName(int language) {
+        Map<String, String> names = new HashMap<>() {{
+            put(Language.kk.name(), templateKK);
+            put(Language.ru.name(), templateRU);
+            put(Language.en.name(), templateEN);
+        }};
+        return names.get(Language.getLanguageById(language).name());
+    }
+
+    public String getTemplateName(Language language) {
+        Map<String, String> names = new HashMap<>() {{
+            put(Language.kk.name(), templateKK);
+            put(Language.ru.name(), templateRU);
+            put(Language.en.name(), templateEN);
+        }};
+        return names.get(language.name());
+    }
+
+    public String getFileByLanguage (int lang) {
+        Map<String, String> files = new HashMap<>() {{
+            put(Language.kk.name(), fileKK);
+            put(Language.ru.name(), fileRU);
+            put(Language.en.name(), fileEN);
+        }};
+        return files.get(Language.getLanguageById(lang).name());
     }
 
 
@@ -45,5 +103,17 @@ public enum Template {
 
     public String getTemplateEN() {
         return templateEN;
+    }
+
+    public String getFileKK() {
+        return fileKK;
+    }
+
+    public String getFileRU() {
+        return fileRU;
+    }
+
+    public String getFileEN() {
+        return fileEN;
     }
 }

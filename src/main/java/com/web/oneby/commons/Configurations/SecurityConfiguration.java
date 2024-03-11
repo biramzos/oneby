@@ -31,9 +31,7 @@ public class SecurityConfiguration {
     private static UserService userService;
 
     @Autowired
-    public SecurityConfiguration(
-        UserService userService
-    ){
+    public SecurityConfiguration(@Lazy UserService userService){
         SecurityConfiguration.userService = userService;
     }
 

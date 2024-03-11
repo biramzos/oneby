@@ -2,7 +2,6 @@ package com.web.oneby.modules.users.Models;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.web.oneby.commons.Enums.Language;
-import com.web.oneby.modules.books.Models.Book;
 import com.web.oneby.modules.users.Enums.UserRole;
 import jakarta.persistence.*;
 import lombok.Data;
@@ -56,15 +55,15 @@ public class User implements UserDetails {
     private byte[] image;
     @Column(name = "is_active")
     private boolean isActive;
-    @JsonIgnore
-    @JdbcTypeCode(SqlTypes.JSON)
-    @ManyToMany(fetch = FetchType.LAZY)
-    @JoinTable(
-            name = "user_favourites",
-            joinColumns = @JoinColumn(name = "user_id"),
-            inverseJoinColumns = @JoinColumn(name = "book_id")
-    )
-    private List<Book> favourites = new ArrayList<>();
+//    @JsonIgnore
+//    @JdbcTypeCode(SqlTypes.JSON)
+//    @ManyToMany(fetch = FetchType.LAZY)
+//    @JoinTable(
+//            name = "user_favourites",
+//            joinColumns = @JoinColumn(name = "user_id"),
+//            inverseJoinColumns = @JoinColumn(name = "book_id")
+//    )
+//    private List<Book> favourites = new ArrayList<>();
 
     public User(
             String nameKK,

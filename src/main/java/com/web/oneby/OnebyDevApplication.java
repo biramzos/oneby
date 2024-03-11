@@ -6,6 +6,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
+import org.springframework.context.annotation.Lazy;
 
 @SpringBootApplication
 @Slf4j
@@ -14,7 +15,7 @@ public class OnebyDevApplication
 {
 
     @Autowired
-    public OnebyDevApplication(UserService userService) {
+    public OnebyDevApplication(@Lazy UserService userService) {
         this.userService = userService;
     }
 
