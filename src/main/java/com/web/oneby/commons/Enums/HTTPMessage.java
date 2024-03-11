@@ -123,9 +123,19 @@ public enum HTTPMessage {
             "Заголовок запроса пропущен!",
             "Request header is missed!",
             HTTPStatus.ERROR),
+    SUCCESSFULLY_UPLOADED(
+            "Сәтті кері жүктелді!",
+            "Успешно загружено!",
+            "Successfully uploaded!",
+            HTTPStatus.SUCCESS),
+    ERROR_WHILE_UPLOADING(
+            "Кері жүктеу кезінде қате!",
+            "Ошибка при загрузке!",
+            "Error while uploading!",
+            HTTPStatus.ERROR),
     ERROR(
-            "Ошибка!",
             "Қате!",
+            "Ошибка!",
             "Error!",
             HTTPStatus.ERROR),
     ;
