@@ -11,28 +11,6 @@ import java.awt.*;
 
 public class FontUtil {
 
-//    public static IFontProvider getFontProvider() {
-//        return new IFontProvider() {
-//            @Override
-//            public Font getFont(String s, String s1, float v, int i, Color color) {
-//                return null;
-//            }
-//
-//            private Map<String, String> fontMappings = createFontMappings();
-//
-//
-//            private Map<String, String> createFontMappings() {
-//                Map<String, String> fontMappings = new HashMap<>();
-//                // Add font mappings for each language
-//                fontMappings.put("Arial", "Arial");
-//                fontMappings.put("Calibri", "Calibri");
-//                fontMappings.put("Times New Roman", "Times New Roman");
-//                // Add mappings for other languages as needed
-//                return fontMappings;
-//            }
-//        };
-//    }
-
     public static IFontProvider getFontProvider() {
         return new IFontProvider() {
 
