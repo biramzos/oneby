@@ -11,7 +11,7 @@ import java.awt.*;
 
 public class FontUtil {
 
-    public static IFontProvider getFontProvider() {
+    public static IFontProvider getTimesNewRomanFontProvider() {
         return new IFontProvider() {
 
             @SneakyThrows
@@ -22,14 +22,27 @@ public class FontUtil {
                 boolean isBoth = style == Font.BOLDITALIC;
                 String fontPath = "";
                 if (isBold) {
-                    fontPath = new ClassPathResource("/static/fonts/TimesNewRoman/font_bold.ttf").getPath();
+                    fontPath = ConstantsUtil.FONTS_DIRECTORY + "TimesNewRoman/font_bold.ttf";
                 } else if (isItalic) {
-                    fontPath = new ClassPathResource("/static/fonts/TimesNewRoman/font_italic.ttf").getPath();
+                    fontPath = ConstantsUtil.FONTS_DIRECTORY + "TimesNewRoman/font_italic.ttf";
                 } else if (isBoth) {
-                    fontPath = new ClassPathResource("/static/fonts/TimesNewRoman/font_bold_italic.ttf").getPath();
+                    fontPath = ConstantsUtil.FONTS_DIRECTORY + "TimesNewRoman/font_bold_italic.ttf";
                 } else {
-                    fontPath = new ClassPathResource("/static/fonts/TimesNewRoman/font.ttf").getPath();
+                    fontPath = ConstantsUtil.FONTS_DIRECTORY + "TimesNewRoman/font.ttf";
                 }
+                return FontFactory.getFont(fontPath, BaseFont.IDENTITY_H, true);
+            }
+
+        };
+    }
+
+    public static IFontProvider getMonoscapeFontProvider() {
+        return new IFontProvider() {
+
+            @SneakyThrows
+            @Override
+            public Font getFont(String fontFamily, String encoding, float size, int style, Color color) {
+                String fontPath = ConstantsUtil.FONTS_DIRECTORY + "Monoscape/font.ttf";
                 return FontFactory.getFont(fontPath, BaseFont.IDENTITY_H, true);
             }
 

@@ -9,27 +9,27 @@ public enum Template {
             "Әдепкі шарт",
             "Контракт по умолчанию",
             "Default contract",
-            "/static/templates/Template_KK.docx",
-            "/static/templates/Template_RU.docx",
-            "/static/templates/Template_EN.docx"
+            "Template_KK.docx",
+            "Template_RU.docx",
+            "Template_EN.docx"
     ),
     CONTRACT_WORK_TOGETHER(
             1,
             "Бірлесіп жұмыс істеу шарты",
             "Договор о совместной работе",
             "Contract of working together",
-            "/static/templates/Template_1_KK.docx",
-            "/static/templates/Template_1_RU.docx",
-            "/static/templates/Template_1_EN.docx"
+            "Template_1_KK.docx",
+            "Template_1_RU.docx",
+            "Template_1_EN.docx"
     ),
     CONTRACT_EMPLOYEE(
             2,
             "Қызметкерлерге арналған шарт",
             "Трудовой договор для сотрудников",
             "Contract for employees",
-            "/static/templates/Template_2_KK.docx",
-            "/static/templates/Template_2_RU.docx",
-            "/static/templates/Template_2_EN.docx"
+            "Template_2_KK.docx",
+            "Template_2_RU.docx",
+            "Template_2_EN.docx"
     ),
     ;
 

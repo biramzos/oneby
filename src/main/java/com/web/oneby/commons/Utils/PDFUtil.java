@@ -36,12 +36,11 @@ public class PDFUtil {
     public static byte[] generateBill() {
         try (ByteArrayOutputStream baos = new ByteArrayOutputStream();
              Document document = new Document(new Rectangle(210.0F, 300F))) {
-            Font font = FontFactory.getFont(new ClassPathResource("/static/fonts/Monoscape/font.ttf")
-                    .getPath(), BaseFont.IDENTITY_H, true, 8, 0);
+            Font font = FontFactory.getFont(ConstantsUtil.FONTS_DIRECTORY + "Monoscape/font.ttf", BaseFont.IDENTITY_H, true, 8, 0);
             PdfWriter.getInstance(document, baos);
             document.setMargins(10f,10f, 10f,10f);
             document.open();
-            Image image = Image.getInstance(new ClassPathResource("/static/images/userDefault.png").getContentAsByteArray());
+            Image image = Image.getInstance(ConstantsUtil.IMAGES_DIRECTORY + "userDefault.png");
             image.scaleToFit(40, 40);
             document.add(image);
             document.add(new Paragraph("OneBy                                 № 1 \n", font));
@@ -72,7 +71,7 @@ public class PDFUtil {
              ByteArrayOutputStream outputStream = new ByteArrayOutputStream()) {
             XWPFDocument document = new XWPFDocument(inputStream);
             PdfOptions options = PdfOptions.create();
-            options.fontProvider(FontUtil.getFontProvider());
+            options.fontProvider(FontUtil.getTimesNewRomanFontProvider());
             PdfConverter.getInstance().convert(document, outputStream, options);
             return outputStream.toByteArray();
         } catch (IOException e) {
@@ -83,7 +82,7 @@ public class PDFUtil {
 
 
     public static byte[] generateDocument(Template template, Map<String, String> replacements, int lang) {
-        try (InputStream inputStream = new ClassPathResource(template.getFileByLanguage(lang)).getInputStream()) {
+        try (InputStream inputStream = new FileInputStream(ConstantsUtil.TEMPLATES_DIRECTORY + template.getFileByLanguage(lang))) {
             WordprocessingMLPackage wordMLPackage = WordprocessingMLPackage.load(inputStream);
             MainDocumentPart documentPart = wordMLPackage.getMainDocumentPart();
             documentPart.variableReplace(replacements);

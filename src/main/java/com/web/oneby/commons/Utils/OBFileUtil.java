@@ -4,6 +4,8 @@ import com.web.oneby.commons.Enums.Template;
 import org.docx4j.openpackaging.exceptions.Docx4JException;
 import org.docx4j.openpackaging.packages.WordprocessingMLPackage;
 import org.docx4j.openpackaging.parts.WordprocessingML.MainDocumentPart;
+import org.springframework.core.io.ClassPathResource;
+import org.springframework.core.io.Resource;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.multipart.MultipartFile;
@@ -12,6 +14,9 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.StandardCopyOption;
 
 public class OBFileUtil {
 
@@ -48,16 +53,23 @@ public class OBFileUtil {
     }
 
     public static boolean saveTemplate(MultipartFile file, Template template, int lang) {
-        String path = template.getFileByLanguage(lang);
-        try (InputStream inputStream = file.getInputStream()) {
-            WordprocessingMLPackage wordMLPackage = WordprocessingMLPackage.load(inputStream);
-            File outputFile = new File(path);
-            wordMLPackage.save(outputFile);
+        try {
+
+
+            String path = ConstantsUtil.TEMPLATES_DIRECTORY + template.getFileByLanguage(lang);
+            Path templatePath = Path.of(path);
+
+            Files.createDirectories(templatePath.getParent());
+
+            try (InputStream inputStream = file.getInputStream()) {
+                Files.copy(inputStream, templatePath, StandardCopyOption.REPLACE_EXISTING);
+            }
             return true;
-        } catch (IOException | Docx4JException e) {
+        } catch (IOException e) {
             e.printStackTrace();
             return false;
         }
     }
+
 
 }
