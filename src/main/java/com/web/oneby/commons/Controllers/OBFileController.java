@@ -25,15 +25,10 @@ public class OBFileController {
     @GetMapping("/bill")
     @PreAuthorize("isAnonymous()")
     public ResponseEntity<byte[]> downloadBill() {
-        // Generate the bill PDF bytes
         byte[] billBytes = PDFUtil.generateBill();
-
-        // Set the response headers
         HttpHeaders headers = new HttpHeaders();
         headers.setContentType(MediaType.APPLICATION_PDF);
         headers.setContentDispositionFormData("attachment", "bill.pdf"); // Set the filename for download
-
-        // Return the response entity with the PDF bytes and headers
         return new ResponseEntity<>(billBytes, headers, HttpStatus.OK);
     }
 
