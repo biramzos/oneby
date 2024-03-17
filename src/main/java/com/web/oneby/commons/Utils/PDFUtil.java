@@ -6,6 +6,7 @@ import com.lowagie.text.Font;
 import com.lowagie.text.Image;
 import com.lowagie.text.Rectangle;
 import com.lowagie.text.pdf.*;
+import com.lowagie.text.pdf.draw.LineSeparator;
 import com.web.oneby.commons.Enums.Language;
 import com.web.oneby.commons.Enums.LogType;
 import com.web.oneby.commons.Enums.Template;
@@ -14,6 +15,7 @@ import fr.opensagres.poi.xwpf.converter.pdf.PdfConverter;
 import fr.opensagres.poi.xwpf.converter.pdf.PdfOptions;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.poi.xwpf.usermodel.*;
+import org.apache.xmlbeans.impl.xb.xsdschema.WhiteSpaceDocument;
 import org.docx4j.Docx4J;
 import org.docx4j.model.datastorage.migration.VariablePrepare;
 import org.docx4j.openpackaging.exceptions.Docx4JException;
@@ -25,6 +27,7 @@ import org.springframework.core.io.ClassPathResource;
 import org.springframework.stereotype.Service;
 
 import javax.xml.bind.JAXBException;
+import java.awt.*;
 import java.io.*;
 import java.util.*;
 
@@ -37,31 +40,17 @@ public class PDFUtil {
 
     public static byte[] generateBill(int language) {
         try (ByteArrayOutputStream baos = new ByteArrayOutputStream();
-             Document document = new Document(new Rectangle(210.0F, 300F))) {
-            Font font = FontFactory.getFont(ConstantsUtil.FONTS_DIRECTORY + "Monoscape/font.ttf", BaseFont.IDENTITY_H, true, 8, 0);
+             Document document = new Document(new Rectangle(297.0F, 420.0F))) {
             PdfWriter.getInstance(document, baos);
             document.setMargins(10f,10f, 10f,10f);
             document.open();
-            Image image = Image.getInstance(ConstantsUtil.IMAGES_DIRECTORY + "userDefault.png");
-            image.scaleToFit(40, 40);
-            document.add(image);
-            String word = TranslationUtil.getMessage("customer", language);
-            System.out.println(word);
-            document.add(new Paragraph("OneBy                                 № 1 \n", font));
-            document.add(new Paragraph("------------------------------------------\n", font));
-            document.add(new Paragraph(TranslationUtil.getMessage("customer", language) + "\n\n", font));
-            document.add(new Paragraph("Full name: Ramis Beishembiyev", font));
-            document.add(new Paragraph("Email: b.ramis.2002@gmail.com", font));
-            document.add(new Paragraph("Username: imramo00", font));
-            document.add(new Paragraph("------------------------------------------\n", font));
-            document.add(new Paragraph("Products\n\n", font));
-            PdfPTable table = new PdfPTable(2);
-            table.setWidthPercentage(100);
-            table.addCell(new Paragraph("Title", font));
-            table.addCell(new Paragraph("Price", font));
-            table.addCell(new Paragraph("Book1 (BookAuthor)", font));
-            table.addCell(new Paragraph("100 T.", font));
-            document.add(table);
+            document.add(getHeaderImage());
+            document.add(getHeader(10L));
+            document.add(new Chunk(getSpacer(Color.black)));
+            writeCustomerInfo(document, language);
+            document.add(new Chunk(getSpacer(Color.black)));
+            writeProductsInfo(document, language);
+            document.add(new Chunk(getSpacer(Color.black)));
             document.close();
             return baos.toByteArray();
         } catch (IOException e) {
@@ -99,6 +88,93 @@ public class PDFUtil {
         }
     }
 
+
+    private static Image getHeaderImage(){
+        try {
+            Image image = Image.getInstance(ConstantsUtil.IMAGES_DIRECTORY + "userDefault.png");
+            image.scaleToFit(40, 40);
+            return image;
+        } catch (IOException e) {
+            LogUtil.write(e.getMessage(), LogType.ERROR);
+            return null;
+        }
+    }
+
+    private static Paragraph getHeader(Long id) {
+        Map<String, Font> fonts = getMonoscapeFonts();
+        Paragraph paragraph = new Paragraph();
+        paragraph.add(new Phrase("OneBy", fonts.get("fontBold")));
+        paragraph.add(new Chunk(getSpacer(Color.white)));
+        paragraph.add(new Phrase("№ " + id, fonts.get("font")));
+        return paragraph;
+    }
+
+    private static void writeCustomerInfo(Document document, int language) {
+        Map<String, Font> fonts = getMonoscapeFonts();
+        document.add(new Paragraph(TranslationUtil.getMessage("customer", language) + "\n\n", fonts.get("fontBold")));
+        //full name
+        Paragraph fullName = new Paragraph();
+        fullName.add(new Phrase(TranslationUtil.getMessage("full_name", language) + ":", fonts.get("font")));
+        fullName.add(new Chunk(getSpacer(Color.white)));
+        fullName.add(new Phrase("Ramis Beishembiyev", fonts.get("font")));
+        document.add(fullName);
+        //Email
+        Paragraph email = new Paragraph();
+        email.add(new Phrase(TranslationUtil.getMessage("email", language) + ":", fonts.get("font")));
+        email.add(new Chunk(getSpacer(Color.white)));
+        email.add(new Phrase("b.ramis.2002@gmail.com", fonts.get("font")));
+        document.add(email);
+        //username
+        Paragraph username = new Paragraph();
+        username.add(new Phrase(TranslationUtil.getMessage("username", language) + ":", fonts.get("font")));
+        username.add(new Chunk(getSpacer(Color.white)));
+        username.add(new Phrase("imramo00", fonts.get("font")));
+        document.add(username);
+    }
+
+    private static void writeProductsInfo(Document document, int language) {
+        Map<String, Font> fonts = getMonoscapeFonts();
+        document.add(new Paragraph(TranslationUtil.getMessage("products", language) + "\n\n", fonts.get("fontBold")));
+        PdfPTable table = new PdfPTable(3);
+        //params of table
+        table.setWidthPercentage(100);
+        table.setWidths(new float[]{ 1.5f, 6.0f, 2.5f });
+        //header of table
+        table.addCell(new Paragraph(TranslationUtil.getMessage("№", language), fonts.get("fontBold")));
+        table.addCell(new Paragraph(TranslationUtil.getMessage("product_name", language), fonts.get("fontBold")));
+        table.addCell(new Paragraph(TranslationUtil.getMessage("product_value", language), fonts.get("fontBold")));
+        //body of table
+        table.addCell(new Paragraph(String.valueOf(100), fonts.get("font")));
+        table.addCell(new Paragraph("Book1 (BookAuthor)", fonts.get("font")));
+        table.addCell(new Paragraph("100 T.", fonts.get("font")));
+        //footer of table
+        PdfPCell cell = new PdfPCell();
+        cell.setColspan(2);
+        Paragraph total = new Paragraph(TranslationUtil.getMessage("total", language), fonts.get("font"));
+        total.setAlignment(Element.ALIGN_CENTER);
+        cell.addElement(total);
+        table.addCell(cell);
+        table.addCell(new Paragraph("100 T.", fonts.get("font")));
+        document.add(table);
+    }
+
+    private static void writeFooter(Document document, int language) {
+
+    }
+
+
+    private static LineSeparator getSpacer(Color color) {
+        LineSeparator spacer = new LineSeparator();
+        spacer.setLineColor(color);
+        return spacer;
+    }
+
+    private static Map<String, Font> getMonoscapeFonts() {
+        return new HashMap<>() {{
+            put("font", FontUtil.getMonoscapeFontProvider().getFont("Monoscape", "Identify-H", 8, 0, Color.BLACK));
+            put("fontBold", FontUtil.getMonoscapeFontProvider().getFont("Monoscape", "Identify-H", 8, 1, Color.BLACK));
+        }};
+    }
 
 
 }

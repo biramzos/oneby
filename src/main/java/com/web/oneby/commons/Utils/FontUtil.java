@@ -28,7 +28,7 @@ public class FontUtil {
                 } else {
                     fontPath = ConstantsUtil.FONTS_DIRECTORY + "TimesNewRoman/font.ttf";
                 }
-                return FontFactory.getFont(fontPath, BaseFont.IDENTITY_H, true);
+                return FontFactory.getFont(fontPath, BaseFont.IDENTITY_H, true, size, 0, color);
             }
         };
     }
@@ -37,8 +37,8 @@ public class FontUtil {
         return new IFontProvider() {
             @Override
             public Font getFont(String fontFamily, String encoding, float size, int style, Color color) {
-                String fontPath = ConstantsUtil.FONTS_DIRECTORY + "Monoscape/font.ttf";
-                return FontFactory.getFont(fontPath, BaseFont.IDENTITY_H, true);
+                String fontPath = ConstantsUtil.FONTS_DIRECTORY + "Monoscape/font.ttf";;
+                return FontFactory.getFont(fontPath, BaseFont.IDENTITY_H, true, size, style, color);
             }
         };
     }
