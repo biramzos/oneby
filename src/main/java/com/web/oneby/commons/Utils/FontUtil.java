@@ -13,8 +13,6 @@ public class FontUtil {
 
     public static IFontProvider getTimesNewRomanFontProvider() {
         return new IFontProvider() {
-
-            @SneakyThrows
             @Override
             public Font getFont(String fontFamily, String encoding, float size, int style, Color color) {
                 boolean isBold = style == Font.BOLD;
@@ -32,20 +30,16 @@ public class FontUtil {
                 }
                 return FontFactory.getFont(fontPath, BaseFont.IDENTITY_H, true);
             }
-
         };
     }
 
     public static IFontProvider getMonoscapeFontProvider() {
         return new IFontProvider() {
-
-            @SneakyThrows
             @Override
             public Font getFont(String fontFamily, String encoding, float size, int style, Color color) {
                 String fontPath = ConstantsUtil.FONTS_DIRECTORY + "Monoscape/font.ttf";
                 return FontFactory.getFont(fontPath, BaseFont.IDENTITY_H, true);
             }
-
         };
     }
 

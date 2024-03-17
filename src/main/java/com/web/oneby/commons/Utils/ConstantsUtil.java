@@ -1,5 +1,6 @@
 package com.web.oneby.commons.Utils;
 
+import com.web.oneby.commons.Enums.LogType;
 import com.web.oneby.modules.users.Models.User;
 import jakarta.servlet.ServletContext;
 import lombok.SneakyThrows;
@@ -27,8 +28,12 @@ public class ConstantsUtil {
     public static final String VIDEOS_DIRECTORY = new ClassPathResource("/assets/videos/").getPath();
     public static final String FILES_DIRECTORY = new ClassPathResource("/assets/files/").getPath();
 
-    @SneakyThrows
     public static String getHostName() {
-        return InetAddress.getLocalHost().getHostName();
+        try {
+            return InetAddress.getLocalHost().getHostName();
+        } catch (Exception e) {
+            LogUtil.write(e.getMessage(), LogType.ERROR);
+            return "http://127.0.0.1:8000";
+        }
     }
 }

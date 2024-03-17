@@ -7,6 +7,7 @@ import com.lowagie.text.Image;
 import com.lowagie.text.Rectangle;
 import com.lowagie.text.pdf.*;
 import com.web.oneby.commons.Enums.Language;
+import com.web.oneby.commons.Enums.LogType;
 import com.web.oneby.commons.Enums.Template;
 import com.web.oneby.commons.Services.OBFileService;
 import fr.opensagres.poi.xwpf.converter.pdf.PdfConverter;
@@ -64,7 +65,7 @@ public class PDFUtil {
             document.close();
             return baos.toByteArray();
         } catch (IOException e) {
-            log.error("Error generating bill: {}", e.getMessage());
+            LogUtil.write(e.getMessage(), LogType.ERROR);
             return null;
         }
     }
@@ -78,7 +79,7 @@ public class PDFUtil {
             PdfConverter.getInstance().convert(document, outputStream, options);
             return outputStream.toByteArray();
         } catch (IOException e) {
-            log.error("Error generating document: {}", e.getMessage());
+            LogUtil.write(e.getMessage(), LogType.ERROR);
             return null;
         }
     }
@@ -93,7 +94,7 @@ public class PDFUtil {
             wordMLPackage.save(outputStream);
             return convertDocxToPdf(outputStream.toByteArray());
         } catch (Exception e) {
-            e.printStackTrace();
+            LogUtil.write(e.getMessage(), LogType.ERROR);
             return null;
         }
     }

@@ -3,9 +3,11 @@ package com.web.oneby.modules.users.Services;
 import com.web.oneby.commons.DTOs.PageObject;
 import com.web.oneby.commons.DTOs.SearchFilter;
 import com.web.oneby.commons.Enums.HTTPMessage;
+import com.web.oneby.commons.Enums.LogType;
 import com.web.oneby.commons.Handlers.HTTPMessageHandler;
 import com.web.oneby.commons.Services.EmailService;
 import com.web.oneby.commons.Utils.ConstantsUtil;
+import com.web.oneby.commons.Utils.LogUtil;
 import com.web.oneby.commons.Utils.SortingUtil;
 import com.web.oneby.commons.Utils.StringUtil;
 import com.web.oneby.modules.users.DTOs.CreateUserRequest;
@@ -42,23 +44,19 @@ import java.util.Set;
 public class UserService implements UserDetailsService {
 
     private static final String SECRET_KEY = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz";
-
     private static UserRepository userRepository;
     private static PasswordEncoder passwordEncoder;
     private EmailService emailService;
-    private JdbcTemplate jdbcTemplate;
 
     @Autowired
     public UserService(
             UserRepository userRepository,
             PasswordEncoder passwordEncoder,
-            EmailService emailService,
-            JdbcTemplate jdbcTemplate
+            EmailService emailService
     ){
         UserService.userRepository = userRepository;
         UserService.passwordEncoder = passwordEncoder;
         this.emailService = emailService;
-        this.jdbcTemplate = jdbcTemplate;
     }
 
     public PageObject<UserResponse> search(SearchFilter request, int language) {
@@ -74,90 +72,103 @@ public class UserService implements UserDetailsService {
 
     @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
-        return userRepository.findByUsername(username).orElseThrow(() -> new UsernameNotFoundException("User '" + username + "' not found!"));
+        try {
+            return userRepository.findByUsername(username).get();
+        } catch (Exception e) {
+            LogUtil.write(e.getMessage(), LogType.ERROR);
+            return null;
+        }
     }
 
-    public User create(CreateUserRequest createUserRequest, HTTPMessageHandler messageHandler, int language) throws IOException {
+    public User create(CreateUserRequest createUserRequest, HTTPMessageHandler messageHandler, int language) {
         if (
                 userRepository.findByUsername(createUserRequest.getUsername()).isPresent() &&
                 userRepository.findByEmail(createUserRequest.getEmail()).isEmpty()
         ) {
-            log.error(HTTPMessage.USERNAME_IS_EXIST.getMessageEN());
+            LogUtil.write(HTTPMessage.USERNAME_IS_EXIST.getMessageEN(), LogType.ERROR);
             messageHandler.set(HTTPMessage.USERNAME_IS_EXIST, language);
             return null;
         } else if (
                 userRepository.findByUsername(createUserRequest.getUsername()).isEmpty() &&
                 userRepository.findByEmail(createUserRequest.getEmail()).isPresent()
         ) {
-            log.error(HTTPMessage.EMAIL_IS_EXIST.getMessageEN());
+            LogUtil.write(HTTPMessage.EMAIL_IS_EXIST.getMessageEN(), LogType.ERROR);
             messageHandler.set(HTTPMessage.EMAIL_IS_EXIST, language);
             return null;
         } else if (
                 userRepository.findByUsername(createUserRequest.getUsername()).isPresent() &&
                 userRepository.findByEmail(createUserRequest.getEmail()).isPresent()
         ) {
-            log.error(HTTPMessage.USER_IS_EXIST.getMessageEN());
+            LogUtil.write(HTTPMessage.USER_IS_EXIST.getMessageEN(), LogType.ERROR);
             messageHandler.set(HTTPMessage.USER_IS_EXIST, language);
             return null;
         }
         else {
             emailService.send(ConstantsUtil.getHostName() + "/api/v1/auth/confirm/" + generateToken(createUserRequest.getUsername()), createUserRequest.getEmail());
-
-            byte [] image = null;
-            if (createUserRequest.getImage() == null) {
-                InputStream inputStream = getClass().getResourceAsStream("/static/images/userDefault.png");
-                if (inputStream != null) {
-                    image = inputStream.readAllBytes();
+            try {
+                byte [] image = null;
+                if (createUserRequest.getImage() == null) {
+                    InputStream inputStream = getClass().getResourceAsStream("/static/images/userDefault.png");
+                    if (inputStream != null) {
+                        image = inputStream.readAllBytes();
+                    }
+                } else {
+                    image = createUserRequest.getImage().getBytes();
                 }
-            } else {
-                image = createUserRequest.getImage().getBytes();
-            }
-            log.info(HTTPMessage.SUCCESSFULLY_REGISTERED.getMessageEN());
-            messageHandler.set(HTTPMessage.SUCCESSFULLY_REGISTERED, language);
-
-            return userRepository.save (
+                LogUtil.write(HTTPMessage.SUCCESSFULLY_REGISTERED.getMessageEN(), LogType.ERROR);
+                messageHandler.set(HTTPMessage.SUCCESSFULLY_REGISTERED, language);
+                return userRepository.save (
                     new User (
-                            createUserRequest.getNameRU(),
-                            createUserRequest.getNameRU(),
-                            createUserRequest.getNameEN(),
-                            createUserRequest.getLastnameRU(),
-                            createUserRequest.getLastnameRU(),
-                            createUserRequest.getLastnameEN(),
-                            createUserRequest.getUsername(),
-                            createUserRequest.getEmail(),
-                            passwordEncoder.encode(createUserRequest.getPassword()),
-                            generateToken(createUserRequest.getUsername()),
-                            Set.of(UserRole.USER),
-                            image,
-                            false
+                        createUserRequest.getNameRU(),
+                        createUserRequest.getNameRU(),
+                        createUserRequest.getNameEN(),
+                        createUserRequest.getLastnameRU(),
+                        createUserRequest.getLastnameRU(),
+                        createUserRequest.getLastnameEN(),
+                        createUserRequest.getUsername(),
+                        createUserRequest.getEmail(),
+                        passwordEncoder.encode(createUserRequest.getPassword()),
+                        generateToken(createUserRequest.getUsername()),
+                        Set.of(UserRole.USER),
+                        image,
+                        false
                     )
-            );
+                );
+            } catch (Exception e) {
+                LogUtil.write(e.getMessage(), LogType.ERROR);
+                return null;
+            }
         }
     }
 
-    public boolean onInit() throws IOException {
-        InputStream inputStream = new FileInputStream(ConstantsUtil.IMAGES_DIRECTORY + "userDefault.png");
-        boolean isAdminExist = UserService.userRepository.countAllByRolesContaining(UserRole.ADMIN) > 0;
-        if (!isAdminExist && (inputStream != null)) {
-            User user = new User(
-                    ConstantsUtil.ADMIN_NAME_KZ,
-                    ConstantsUtil.ADMIN_NAME_RU,
-                    ConstantsUtil.ADMIN_NAME_EN,
-                    ConstantsUtil.ADMIN_LASTNAME_KZ,
-                    ConstantsUtil.ADMIN_LASTNAME_RU,
-                    ConstantsUtil.ADMIN_LASTNAME_EN,
-                    ConstantsUtil.ADMIN_USERNAME,
-                    ConstantsUtil.ADMIN_EMAIL,
-                    passwordEncoder.encode(ConstantsUtil.ADMIN_PASSWORD),
-                    generateToken(ConstantsUtil.ADMIN_USERNAME),
-                    Set.of(UserRole.ADMIN),
-                    inputStream.readAllBytes(),
-                    true
-            );
-            userRepository.save(user);
-            return true;
+    public boolean onInit() {
+        try {
+            InputStream inputStream = new FileInputStream(ConstantsUtil.IMAGES_DIRECTORY + "userDefault.png");
+            boolean isAdminExist = UserService.userRepository.countAllByRolesContaining(UserRole.ADMIN) > 0;
+            if (!isAdminExist) {
+                User user = new User(
+                        ConstantsUtil.ADMIN_NAME_KZ,
+                        ConstantsUtil.ADMIN_NAME_RU,
+                        ConstantsUtil.ADMIN_NAME_EN,
+                        ConstantsUtil.ADMIN_LASTNAME_KZ,
+                        ConstantsUtil.ADMIN_LASTNAME_RU,
+                        ConstantsUtil.ADMIN_LASTNAME_EN,
+                        ConstantsUtil.ADMIN_USERNAME,
+                        ConstantsUtil.ADMIN_EMAIL,
+                        passwordEncoder.encode(ConstantsUtil.ADMIN_PASSWORD),
+                        generateToken(ConstantsUtil.ADMIN_USERNAME),
+                        Set.of(UserRole.ADMIN),
+                        inputStream.readAllBytes(),
+                        true
+                );
+                userRepository.save(user);
+                return true;
+            }
+            return false;
+        } catch (Exception e) {
+            LogUtil.write(e.getMessage(), LogType.ERROR);
+            return false;
         }
-        return false;
     }
 
     private static String generateToken(String username){
@@ -177,16 +188,16 @@ public class UserService implements UserDetailsService {
         Optional<User> user = userRepository.findByToken(token);
         if (user.isPresent()) {
             if (user.get().isActive()) {
-                log.info(HTTPMessage.USER_ALREADY_CONFIRMED.getMessageEN());
+                LogUtil.write(HTTPMessage.USER_ALREADY_CONFIRMED.getMessageEN(), LogType.INFO);
                 messageHandler.set(HTTPMessage.USER_ALREADY_CONFIRMED, language);
             } else {
                 user.get().setActive(true);
                 userRepository.save(user.get());
-                log.info(HTTPMessage.USER_CONFIRMED.getMessageEN());
+                LogUtil.write(HTTPMessage.USER_CONFIRMED.getMessageEN(), LogType.INFO);
                 messageHandler.set(HTTPMessage.USER_CONFIRMED, language);
             }
         } else {
-            log.info(HTTPMessage.USER_NOT_CONFIRMED.getMessageEN());
+            LogUtil.write(HTTPMessage.USER_NOT_CONFIRMED.getMessageEN(), LogType.INFO);
             messageHandler.set(HTTPMessage.USER_NOT_CONFIRMED, language);
         }
     }

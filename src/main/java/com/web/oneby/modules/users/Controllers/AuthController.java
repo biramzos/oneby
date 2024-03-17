@@ -45,7 +45,7 @@ public class AuthController {
             HttpServletResponse httpServletResponse,
             @ModelAttribute CreateUserRequest createUserRequest,
             @RequestHeader(value = "Current-Language", defaultValue = "ru") Language language
-    ) throws IOException {
+    ) {
         Response response = new Response();
         HTTPMessageHandler messageHandler = new HTTPMessageHandler();
         User user = userService.create(createUserRequest, messageHandler, language.getId());
