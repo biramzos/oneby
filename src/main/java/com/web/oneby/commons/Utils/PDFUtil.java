@@ -40,7 +40,7 @@ public class PDFUtil {
 
     public static byte[] generateBill(int language) {
         try (ByteArrayOutputStream baos = new ByteArrayOutputStream();
-             Document document = new Document(new Rectangle(297.0F, 420.0F))) {
+             Document document = new Document(PageSize.A6)) {
             PdfWriter.getInstance(document, baos);
             document.setMargins(10f,10f, 10f,10f);
             document.open();
