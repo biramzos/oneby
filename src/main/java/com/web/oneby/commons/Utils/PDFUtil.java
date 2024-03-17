@@ -19,6 +19,7 @@ import org.docx4j.openpackaging.exceptions.Docx4JException;
 import org.docx4j.openpackaging.packages.WordprocessingMLPackage;
 import org.docx4j.openpackaging.parts.WordprocessingML.MainDocumentPart;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.cglib.core.Local;
 import org.springframework.core.io.ClassPathResource;
 import org.springframework.stereotype.Service;
 
@@ -33,7 +34,7 @@ public class PDFUtil {
     @Autowired
     private static OBFileService fileService;
 
-    public static byte[] generateBill() {
+    public static byte[] generateBill(int language) {
         try (ByteArrayOutputStream baos = new ByteArrayOutputStream();
              Document document = new Document(new Rectangle(210.0F, 300F))) {
             Font font = FontFactory.getFont(ConstantsUtil.FONTS_DIRECTORY + "Monoscape/font.ttf", BaseFont.IDENTITY_H, true, 8, 0);
@@ -43,9 +44,11 @@ public class PDFUtil {
             Image image = Image.getInstance(ConstantsUtil.IMAGES_DIRECTORY + "userDefault.png");
             image.scaleToFit(40, 40);
             document.add(image);
+            String word = TranslationUtil.getMessage("customer", language);
+            System.out.println(word);
             document.add(new Paragraph("OneBy                                 № 1 \n", font));
             document.add(new Paragraph("------------------------------------------\n", font));
-            document.add(new Paragraph("Customer\n\n", font));
+            document.add(new Paragraph(TranslationUtil.getMessage("customer", language) + "\n\n", font));
             document.add(new Paragraph("Full name: Ramis Beishembiyev", font));
             document.add(new Paragraph("Email: b.ramis.2002@gmail.com", font));
             document.add(new Paragraph("Username: imramo00", font));

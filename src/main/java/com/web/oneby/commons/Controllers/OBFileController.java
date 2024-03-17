@@ -24,11 +24,11 @@ public class OBFileController {
 
     @GetMapping("/bill")
     @PreAuthorize("isAnonymous()")
-    public ResponseEntity<byte[]> downloadBill() {
-        byte[] billBytes = PDFUtil.generateBill();
+    public ResponseEntity<byte[]> downloadBill(@RequestHeader(value = "Current-Language", defaultValue = "ru") Language language) {
+        byte[] billBytes = PDFUtil.generateBill(language.getId());
         HttpHeaders headers = new HttpHeaders();
         headers.setContentType(MediaType.APPLICATION_PDF);
-        headers.setContentDispositionFormData("attachment", "bill.pdf"); // Set the filename for download
+        headers.setContentDispositionFormData("attachment", "bill.pdf");
         return new ResponseEntity<>(billBytes, headers, HttpStatus.OK);
     }
 

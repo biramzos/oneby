@@ -29,6 +29,7 @@ import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
+import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.List;
@@ -100,7 +101,7 @@ public class UserService implements UserDetailsService {
             return null;
         }
         else {
-            emailService.send(ConstantsUtil.HOST + "/api/v1/auth/confirm/" + generateToken(createUserRequest.getUsername()), createUserRequest.getEmail());
+            emailService.send(ConstantsUtil.getHostName() + "/api/v1/auth/confirm/" + generateToken(createUserRequest.getUsername()), createUserRequest.getEmail());
 
             byte [] image = null;
             if (createUserRequest.getImage() == null) {
@@ -135,13 +136,9 @@ public class UserService implements UserDetailsService {
     }
 
     public boolean onInit() throws IOException {
+        InputStream inputStream = new FileInputStream(ConstantsUtil.IMAGES_DIRECTORY + "userDefault.png");
         boolean isAdminExist = UserService.userRepository.countAllByRolesContaining(UserRole.ADMIN) > 0;
-        if (!isAdminExist) {
-            byte [] image = null;
-            InputStream inputStream = UserService.class.getResourceAsStream("/static/images/userDefault.png");
-            if (inputStream != null) {
-                image = inputStream.readAllBytes();
-            }
+        if (!isAdminExist && (inputStream != null)) {
             User user = new User(
                     ConstantsUtil.ADMIN_NAME_KZ,
                     ConstantsUtil.ADMIN_NAME_RU,
@@ -154,7 +151,7 @@ public class UserService implements UserDetailsService {
                     passwordEncoder.encode(ConstantsUtil.ADMIN_PASSWORD),
                     generateToken(ConstantsUtil.ADMIN_USERNAME),
                     Set.of(UserRole.ADMIN),
-                    image,
+                    inputStream.readAllBytes(),
                     true
             );
             userRepository.save(user);
