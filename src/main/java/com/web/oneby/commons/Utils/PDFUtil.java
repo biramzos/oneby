@@ -25,10 +25,10 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cglib.core.Local;
 import org.springframework.core.io.ClassPathResource;
 import org.springframework.stereotype.Service;
-
 import javax.xml.bind.JAXBException;
 import java.awt.*;
 import java.io.*;
+import java.time.LocalDate;
 import java.util.*;
 
 @Slf4j
@@ -45,12 +45,14 @@ public class PDFUtil {
             document.setMargins(10f,10f, 10f,10f);
             document.open();
             document.add(getHeaderImage());
-            document.add(getHeader(10L));
+            document.add(getHeader(10L, language));
             document.add(new Chunk(getSpacer(Color.black)));
             writeCustomerInfo(document, language);
             document.add(new Chunk(getSpacer(Color.black)));
             writeProductsInfo(document, language);
             document.add(new Chunk(getSpacer(Color.black)));
+            writeFooter(document, language);
+            document.add(getSpaceCutter(Color.black));
             document.close();
             return baos.toByteArray();
         } catch (IOException e) {
@@ -91,8 +93,8 @@ public class PDFUtil {
 
     private static Image getHeaderImage(){
         try {
-            Image image = Image.getInstance(ConstantsUtil.IMAGES_DIRECTORY + "userDefault.png");
-            image.scaleToFit(40, 40);
+            Image image = Image.getInstance(ConstantsUtil.LOGOS_DIRECTORY + "logo-black.png");
+            image.scaleToFit(50, 50);
             return image;
         } catch (IOException e) {
             LogUtil.write(e.getMessage(), LogType.ERROR);
@@ -100,10 +102,10 @@ public class PDFUtil {
         }
     }
 
-    private static Paragraph getHeader(Long id) {
+    private static Paragraph getHeader(Long id, int language) {
         Map<String, Font> fonts = getMonoscapeFonts();
         Paragraph paragraph = new Paragraph();
-        paragraph.add(new Phrase("OneBy", fonts.get("fontBold")));
+        paragraph.add(new Phrase(TranslationUtil.getMessage("payment_bill", language), fonts.get("fontBold")));
         paragraph.add(new Chunk(getSpacer(Color.white)));
         paragraph.add(new Phrase("№ " + id, fonts.get("font")));
         return paragraph;
@@ -111,7 +113,7 @@ public class PDFUtil {
 
     private static void writeCustomerInfo(Document document, int language) {
         Map<String, Font> fonts = getMonoscapeFonts();
-        document.add(new Paragraph(TranslationUtil.getMessage("customer", language) + "\n\n", fonts.get("fontBold")));
+        document.add(new Paragraph(TranslationUtil.getMessage("customer", language) + "\n", fonts.get("fontBold")));
         //full name
         Paragraph fullName = new Paragraph();
         fullName.add(new Phrase(TranslationUtil.getMessage("full_name", language) + ":", fonts.get("font")));
@@ -159,7 +161,11 @@ public class PDFUtil {
     }
 
     private static void writeFooter(Document document, int language) {
-
+        Map<String, Font> fonts = getMonoscapeFonts();
+        document.add(new Paragraph(TranslationUtil.getMessage("terms_and_conditions", language), fonts.get("fontBold")));
+        document.add(new Paragraph(TranslationUtil.getMessage("payment_is_due_within", language, "15"), fonts.get("font")));
+        document.add(new Paragraph(TranslationUtil.getMessage("please_make_checks_payable_to", language, "OneBy"), fonts.get("font")));
+        document.add(new Paragraph("\n", fonts.get("font")));
     }
 
 
@@ -169,12 +175,47 @@ public class PDFUtil {
         return spacer;
     }
 
+    private static LineSeparator getSpaceCutter(Color color) {
+        LineSeparator spacer = new LineSeparator();
+        spacer.setLineWidth(1f);
+        spacer.setLineColor(color);
+        spacer = new LineSeparator() {
+            @Override
+            public void draw(PdfContentByte canvas, float llx, float lly, float urx, float ury, float y) {
+                canvas.saveState();
+                canvas.setLineWidth(lineWidth);
+                canvas.setColorStroke(color);
+                float dashLength = 5;
+                float gapLength = 2;
+                float totalLength = dashLength + gapLength;
+                float x = llx;
+                while (x < urx) {
+                    canvas.moveTo(x, y);
+                    canvas.lineTo(Math.min(x + dashLength, urx), y);
+                    x += totalLength;
+                }
+                canvas.stroke();
+                canvas.restoreState();
+            }
+        };
+        return spacer;
+    }
+
     private static Map<String, Font> getMonoscapeFonts() {
         return new HashMap<>() {{
-            put("font", FontUtil.getMonoscapeFontProvider().getFont("Monoscape", "Identify-H", 8, 0, Color.BLACK));
-            put("fontBold", FontUtil.getMonoscapeFontProvider().getFont("Monoscape", "Identify-H", 9, 1, Color.BLACK));
+            put("font", FontUtil.getMonoscapeFontProvider().getFont("Monoscape", BaseFont.IDENTITY_H, 8, 0, Color.BLACK));
+            put("fontBold", FontUtil.getMonoscapeFontProvider().getFont("Monoscape", BaseFont.IDENTITY_H, 9, 1, Color.BLACK));
         }};
     }
 
+    private static Map<String, Font> getTimesNewRomanFonts() {
+        return new HashMap<>() {{
+            put("font", FontUtil.getTimesNewRomanFontProvider().getFont("TimesNewRoman", BaseFont.IDENTITY_H, 8, 0, Color.BLACK));
+            put("fontBold", FontUtil.getTimesNewRomanFontProvider().getFont("TimesNewRoman", BaseFont.IDENTITY_H, 9, 1, Color.BLACK));
+            put("fontItalic", FontUtil.getTimesNewRomanFontProvider().getFont("TimesNewRoman", BaseFont.IDENTITY_H, 9, 2, Color.BLACK));
+            put("fontBoldItalic", FontUtil.getTimesNewRomanFontProvider().getFont("TimesNewRoman", BaseFont.IDENTITY_H, 9, 3, Color.BLACK));
+
+        }};
+    }
 
 }

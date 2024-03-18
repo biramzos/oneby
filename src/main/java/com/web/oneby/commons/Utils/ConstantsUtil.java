@@ -25,6 +25,7 @@ public class ConstantsUtil {
     public static final String TEMPLATES_DIRECTORY = new ClassPathResource("/assets/templates/").getPath();
     public static final String FONTS_DIRECTORY = new ClassPathResource("/assets/fonts/").getPath();
     public static final String IMAGES_DIRECTORY = new ClassPathResource("/assets/images/").getPath();
+    public static final String LOGOS_DIRECTORY = new ClassPathResource("/assets/logos/").getPath();
     public static final String VIDEOS_DIRECTORY = new ClassPathResource("/assets/videos/").getPath();
     public static final String FILES_DIRECTORY = new ClassPathResource("/assets/files/").getPath();
 

@@ -6,6 +6,7 @@ import org.springframework.context.MessageSource;
 import org.springframework.stereotype.Component;
 
 import java.util.Locale;
+import java.util.Properties;
 
 @Component
 public class TranslationUtil {
@@ -20,8 +21,8 @@ public class TranslationUtil {
         return messageSource.getMessage(key, arguments, new Locale(language.name()));
     }
 
-    public static String getMessage(String key, int language, Object... arguments) {
-        return messageSource.getMessage(key, arguments, new Locale(Language.getLanguageById(language).name()));
+    public static String getMessage(String key, int language, String... args) {
+        return messageSource.getMessage(key, args, new Locale(Language.getLanguageById(language).name()));
     }
 
     public static String getMessage(String key, Language language) {
