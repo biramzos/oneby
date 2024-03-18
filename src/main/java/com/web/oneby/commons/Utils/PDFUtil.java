@@ -172,7 +172,7 @@ public class PDFUtil {
     private static Map<String, Font> getMonoscapeFonts() {
         return new HashMap<>() {{
             put("font", FontUtil.getMonoscapeFontProvider().getFont("Monoscape", "Identify-H", 8, 0, Color.BLACK));
-            put("fontBold", FontUtil.getMonoscapeFontProvider().getFont("Monoscape", "Identify-H", 8, 1, Color.BLACK));
+            put("fontBold", FontUtil.getMonoscapeFontProvider().getFont("Monoscape", "Identify-H", 9, 1, Color.BLACK));
         }};
     }
 
