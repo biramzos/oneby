@@ -9,6 +9,7 @@ import com.lowagie.text.pdf.*;
 import com.lowagie.text.pdf.draw.LineSeparator;
 import com.web.oneby.commons.Enums.Language;
 import com.web.oneby.commons.Enums.LogType;
+import com.web.oneby.commons.Enums.ProductType;
 import com.web.oneby.commons.Enums.Template;
 import com.web.oneby.commons.Services.OBFileService;
 import fr.opensagres.poi.xwpf.converter.pdf.PdfConverter;
@@ -29,6 +30,8 @@ import javax.xml.bind.JAXBException;
 import java.awt.*;
 import java.io.*;
 import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.time.ZoneId;
 import java.util.*;
 
 @Slf4j
@@ -54,6 +57,7 @@ public class PDFUtil {
             writeFooter(document, language);
             document.add(getSpaceCutter(Color.black));
             document.close();
+            LogUtil.write("Payment bill is generated![id=?]", LogType.INFO);
             return baos.toByteArray();
         } catch (IOException e) {
             LogUtil.write(e.getMessage(), LogType.ERROR);
@@ -132,6 +136,12 @@ public class PDFUtil {
         username.add(new Chunk(getSpacer(Color.white)));
         username.add(new Phrase("imramo00", fonts.get("font")));
         document.add(username);
+        //date
+        Paragraph date = new Paragraph();
+        date.add(new Phrase(TranslationUtil.getMessage("date", language) + ":", fonts.get("font")));
+        date.add(new Chunk(getSpacer(Color.white)));
+        date.add(new Phrase(DateUtil.getStringDateTimeFromDateTime(LocalDateTime.now(), language), fonts.get("font")));
+        document.add(date);
     }
 
     private static void writeProductsInfo(Document document, int language) {
@@ -140,23 +150,29 @@ public class PDFUtil {
         PdfPTable table = new PdfPTable(3);
         //params of table
         table.setWidthPercentage(100);
-        table.setWidths(new float[]{ 1.5f, 6.0f, 2.5f });
+        table.setWidths(new float[]{ 1.0f, 8f, 2f });
         //header of table
         table.addCell(new Paragraph(TranslationUtil.getMessage("№", language), fonts.get("fontBold")));
         table.addCell(new Paragraph(TranslationUtil.getMessage("product_name", language), fonts.get("fontBold")));
         table.addCell(new Paragraph(TranslationUtil.getMessage("product_value", language), fonts.get("fontBold")));
         //body of table
-        table.addCell(new Paragraph(String.valueOf(100), fonts.get("font")));
-        table.addCell(new Paragraph("Book1 (BookAuthor)", fonts.get("font")));
-        table.addCell(new Paragraph("100 T.", fonts.get("font")));
+        //Books
+        table.addCell(getTableProductHeader(ProductType.BOOKS.getTableName(), language));
+        for (int i = 0; i < 10; i++) {
+            table.addCell(new Paragraph(String.valueOf(i + 1), fonts.get("font")));
+            table.addCell(new Paragraph("Book1 (BookAuthor)", fonts.get("font")));
+            table.addCell(new Paragraph("100 T.", fonts.get("font")));
+        }
         //footer of table
         PdfPCell cell = new PdfPCell();
         cell.setColspan(2);
-        Paragraph total = new Paragraph(TranslationUtil.getMessage("total", language), fonts.get("font"));
+        Paragraph total = new Paragraph(TranslationUtil.getMessage("total", language), fonts.get("fontBold"));
         total.setAlignment(Element.ALIGN_CENTER);
         cell.addElement(total);
         table.addCell(cell);
-        table.addCell(new Paragraph("100 T.", fonts.get("font")));
+        cell = new PdfPCell();
+        cell.addElement(new Paragraph("100 T.", fonts.get("fontBold")));
+        table.addCell(cell);
         document.add(table);
     }
 
@@ -173,6 +189,16 @@ public class PDFUtil {
         LineSeparator spacer = new LineSeparator();
         spacer.setLineColor(color);
         return spacer;
+    }
+
+    private static PdfPCell getTableProductHeader(String productType, int language) {
+        Map<String, Font> fonts = getMonoscapeFonts();
+        PdfPCell header = new PdfPCell();
+        header.setColspan(3);
+        Paragraph headerStr = new Paragraph(TranslationUtil.getMessage(productType, language), fonts.get("fontBold"));
+        headerStr.setAlignment(Paragraph.ALIGN_CENTER);
+        header.addElement(headerStr);
+        return header;
     }
 
     private static LineSeparator getSpaceCutter(Color color) {

@@ -13,7 +13,7 @@ public class DateUtil {
         int hour = localDateTime.getHour();
         int minute = localDateTime.getMinute();
         return day + " " + Month.fromId(month).getName(language) + " "
-                + year + " " + hour + ":" + minute;
+                + year + " " + (hour < 10 ? "0" + hour : hour) + ":" + (minute < 10 ? "0" + minute : minute);
     }
 
     public static String getStringDateFromDate(LocalDate localDate, int language){

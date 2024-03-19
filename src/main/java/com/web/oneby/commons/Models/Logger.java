@@ -2,6 +2,7 @@ package com.web.oneby.commons.Models;
 
 
 import com.web.oneby.commons.Enums.LogType;
+import com.web.oneby.modules.users.Models.User;
 import jakarta.persistence.*;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -19,9 +20,12 @@ public class Logger {
     private LogType type;
     @Column(columnDefinition = "TEXT")
     private String message;
+    @Column()
+    private Long userId;
 
-    public Logger(LogType type, String text) {
+    public Logger(LogType type, String text, Long userId) {
         this.type = type;
         this.message = text;
+        this.userId = userId;
     }
 }
