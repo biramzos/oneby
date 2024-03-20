@@ -28,7 +28,7 @@ public class FontUtil {
                 } else {
                     fontPath = ConstantsUtil.FONTS_DIRECTORY + "TimesNewRoman/font.ttf";
                 }
-                return FontFactory.getFont(fontPath, BaseFont.IDENTITY_H, true, size, 0, color);
+                return FontFactory.getFont(fontPath, BaseFont.IDENTITY_H, false, size, 0, color);
             }
         };
     }

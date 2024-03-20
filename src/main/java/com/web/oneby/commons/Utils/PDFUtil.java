@@ -30,6 +30,7 @@ import org.springframework.stereotype.Service;
 import javax.xml.bind.JAXBException;
 import java.awt.*;
 import java.io.*;
+import java.security.KeyStore;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.ZoneId;
@@ -89,7 +90,8 @@ public class PDFUtil {
         try (InputStream inputStream = new FileInputStream(ConstantsUtil.TEMPLATES_DIRECTORY + template.getFileByLanguage(lang))) {
             WordprocessingMLPackage wordMLPackage = WordprocessingMLPackage.load(inputStream);
             MainDocumentPart documentPart = wordMLPackage.getMainDocumentPart();
-            documentPart.variableReplace(replacements);
+
+            documentPart.variableReplace(getReplacements(replacements, lang));
             ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
             wordMLPackage.save(outputStream);
             LogUtil.write("Document is generated![id=?]", LogType.INFO);
@@ -100,6 +102,17 @@ public class PDFUtil {
         }
     }
 
+    private static Map<String, String> getReplacements(Map<String, String> replacements, int language) {
+        Map<String, String> variables = new HashMap<>();
+        for (Map.Entry<String, String> replacement : replacements.entrySet()) {
+            if (replacement.getKey().equals("date")) {
+                variables.put(replacement.getKey(), DateUtil.modifyStringDateForDocument(replacement.getValue(), language));
+            } else {
+                variables.put(replacement.getKey(), replacement.getValue());
+            }
+        }
+        return variables;
+    }
 
     private static Image getHeaderImage(){
         try {
@@ -146,7 +159,7 @@ public class PDFUtil {
         Paragraph date = new Paragraph();
         date.add(new Phrase(TranslationUtil.getMessage("date", language) + ":", fonts.get("font")));
         date.add(new Chunk(getSpacer(Color.white)));
-        date.add(new Phrase(DateUtil.getStringDateTimeFromDateTime(LocalDateTime.now(), language), fonts.get("font")));
+        date.add(new Phrase(DateUtil.getStringDateTimeFromDateTime(LocalDateTime.now(ZoneId.of("GMT+05:00")), language), fonts.get("font")));
         document.add(date);
     }
 
