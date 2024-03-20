@@ -1,7 +1,10 @@
 package com.web.oneby.commons.Enums;
 
 public enum ProductType {
-    BOOKS("books");
+    BOOKS("books"),
+    COURSES("courses"),
+    SPORTS("sports"),
+    DRESSES("dresses");
 
     private String tableName;
 

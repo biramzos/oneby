@@ -25,6 +25,7 @@ import org.docx4j.openpackaging.parts.WordprocessingML.MainDocumentPart;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cglib.core.Local;
 import org.springframework.core.io.ClassPathResource;
+import org.springframework.stereotype.Component;
 import org.springframework.stereotype.Service;
 import javax.xml.bind.JAXBException;
 import java.awt.*;
@@ -35,11 +36,15 @@ import java.time.ZoneId;
 import java.util.*;
 
 @Slf4j
-@Service
+@Component
 public class PDFUtil {
 
-    @Autowired
     private static OBFileService fileService;
+
+    @Autowired
+    public PDFUtil (OBFileService fileService) {
+        PDFUtil.fileService = fileService;
+    }
 
     public static byte[] generateBill(int language) {
         try (ByteArrayOutputStream baos = new ByteArrayOutputStream();
@@ -87,6 +92,7 @@ public class PDFUtil {
             documentPart.variableReplace(replacements);
             ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
             wordMLPackage.save(outputStream);
+            LogUtil.write("Document is generated![id=?]", LogType.INFO);
             return convertDocxToPdf(outputStream.toByteArray());
         } catch (Exception e) {
             LogUtil.write(e.getMessage(), LogType.ERROR);

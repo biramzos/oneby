@@ -1,21 +1,16 @@
 package com.web.oneby.commons.Utils;
 
-
 import com.web.oneby.commons.Enums.LogType;
 import com.web.oneby.commons.Models.Logger;
 import com.web.oneby.commons.Services.LoggerService;
 import com.web.oneby.modules.users.Models.User;
 import lombok.extern.slf4j.Slf4j;
-import org.apache.catalina.core.ApplicationContext;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.autoconfigure.neo4j.Neo4jProperties;
-import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Component;
 
-
-@Component
 @Slf4j
+@Component
 public class LogUtil {
 
     private static LoggerService loggerService;
