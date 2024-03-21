@@ -1,13 +1,7 @@
 package com.web.oneby.commons.Utils;
 
 import com.web.oneby.commons.Enums.LogType;
-import com.web.oneby.modules.users.Models.User;
-import jakarta.servlet.ServletContext;
-import lombok.SneakyThrows;
-import org.apache.catalina.core.ApplicationContext;
 import org.springframework.core.io.ClassPathResource;
-import org.springframework.core.io.ResourceLoader;
-
 import java.net.InetAddress;
 
 public class ConstantsUtil {

@@ -2,7 +2,6 @@ package com.web.oneby.commons.Enums;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonValue;
-
 import java.util.HashMap;
 import java.util.Map;
 

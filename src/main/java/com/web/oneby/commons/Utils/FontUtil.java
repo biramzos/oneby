@@ -4,9 +4,6 @@ import com.lowagie.text.Font;
 import com.lowagie.text.FontFactory;
 import com.lowagie.text.pdf.BaseFont;
 import fr.opensagres.xdocreport.itext.extension.font.IFontProvider;
-import lombok.SneakyThrows;
-import org.springframework.core.io.ClassPathResource;
-
 import java.awt.*;
 
 public class FontUtil {

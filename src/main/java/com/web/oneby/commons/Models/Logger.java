@@ -1,8 +1,6 @@
 package com.web.oneby.commons.Models;
 
-
 import com.web.oneby.commons.Enums.LogType;
-import com.web.oneby.modules.users.Models.User;
 import jakarta.persistence.*;
 import lombok.Data;
 import lombok.NoArgsConstructor;

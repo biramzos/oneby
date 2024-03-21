@@ -5,6 +5,7 @@ import jakarta.persistence.*;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import com.web.oneby.commons.Enums.Module;
+
 @Data
 @Entity
 @Table(name = "settings")
