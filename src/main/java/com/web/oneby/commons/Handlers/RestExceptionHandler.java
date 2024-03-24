@@ -32,63 +32,54 @@ public class RestExceptionHandler {
     @ExceptionHandler(AccessDeniedException.class)
     public static Response handleAccessDeniedException(HttpServletRequest request, HttpServletResponse response,
                                     AccessDeniedException exception) {
-        Response res = new Response();
         HTTPMessageHandler message = new HTTPMessageHandler();
         int language = (StringUtil.isEmpty(request.getHeader("Current-Language"))) ?
                 Language.ru.getId()    :
                 Language.valueOf(request.getHeader("Current-Language")).getId();
         message.set(HTTPMessage.ACCESS_DENIED, language);
         LogUtil.write(exception.getMessage(), LogType.ERROR);
-        res.put("message", message);
-        return res;
+        return Response.getResponse("message", message);
     }
 
     @ExceptionHandler(DisabledException.class)
     public static Response handleDisabledException(HttpServletRequest request, HttpServletResponse response,
                                        DisabledException exception) {
-        Response res = new Response();
         HTTPMessageHandler message = new HTTPMessageHandler();
         int language = (StringUtil.isEmpty(request.getHeader("Current-Language"))) ?
                 Language.ru.getId()    :
                 Language.valueOf(request.getHeader("Current-Language")).getId();
         LogUtil.write(exception.getMessage(), LogType.ERROR);
         message.set(HTTPMessage.USER_IS_DISABLED, language);
-        res.put("message", message);
-        return res;
+        return Response.getResponse("message", message);
     }
 
     @ExceptionHandler(BadCredentialsException.class)
     public static Response handleBadCredentialsException(HttpServletRequest request, HttpServletResponse response,
                                       AuthenticationException exception) {
-        Response res = new Response();
         HTTPMessageHandler message = new HTTPMessageHandler();
         int language = (StringUtil.isEmpty(request.getHeader("Current-Language"))) ?
                 Language.ru.getId()    :
                 Language.valueOf(request.getHeader("Current-Language")).getId();
         message.set(HTTPMessage.USERNAME_OR_PASSWORD_IS_WRONG, language);
         LogUtil.write(exception.getMessage(), LogType.ERROR);
-        res.put("message", message);
-        return res;
+        return Response.getResponse("message", message);
     }
 
     @ExceptionHandler(MissingPathVariableException.class)
     public static Response handleMissingPathVariableException (HttpServletRequest request, HttpServletResponse response,
                                        MissingPathVariableException exception) {
-        Response res = new Response();
         HTTPMessageHandler message = new HTTPMessageHandler();
         int language = (StringUtil.isEmpty(request.getHeader("Current-Language"))) ?
                 Language.ru.getId()    :
                 Language.valueOf(request.getHeader("Current-Language")).getId();
         message.set(HTTPMessage.ENTITY_IS_NOT_FOUND,language);
         LogUtil.write(exception.getMessage(), LogType.ERROR);
-        res.put("message", message);
-        return res;
+        return Response.getResponse("message", message);
     }
 
     @ExceptionHandler(NullPointerException.class)
     public static Response handleNullPointerException (HttpServletRequest request, HttpServletResponse response,
                                        NullPointerException exception) {
-        Response res = new Response();
         HTTPMessageHandler message = new HTTPMessageHandler();
         int language = (StringUtil.isEmpty(request.getHeader("Current-Language"))) ?
                 Language.ru.getId()    :
@@ -99,92 +90,79 @@ public class RestExceptionHandler {
         } else {
             message.set(HTTPMessage.NULL_POINTER, language);
         }
-        res.put("message", message);
-        return res;
+        return Response.getResponse("message", message);
     }
 
     @ExceptionHandler(NoResourceFoundException.class)
     public static Response handleNoResourceFoundException (HttpServletRequest request, HttpServletResponse response,
                                        NoResourceFoundException exception) {
-        Response res = new Response();
         HTTPMessageHandler message = new HTTPMessageHandler();
         int language = (StringUtil.isEmpty(request.getHeader("Current-Language"))) ?
                 Language.ru.getId()    :
                 Language.valueOf(request.getHeader("Current-Language")).getId();
         message.set(HTTPMessage.NO_RESOURCES_FOUND, language);
         LogUtil.write(exception.getMessage(), LogType.ERROR);
-        res.put("message", message);
-        return res;
+        return Response.getResponse("message", message);
     }
 
     @ExceptionHandler(HttpMessageNotReadableException.class)
     public static Response handleHttpMessageNotReadableException (HttpServletRequest request, HttpServletResponse response,
                                       HttpMessageNotReadableException exception) {
-        Response res = new Response();
         HTTPMessageHandler message = new HTTPMessageHandler();
         int language = (StringUtil.isEmpty(request.getHeader("Current-Language"))) ?
                 Language.ru.getId()    :
                 Language.valueOf(request.getHeader("Current-Language")).getId();
         message.set(HTTPMessage.CANNOT_PARSE_DATA, language);
         LogUtil.write(exception.getMessage(), LogType.ERROR);
-        res.put("message", message);
-        return res;
+        return Response.getResponse("message", message);
     }
 
     @ExceptionHandler(MissingRequestHeaderException.class)
     public static Response handleMissingRequestHeaderException (HttpServletRequest request, HttpServletResponse response,
                                         MissingRequestHeaderException exception) {
-        Response res = new Response();
         HTTPMessageHandler message = new HTTPMessageHandler();
         int language = (StringUtil.isEmpty(request.getHeader("Current-Language"))) ?
                 Language.ru.getId()    :
                 Language.valueOf(request.getHeader("Current-Language")).getId();
         message.set(HTTPMessage.MISSING_REQUEST_HEADER, language);
         LogUtil.write(exception.getMessage(), LogType.ERROR);
-        res.put("message", message);
-        return res;
+        return Response.getResponse("message", message);
     }
 
     @ExceptionHandler(UsernameNotFoundException.class)
     public static Response handleUsernameNotFoundException (HttpServletRequest request, HttpServletResponse response,
                                         UsernameNotFoundException exception) {
-        Response res = new Response();
         HTTPMessageHandler message = new HTTPMessageHandler();
         int language = (StringUtil.isEmpty(request.getHeader("Current-Language"))) ?
                 Language.ru.getId()    :
                 Language.valueOf(request.getHeader("Current-Language")).getId();
         message.set(HTTPMessage.USER_NOT_FOUND, language);
         LogUtil.write(exception.getMessage(), LogType.ERROR);
-        res.put("message", message);
-        return res;
+        return Response.getResponse("message", message);
     }
 
     @ExceptionHandler(InternalAuthenticationServiceException.class)
     public static Response handleInternalAuthenticationServiceException (HttpServletRequest request, HttpServletResponse response,
                                          InternalAuthenticationServiceException exception) {
-        Response res = new Response();
         HTTPMessageHandler message = new HTTPMessageHandler();
         int language = (StringUtil.isEmpty(request.getHeader("Current-Language"))) ?
                 Language.ru.getId()    :
                 Language.valueOf(request.getHeader("Current-Language")).getId();
         message.set(HTTPMessage.USER_IS_NOT_EXIST, language);
         LogUtil.write(exception.getMessage(), LogType.ERROR);
-        res.put("message", message);
-        return res;
+        return Response.getResponse("message", message);
     }
 
     @ExceptionHandler(Exception.class)
     public static Response handleException (HttpServletRequest request, HttpServletResponse response,
                                        Exception exception) {
-        Response res = new Response();
         HTTPMessageHandler message = new HTTPMessageHandler();
         int language = (StringUtil.isEmpty(request.getHeader("Current-Language"))) ?
                 Language.ru.getId()    :
                 Language.valueOf(request.getHeader("Current-Language")).getId();
         message.set(HTTPMessage.ERROR, language);
         LogUtil.write(exception.getMessage(), LogType.ERROR);
-        res.put("message", message);
-        return res;
+        return Response.getResponse("message", message);
     }
 
 }
