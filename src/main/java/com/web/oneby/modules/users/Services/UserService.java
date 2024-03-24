@@ -18,6 +18,7 @@ import com.web.oneby.modules.users.Repositories.UserRepository;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
 import jakarta.persistence.criteria.Predicate;
+import jakarta.transaction.Transactional;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.PageRequest;
@@ -34,10 +35,7 @@ import org.springframework.stereotype.Service;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
-import java.util.List;
-import java.util.Map;
-import java.util.Optional;
-import java.util.Set;
+import java.util.*;
 
 @Service
 @Slf4j
@@ -63,7 +61,7 @@ public class UserService implements UserDetailsService {
         Pageable pageable = PageRequest.of(
                 request.getPageNumber() - 1,
                 request.getCountInPage(),
-                Sort.by(SortingUtil.getSortingOrders(request.getSort())));
+                Sort.by(SortingUtil.getSortingOrders(request.getSort(), language)));
         return new PageObject<>(userRepository
                 .findAll(UserService.filter(request.getFilter()), pageable)
                 .map(user -> UserResponse.fromUser(user, language)));
@@ -71,7 +69,8 @@ public class UserService implements UserDetailsService {
 
 
     @Override
-    public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
+    @Transactional
+    public UserDetails loadUserByUsername(String username) {
         try {
             return userRepository.findByUsername(username).get();
         } catch (Exception e) {
@@ -129,7 +128,7 @@ public class UserService implements UserDetailsService {
                         createUserRequest.getEmail(),
                         passwordEncoder.encode(createUserRequest.getPassword()),
                         generateToken(createUserRequest.getUsername()),
-                        Set.of(UserRole.USER),
+                        List.of(UserRole.USER),
                         image,
                         false
                     )
@@ -157,7 +156,7 @@ public class UserService implements UserDetailsService {
                         ConstantsUtil.ADMIN_EMAIL,
                         passwordEncoder.encode(ConstantsUtil.ADMIN_PASSWORD),
                         generateToken(ConstantsUtil.ADMIN_USERNAME),
-                        Set.of(UserRole.ADMIN),
+                        List.of(UserRole.ADMIN),
                         inputStream.readAllBytes(),
                         true
                 );

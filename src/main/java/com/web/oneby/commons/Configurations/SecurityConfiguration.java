@@ -3,9 +3,12 @@ package com.web.oneby.commons.Configurations;
 import com.web.oneby.commons.Filters.JWTFilter;
 import com.web.oneby.modules.users.Services.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.cache.CacheManager;
+import org.springframework.cache.concurrent.ConcurrentMapCacheManager;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Lazy;
+import org.springframework.data.repository.cdi.Eager;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.mail.javamail.JavaMailSenderImpl;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -14,6 +17,8 @@ import org.springframework.security.authentication.dao.DaoAuthenticationProvider
 import org.springframework.security.config.annotation.method.configuration.EnableGlobalMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
+import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
@@ -25,14 +30,11 @@ import java.util.Properties;
 
 @EnableWebSecurity
 @Configuration
-@EnableGlobalMethodSecurity(prePostEnabled = true)
 public class SecurityConfiguration {
-    private static UserService userService;
 
     @Autowired
-    public SecurityConfiguration(@Lazy UserService userService){
-        SecurityConfiguration.userService = userService;
-    }
+    private @Lazy UserService userService;
+
 
     @Bean
     CorsConfigurationSource corsConfigurationSource() {
@@ -54,7 +56,7 @@ public class SecurityConfiguration {
     @Bean
     public AuthenticationManager authManager(){
         DaoAuthenticationProvider provider = new DaoAuthenticationProvider();
-        provider.setUserDetailsService(SecurityConfiguration.userService);
+        provider.setUserDetailsService(userService);
         provider.setPasswordEncoder(passwordEncoder());
         return new ProviderManager(provider);
     }
@@ -75,17 +77,22 @@ public class SecurityConfiguration {
     }
 
     @Bean
-    public static JWTFilter authTokenFilter(){
-        return new JWTFilter(SecurityConfiguration.userService);
+    public JWTFilter authTokenFilter(){
+        return new JWTFilter(this.userService);
     }
 
     @Bean
     public SecurityFilterChain configure(HttpSecurity http) throws Exception {
         return http.cors().and().csrf().disable()
-                .authenticationManager(authManager())
+                //.authenticationManager(authManager())
                 .authorizeRequests().anyRequest().permitAll()
                 .and()
                 .addFilterBefore(authTokenFilter(), UsernamePasswordAuthenticationFilter.class)
                 .build();
+    }
+
+    @Bean
+    public CacheManager cacheManager() {
+        return new ConcurrentMapCacheManager("authenticationCache");
     }
 }

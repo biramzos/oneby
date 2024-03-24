@@ -23,11 +23,11 @@ import java.io.IOException;
 @Component
 @Slf4j
 public class JWTFilter extends OncePerRequestFilter {
-    private final UserService userService;
+    private UserService userService;
 
     @Autowired
     public JWTFilter(
-            @Lazy UserService userService
+            UserService userService
     ){
         this.userService = userService;
     }
@@ -70,7 +70,7 @@ public class JWTFilter extends OncePerRequestFilter {
                 request.getMethod().equals(HttpMethod.POST.name())
             )
         ) {
-            filterChain.doFilter(request,response);
+            return;
         } else {
             String token = "";
             if (request.getHeader("Authorization") != null &&

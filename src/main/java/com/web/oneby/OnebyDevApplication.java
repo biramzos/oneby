@@ -7,9 +7,10 @@ import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.annotation.Lazy;
+import org.springframework.security.config.annotation.method.configuration.EnableGlobalMethodSecurity;
 
 @SpringBootApplication
-@Slf4j
+@EnableGlobalMethodSecurity(prePostEnabled = true)
 public class OnebyDevApplication
         implements CommandLineRunner
 {
@@ -26,7 +27,7 @@ public class OnebyDevApplication
     private final UserService userService;
 
     @Override
-    public void run(String... args) throws Exception {
+    public void run(String... args) {
         userService.onInit();
     }
 }

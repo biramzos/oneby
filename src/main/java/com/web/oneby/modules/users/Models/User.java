@@ -1,6 +1,7 @@
 package com.web.oneby.modules.users.Models;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.lowagie.text.pdf.ArabicLigaturizer;
 import com.web.oneby.commons.Enums.Language;
 import com.web.oneby.modules.users.Enums.UserRole;
 import jakarta.persistence.*;
@@ -48,7 +49,7 @@ public class User implements UserDetails {
     @ElementCollection(targetClass = UserRole.class, fetch = FetchType.EAGER)
     @Enumerated(EnumType.STRING)
     @CollectionTable(name = "user_roles", joinColumns = @JoinColumn(name = "user_id"))
-    private Set<UserRole> roles = new HashSet<>();
+    private List<UserRole> roles = new ArrayList<>();
     @JsonIgnore
     @Lob
     @Column(columnDefinition = "LONGBLOB")
@@ -76,7 +77,7 @@ public class User implements UserDetails {
             String email,
             String password,
             String token,
-            Set<UserRole> roles,
+            List<UserRole> roles,
             byte[] image,
             boolean isActive
     ){

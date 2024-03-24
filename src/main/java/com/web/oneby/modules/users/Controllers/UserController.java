@@ -33,7 +33,7 @@ public class UserController {
 
     @ResponseBody
     @PostMapping("/")
-    @PreAuthorize(value = "hasAuthority('ADMIN')")
+    @PreAuthorize("hasAuthority('ADMIN')")
     public Response findUsers(
             @RequestHeader(value = "Current-Language", defaultValue = "ru") Language language,
             @RequestBody SearchFilter request
