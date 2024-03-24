@@ -1,18 +1,14 @@
 package com.web.oneby.modules.users.Models;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
-import com.lowagie.text.pdf.ArabicLigaturizer;
 import com.web.oneby.commons.Enums.Language;
 import com.web.oneby.modules.users.Enums.UserRole;
 import jakarta.persistence.*;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import lombok.ToString;
-import org.hibernate.annotations.JdbcTypeCode;
-import org.hibernate.type.SqlTypes;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
-
 import java.util.*;
 
 @Data

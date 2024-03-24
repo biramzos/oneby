@@ -77,17 +77,11 @@ public class SecurityConfiguration {
     }
 
     @Bean
-    public JWTFilter authTokenFilter(){
-        return new JWTFilter(this.userService);
-    }
-
-    @Bean
     public SecurityFilterChain configure(HttpSecurity http) throws Exception {
         return http.cors().and().csrf().disable()
-                //.authenticationManager(authManager())
+                .authenticationManager(authManager())
                 .authorizeRequests().anyRequest().permitAll()
                 .and()
-                .addFilterBefore(authTokenFilter(), UsernamePasswordAuthenticationFilter.class)
                 .build();
     }
 

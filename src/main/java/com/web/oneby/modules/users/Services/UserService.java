@@ -17,7 +17,7 @@ import com.web.oneby.modules.users.Models.User;
 import com.web.oneby.modules.users.Repositories.UserRepository;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
-import jakarta.persistence.criteria.Predicate;
+import jakarta.persistence.criteria.*;
 import jakarta.transaction.Transactional;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -36,6 +36,7 @@ import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.*;
+import java.util.stream.Collectors;
 
 @Service
 @Slf4j
@@ -72,7 +73,7 @@ public class UserService implements UserDetailsService {
     @Transactional
     public UserDetails loadUserByUsername(String username) {
         try {
-            return userRepository.findByUsername(username).get();
+            return userRepository.getUserByUsername(username);
         } catch (Exception e) {
             LogUtil.write(e.getMessage(), LogType.ERROR);
             return null;
@@ -237,7 +238,9 @@ public class UserService implements UserDetailsService {
                     );
                 }
                 if (key.equals("roles") && !((List<String>) value).isEmpty()) {
-                    Predicate rolePredicate = root.join("roles").in((List<String>) value);
+                    List<String> roles = ((List<String>) value);
+                    Path<List<String>> rolesPath = root.join("roles");
+                    Predicate rolePredicate = rolesPath.in(roles);
                     predication = criteriaBuilder.and(predication, rolePredicate);
                 }
             }

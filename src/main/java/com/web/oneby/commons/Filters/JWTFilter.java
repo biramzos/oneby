@@ -63,15 +63,13 @@ public class JWTFilter extends OncePerRequestFilter {
 
     @Override
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain) throws ServletException, IOException {
-        if (request.getServletPath().contains("/api/v1/auth/confirm") ||
-            request.getServletPath().equals("/api/v1/auth/register") ||
-            (
+        if (!request.getServletPath().contains("/api/v1/auth/confirm") ||
+            !request.getServletPath().equals("/api/v1/auth/register") ||
+            !(
                 request.getServletPath().equals("/api/v1/auth/login") &&
                 request.getMethod().equals(HttpMethod.POST.name())
             )
         ) {
-            return;
-        } else {
             String token = "";
             if (request.getHeader("Authorization") != null &&
                     request.getHeader("Authorization").length() > 7 &&
@@ -87,7 +85,7 @@ public class JWTFilter extends OncePerRequestFilter {
             } catch (Exception e) {
                 log.error("Error: " + e.getMessage());
             }
-            filterChain.doFilter(request, response);
         }
+        filterChain.doFilter(request, response);
     }
 }
