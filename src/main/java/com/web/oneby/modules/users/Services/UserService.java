@@ -115,7 +115,7 @@ public class UserService implements UserDetailsService {
                 } else {
                     image = createUserRequest.getImage().getBytes();
                 }
-                LogUtil.write(HTTPMessage.SUCCESSFULLY_REGISTERED.getMessageEN(), LogType.ERROR);
+                LogUtil.write(HTTPMessage.SUCCESSFULLY_REGISTERED.getMessageEN(), LogType.INFO);
                 messageHandler.set(HTTPMessage.SUCCESSFULLY_REGISTERED, language);
                 return userRepository.save (
                     new User (
@@ -162,8 +162,10 @@ public class UserService implements UserDetailsService {
                         true
                 );
                 userRepository.save(user);
+                LogUtil.write("Admin is created!", LogType.INFO);
                 return true;
             }
+            LogUtil.write("Admin is exist!", LogType.WARNING);
             return false;
         } catch (Exception e) {
             LogUtil.write(e.getMessage(), LogType.ERROR);
@@ -197,7 +199,7 @@ public class UserService implements UserDetailsService {
                 messageHandler.set(HTTPMessage.USER_CONFIRMED, language);
             }
         } else {
-            LogUtil.write(HTTPMessage.USER_NOT_CONFIRMED.getMessageEN(), LogType.INFO);
+            LogUtil.write(HTTPMessage.USER_NOT_CONFIRMED.getMessageEN(), LogType.WARNING);
             messageHandler.set(HTTPMessage.USER_NOT_CONFIRMED, language);
         }
     }

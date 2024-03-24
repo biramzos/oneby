@@ -77,6 +77,11 @@ public enum HTTPMessage {
             "Доступ запрещен!",
             "Access denied!",
             HTTPStatus.ERROR),
+    USER_NOT_FOUND(
+            "Пайдаланушы табылмады!",
+            "Пользователь не найден!",
+            "User isn't found!",
+            HTTPStatus.ERROR),
     USER_IS_DISABLED(
             "Тіркелгі ажыратылады. Оны белсендіруіңізді сұраймыз!",
             "Учетная запись отключена. Пожалуйста, активируйте его!",
