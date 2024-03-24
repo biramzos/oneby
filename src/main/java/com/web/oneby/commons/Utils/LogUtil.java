@@ -22,7 +22,7 @@ public class LogUtil {
 
     public static void write(String message, LogType type) {
         Long userId = 0L;
-        if (!SecurityContextHolder.getContext().getAuthentication().getCredentials().equals("")) {
+        if (SecurityContextHolder.getContext().getAuthentication() != null && !SecurityContextHolder.getContext().getAuthentication().getCredentials().equals("")) {
             userId = ((User) SecurityContextHolder.getContext().getAuthentication().getPrincipal()).getId();
         }
         loggerService.create(new Logger(type, message, userId));

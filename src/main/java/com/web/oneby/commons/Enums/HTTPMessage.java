@@ -183,7 +183,7 @@ public enum HTTPMessage {
             put("messageRU", messageRU);
             put("messageEN", messageEN);
         }};
-        return names.get("name" + Language.getLanguageById(language).suffix());
+        return names.get("message" + Language.getLanguageById(language).suffix());
     }
 
     public String getMessage(Language language) {
