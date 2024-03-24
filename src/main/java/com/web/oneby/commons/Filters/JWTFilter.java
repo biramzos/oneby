@@ -1,5 +1,7 @@
 package com.web.oneby.commons.Filters;
 
+import com.web.oneby.commons.Enums.LogType;
+import com.web.oneby.commons.Utils.LogUtil;
 import com.web.oneby.modules.users.Models.User;
 import com.web.oneby.modules.users.Services.UserService;
 import io.jsonwebtoken.ExpiredJwtException;
@@ -21,7 +23,6 @@ import org.springframework.web.filter.OncePerRequestFilter;
 import java.io.IOException;
 
 @Component
-@Slf4j
 public class JWTFilter extends OncePerRequestFilter {
     private UserService userService;
 
@@ -45,17 +46,17 @@ public class JWTFilter extends OncePerRequestFilter {
     }
 
     public boolean validation(String token){
-        try{
+        try {
             Jwts.parser().setSigningKey(SECRET_KEY).parseClaimsJws(token);
             return true;
         } catch (MalformedJwtException e) {
-            log.error("Invalid token: " + e.getMessage());
+            LogUtil.write("Invalid token: " + e.getMessage(), LogType.ERROR);
         } catch (ExpiredJwtException e) {
-            log.error("Token is expired: " + e.getMessage());
+            LogUtil.write("Token is expired: " + e.getMessage(), LogType.ERROR);
         } catch (UnsupportedJwtException e) {
-            log.error("Token is unsupported: " + e.getMessage());
+            LogUtil.write("Token is unsupported: " + e.getMessage(), LogType.ERROR);
         } catch (IllegalArgumentException e) {
-            log.error("Token claims string is empty: " + e.getMessage());
+            LogUtil.write("Token claims string is empty: " + e.getMessage(), LogType.ERROR);
         }
         return false;
     }
@@ -82,7 +83,7 @@ public class JWTFilter extends OncePerRequestFilter {
                             .setAuthentication(new UsernamePasswordAuthenticationToken(user, user.getUsername(), user.getRoles()));
                 }
             } catch (Exception e) {
-                log.error("Error: " + e.getMessage());
+                LogUtil.write("Error: " + e.getMessage(), LogType.ERROR);
             }
         }
         filterChain.doFilter(request, response);
