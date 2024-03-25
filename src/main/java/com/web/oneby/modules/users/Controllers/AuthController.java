@@ -10,6 +10,7 @@ import com.web.oneby.modules.users.DTOs.UserResponse;
 import com.web.oneby.modules.users.Models.User;
 import com.web.oneby.modules.users.Services.UserService;
 import jakarta.servlet.http.HttpServletResponse;
+import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
@@ -43,7 +44,7 @@ public class AuthController {
     @PreAuthorize("isAnonymous()")
     public Response registerUser(
             HttpServletResponse httpServletResponse,
-            @ModelAttribute CreateUserRequest createUserRequest,
+            @ModelAttribute @Valid CreateUserRequest createUserRequest,
             @RequestHeader(value = "Current-Language", defaultValue = "ru") Language language
     ) {
         Response response = new Response();

@@ -18,12 +18,17 @@ import org.springframework.security.authentication.InternalAuthenticationService
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
+import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.MissingPathVariableException;
 import org.springframework.web.bind.MissingRequestHeaderException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 import org.springframework.web.servlet.resource.NoResourceFoundException;
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 @RestControllerAdvice
 @Slf4j
@@ -151,6 +156,20 @@ public class RestExceptionHandler {
         message.set(HTTPMessage.USER_IS_NOT_EXIST, language);
         LogUtil.write(exception.getMessage(), LogType.ERROR);
         return Response.getResponse("message", message);
+    }
+
+    @ExceptionHandler(MethodArgumentNotValidException.class)
+    public static Response handleMethodArgumentNotValidException (HttpServletRequest request, HttpServletResponse response,
+                                      MethodArgumentNotValidException exception) {
+        Map<String, HTTPMessageHandler> messages = new HashMap<>();
+        int language = (StringUtil.isEmpty(request.getHeader("Current-Language"))) ?
+                Language.ru.getId()    :
+                Language.valueOf(request.getHeader("Current-Language")).getId();
+        exception.getBindingResult().getFieldErrors().forEach(fieldError -> {
+            messages.put(fieldError.getField(), new HTTPMessageHandler(HTTPMessage.valueOf(fieldError.getDefaultMessage()), language));
+        });
+        LogUtil.write(exception.getMessage(), LogType.ERROR);
+        return Response.getResponse("message", messages);
     }
 
     @ExceptionHandler(Exception.class)

@@ -17,6 +17,30 @@ public enum HTTPMessage {
             "Успешно подтверждено!",
             "Successfully confirmed!",
             HTTPStatus.SUCCESS),
+    CANNOT_BE_BLANK(
+            "Бос болуы мүмкін емес!",
+            "Не может быть пустым!",
+            "Cannot be blank!",
+            HTTPStatus.ERROR
+    ),
+    NEED_EMAIL(
+            "Ол электрондық пошта болуы керек!",
+            "Это должна быть электронная почта!",
+            "It needs to be email!",
+            HTTPStatus.ERROR)
+    ,
+    PASSWORD_NEEDS_TO_BE_MORE(
+            "Құпия сөз өлшемі 6-дан көп болуы керек!",
+            "Размер пароля должен быть больше 6!",
+            "Password size needs to be more than 6!",
+            HTTPStatus.ERROR
+    ),
+    CANNOT_BE_NULL(
+            "Алаң бос болмауы керек!",
+            "Поле не должно быть пустым!",
+            "The field must not be empty!",
+            HTTPStatus.ERROR
+    ),
     USER_ALREADY_CONFIRMED(
             "Пайдаланушы расталған!",
             "Пользователь уже подтвержден!",
