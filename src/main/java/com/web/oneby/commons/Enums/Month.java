@@ -22,6 +22,13 @@ public enum Month {
     private String nameEN;
     private String nameRU;
     private String nameKK;
+    private final static Map<Integer, Month> months = new HashMap<>();
+
+    static {
+        for (Month month : values()) {
+            months.put(month.id, month);
+        }
+    }
 
     Month (int id, String nameKK, String nameRU, String nameEN) {
         this.id = id;
@@ -31,14 +38,7 @@ public enum Month {
     }
 
     public static Month fromId (int id) {
-        Month month = null;
-        for (Month m: Month.values()) {
-            if (m.getId() == id) {
-                month = m;
-                break;
-            }
-        }
-        return month;
+        return months.get(id);
     }
 
     public int getId() {

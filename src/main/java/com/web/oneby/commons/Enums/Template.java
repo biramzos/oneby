@@ -42,6 +42,14 @@ public enum Template {
     private String fileRU;
     private String fileEN;
 
+    private final static Map<Integer, Template> templates = new HashMap<>();
+
+    static {
+        for (Template template : values()) {
+            templates.put(template.id, template);
+        }
+    }
+
     Template (int id, String templateKK, String templateRU, String templateEN, String fileKK, String fileRU, String fileEN) {
         this.id = id;
         this.templateKK = templateKK;
@@ -53,12 +61,7 @@ public enum Template {
     }
 
     public static Template getById (int id) {
-        for (Template template: values()) {
-            if (template.getId() == id) {
-                return template;
-            }
-        }
-        return null;
+        return templates.get(id);
     }
 
     public String getTemplateName(int language) {

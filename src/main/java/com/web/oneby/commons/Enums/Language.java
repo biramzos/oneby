@@ -13,6 +13,14 @@ public enum Language {
     private String nameRU;
     private String nameEN;
 
+    private final static Map<Integer, Language> languages = new HashMap<>();
+
+    static {
+        for (Language language: values()) {
+            languages.put(language.id, language);
+        }
+    }
+
     Language (
         int id,
         String nameKK,
@@ -61,14 +69,7 @@ public enum Language {
     }
 
     public static Language getLanguageById(int languageID) {
-        Language language = null;
-        for (Language l: values()) {
-            if (languageID == l.getId()) {
-                language = l;
-                break;
-            }
-        }
-        return language;
+        return languages.get(languageID);
     }
 
     public static boolean contains(String language) {
