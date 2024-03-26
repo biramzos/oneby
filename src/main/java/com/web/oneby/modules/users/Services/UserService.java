@@ -9,40 +9,34 @@ import com.web.oneby.commons.Services.EmailService;
 import com.web.oneby.commons.Utils.ConstantsUtil;
 import com.web.oneby.commons.Utils.LogUtil;
 import com.web.oneby.commons.Utils.SortingUtil;
-import com.web.oneby.commons.Utils.StringUtil;
+import com.web.oneby.commons.Utils.TokenUtil;
 import com.web.oneby.modules.users.DTOs.CreateUserRequest;
 import com.web.oneby.modules.users.DTOs.UserResponse;
 import com.web.oneby.modules.users.Enums.UserRole;
 import com.web.oneby.modules.users.Models.User;
 import com.web.oneby.modules.users.Repositories.UserRepository;
+import com.web.oneby.modules.users.Specifications.UserSpecification;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
-import jakarta.persistence.criteria.*;
 import jakarta.transaction.Transactional;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
-import org.springframework.data.jpa.domain.Specification;
-import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
-
 import java.io.FileInputStream;
-import java.io.IOException;
 import java.io.InputStream;
 import java.util.*;
-import java.util.stream.Collectors;
 
 @Service
 @Slf4j
 public class UserService implements UserDetailsService {
 
-    private static final String SECRET_KEY = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz";
     private static UserRepository userRepository;
     private static PasswordEncoder passwordEncoder;
     private EmailService emailService;
@@ -64,7 +58,7 @@ public class UserService implements UserDetailsService {
                 request.getCountInPage(),
                 Sort.by(SortingUtil.getSortingOrders(request.getSort(), language)));
         return new PageObject<>(userRepository
-                .findAll(UserService.filter(request.getFilter()), pageable)
+                .findAll(UserSpecification.getSpecification(request.getFilter()), pageable)
                 .map(user -> UserResponse.fromUser(user, language)));
     }
 
@@ -104,7 +98,7 @@ public class UserService implements UserDetailsService {
             return null;
         }
         else {
-            emailService.send(ConstantsUtil.getHostName() + "/api/v1/auth/confirm/" + generateToken(createUserRequest.getUsername()), createUserRequest.getEmail());
+            emailService.send(ConstantsUtil.getHostName() + "/api/v1/auth/confirm/" + TokenUtil.generateTokenByUsername(createUserRequest.getUsername()), createUserRequest.getEmail());
             try {
                 byte [] image = null;
                 if (createUserRequest.getImage() == null) {
@@ -128,7 +122,7 @@ public class UserService implements UserDetailsService {
                         createUserRequest.getUsername(),
                         createUserRequest.getEmail(),
                         passwordEncoder.encode(createUserRequest.getPassword()),
-                        generateToken(createUserRequest.getUsername()),
+                        TokenUtil.generateTokenByUsername(createUserRequest.getUsername()),
                         List.of(UserRole.USER),
                         image,
                         false
@@ -156,7 +150,7 @@ public class UserService implements UserDetailsService {
                         ConstantsUtil.ADMIN_USERNAME,
                         ConstantsUtil.ADMIN_EMAIL,
                         passwordEncoder.encode(ConstantsUtil.ADMIN_PASSWORD),
-                        generateToken(ConstantsUtil.ADMIN_USERNAME),
+                        TokenUtil.generateTokenByUsername(ConstantsUtil.ADMIN_USERNAME),
                         List.of(UserRole.ADMIN),
                         inputStream.readAllBytes(),
                         true
@@ -171,15 +165,6 @@ public class UserService implements UserDetailsService {
             LogUtil.write(e.getMessage(), LogType.ERROR);
             return false;
         }
-    }
-
-    private static String generateToken(String username){
-        return Jwts
-                .builder()
-                .claim("username", username)
-                .setSubject(username)
-                .signWith(SignatureAlgorithm.HS256, SECRET_KEY)
-                .compact();
     }
 
     public User getById(Long id){
@@ -202,49 +187,5 @@ public class UserService implements UserDetailsService {
             LogUtil.write(HTTPMessage.USER_NOT_CONFIRMED.getMessageEN(), LogType.WARNING);
             messageHandler.set(HTTPMessage.USER_NOT_CONFIRMED, language);
         }
-    }
-
-    public static Specification<User> filter(Map<String, Object> filter){
-        return ((root, query, criteriaBuilder) -> {
-            Predicate predication = criteriaBuilder.conjunction();
-            for (String key: filter.keySet()) {
-                Object value = filter.get(key);
-                if (key.equals("name") && StringUtil.isNotEmpty((String) value)) {
-                    predication = criteriaBuilder.or(
-                            criteriaBuilder.like(
-                                    root.get("nameKK"), "%" + (String) value + "%"
-                            ),
-                            criteriaBuilder.like(
-                                    root.get("nameRU"), "%" + (String) value + "%"
-                            ),
-                            criteriaBuilder.like(
-                                    root.get("nameEN"), "%" + (String) value + "%"
-                            ),
-                            criteriaBuilder.like(
-                                    root.get("lastnameKK"), "%" + (String) value + "%"
-                            ),
-                            criteriaBuilder.like(
-                                    root.get("lastnameRU"), "%" + (String) value + "%"
-                            ),
-                            criteriaBuilder.like(
-                                    root.get("lastnameEN"), "%" + (String) value + "%"
-                            ),
-                            criteriaBuilder.like(
-                                    root.get("username"), "%" + (String) value + "%"
-                            ),
-                            criteriaBuilder.like(
-                                    root.get("email"), "%" + (String) value + "%"
-                            )
-                    );
-                }
-                if (key.equals("roles") && !((List<String>) value).isEmpty()) {
-                    List<String> roles = ((List<String>) value);
-                    Path<List<String>> rolesPath = root.join("roles");
-                    Predicate rolePredicate = rolesPath.in(roles);
-                    predication = criteriaBuilder.and(predication, rolePredicate);
-                }
-            }
-            return predication;
-        });
     }
 }

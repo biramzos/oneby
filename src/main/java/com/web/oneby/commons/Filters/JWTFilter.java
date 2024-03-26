@@ -2,6 +2,7 @@ package com.web.oneby.commons.Filters;
 
 import com.web.oneby.commons.Enums.LogType;
 import com.web.oneby.commons.Utils.LogUtil;
+import com.web.oneby.commons.Utils.TokenUtil;
 import com.web.oneby.modules.users.Models.User;
 import com.web.oneby.modules.users.Services.UserService;
 import io.jsonwebtoken.ExpiredJwtException;
@@ -33,59 +34,31 @@ public class JWTFilter extends OncePerRequestFilter {
         this.userService = userService;
     }
 
-    private final String SECRET_KEY = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz";
-
     public User parseUser(String token){
-        String username = Jwts
-                .parser()
-                .setSigningKey(SECRET_KEY)
-                .parseClaimsJws(token)
-                .getBody()
-                .getSubject();
-        return (User) userService.loadUserByUsername(username);
-    }
-
-    public boolean validation(String token){
-        try {
-            Jwts.parser().setSigningKey(SECRET_KEY).parseClaimsJws(token);
-            return true;
-        } catch (MalformedJwtException e) {
-            LogUtil.write("Invalid token: " + e.getMessage(), LogType.ERROR);
-        } catch (ExpiredJwtException e) {
-            LogUtil.write("Token is expired: " + e.getMessage(), LogType.ERROR);
-        } catch (UnsupportedJwtException e) {
-            LogUtil.write("Token is unsupported: " + e.getMessage(), LogType.ERROR);
-        } catch (IllegalArgumentException e) {
-            LogUtil.write("Token claims string is empty: " + e.getMessage(), LogType.ERROR);
-        }
-        return false;
+        return (User) userService.loadUserByUsername(TokenUtil.getUsernameFromToken(token));
     }
 
     @Override
-    protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain) throws ServletException, IOException {
-        if (!request.getServletPath().contains("/api/v1/auth/confirm") ||
-            !request.getServletPath().equals("/api/v1/auth/register") ||
-            !(
-                request.getServletPath().equals("/api/v1/auth/login") &&
-                request.getMethod().equals(HttpMethod.POST.name())
-            )
-        ) {
-            String token = "";
-            if (request.getHeader("Authorization") != null &&
-                    request.getHeader("Authorization").length() > 7 &&
-                    request.getHeader("Authorization").startsWith("Bearer ")) {
-                token = request.getHeader("Authorization").substring(7);
-            }
-            try {
-                if (!token.isEmpty() && validation(token)) {
-                    User user = parseUser(token);
-                    SecurityContextHolder.getContext()
-                            .setAuthentication(new UsernamePasswordAuthenticationToken(user, user.getUsername(), user.getRoles()));
+    protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain) {
+        try {
+            if (!request.getServletPath().contains("/api/v1/auth/confirm") ||
+                !request.getServletPath().equals("/api/v1/auth/register") ||
+                !(request.getServletPath().equals("/api/v1/auth/login") && request.getMethod().equals(HttpMethod.POST.name()))
+            ) {
+                String token = "";
+                if (request.getHeader("Authorization") != null &&
+                        request.getHeader("Authorization").length() > 7 &&
+                        request.getHeader("Authorization").startsWith("Bearer ")) {
+                    token = request.getHeader("Authorization").substring(7);
                 }
-            } catch (Exception e) {
-                LogUtil.write("Error: " + e.getMessage(), LogType.ERROR);
+                if (!token.isEmpty() && TokenUtil.validateToken(token)) {
+                    User user = parseUser(token);
+                    SecurityContextHolder.getContext().setAuthentication(new UsernamePasswordAuthenticationToken(user, user.getUsername(), user.getRoles()));
+                }
             }
+            filterChain.doFilter(request, response);
+        } catch (Exception e) {
+            LogUtil.write("Error: " + e.getMessage(), LogType.ERROR);
         }
-        filterChain.doFilter(request, response);
     }
 }
