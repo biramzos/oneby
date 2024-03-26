@@ -30,7 +30,7 @@ public class BookController {
     @GetMapping("/genres")
     @PreAuthorize("isAuthenticated() or isAnonymous()")
     public Response getGenres(@RequestHeader(value = "Current-Language", defaultValue = "ru") Language language) {
-        return Response.getResponse("genres", Arrays.stream(Genre.values()).map(genre -> new SimpleObject(genre.getId(), genre.getName(language))).toList());
+        return Response.getResponse("genres", Arrays.stream(Genre.values()).map(genre -> new SimpleObject(genre.name(), genre.getName(language))).toList());
     }
 
     @ResponseBody

@@ -107,6 +107,11 @@ public enum HTTPMessage {
             "Доступ запрещен!",
             "Access denied!",
             HTTPStatus.ERROR),
+    LANGUAGE_IS_NOT_EXIST(
+            "Тіл жоқ!",
+            "Языка не существует!",
+            "Language is not exist!",
+            HTTPStatus.ERROR),
     USER_NOT_FOUND(
             "Пайдаланушы табылмады!",
             "Пользователь не найден!",

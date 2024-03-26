@@ -1,5 +1,7 @@
 package com.web.oneby.modules.books.DTOs;
 
+import com.web.oneby.commons.Enums.Language;
+import com.web.oneby.modules.books.Enums.Genre;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -21,7 +23,8 @@ public class BookRequest {
     private String authorKK;
     private String authorRU;
     private String authorEN;
-    private List<Integer> genres;
+    private Language language;
+    private List<Genre> genres;
     private MultipartFile image;
     private MultipartFile file;
 }

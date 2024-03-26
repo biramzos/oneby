@@ -41,6 +41,9 @@ public class Book {
     private String authorRU;
     @Column(name = "author_en")
     private String authorEN;
+    @Column(name = "language")
+    @Enumerated(EnumType.STRING)
+    private Language language;
     @JsonIgnore
     @ElementCollection(targetClass = Genre.class, fetch = FetchType.EAGER)
     @Enumerated(EnumType.STRING)
@@ -64,6 +67,7 @@ public class Book {
                 String authorKK,
                 String authorRU,
                 String authorEN,
+                Language language,
                 List<Genre> genres,
                 byte[] image,
                 OBFile file) {
@@ -76,6 +80,7 @@ public class Book {
         this.authorKK = authorKK;
         this.authorRU = authorRU;
         this.authorEN = authorEN;
+        this.language = language;
         this.genres = genres;
         this.image = image;
         this.file = file;
