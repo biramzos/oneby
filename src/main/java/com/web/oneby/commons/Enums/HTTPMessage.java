@@ -23,6 +23,12 @@ public enum HTTPMessage {
             "Cannot be blank!",
             HTTPStatus.ERROR
     ),
+    CANNOT_BE_EMPTY(
+            "Бос болуы мүмкін емес!",
+            "Не может быть пустым!",
+            "Cannot be empty!",
+            HTTPStatus.ERROR
+    ),
     NEED_EMAIL(
             "Ол электрондық пошта болуы керек!",
             "Это должна быть электронная почта!",

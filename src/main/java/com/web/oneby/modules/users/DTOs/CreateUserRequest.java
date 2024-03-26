@@ -22,7 +22,6 @@ public class CreateUserRequest {
     private String username;
     @Email(message = "NEED_EMAIL")
     private String email;
-    @NotBlank(message = "CANNOT_BE_BLANK")
     @Size(min = 6, message = "PASSWORD_NEEDS_TO_BE_MORE")
     private String password;
     @NotNull(message = "CANNOT_BE_NULL")
