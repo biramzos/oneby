@@ -9,7 +9,7 @@ import java.util.Map;
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-public class SearchFilter extends PageFilter{
+public class SearchFilter extends PageFilter {
     private Map<String, Object> filter;
     private Map<String, Direction> sort;
 }
