@@ -2,6 +2,7 @@ package com.web.oneby.users.Service;
 
 import com.web.oneby.commons.DTOs.PageObject;
 import com.web.oneby.commons.DTOs.SearchFilter;
+import com.web.oneby.commons.Enums.Language;
 import com.web.oneby.modules.users.DTOs.UserResponse;
 import com.web.oneby.modules.users.Models.User;
 import com.web.oneby.modules.users.Services.UserService;
@@ -18,7 +19,7 @@ public class UserServiceTest {
     @Test
     void filterTest() {
         SearchFilter filter = new SearchFilter(1, 2, new HashMap<>(), new HashMap<>());
-        PageObject<UserResponse> users = userService.search(filter, 1);
+        PageObject<UserResponse> users = userService.search(filter, Language.ru);
         System.out.println(users.getTotalSize());
     }
 }

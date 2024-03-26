@@ -17,6 +17,7 @@ public class SortingUtil {
                 case "name" -> sorts.put("name" + Language.getLanguageById(language).suffix(), e.getValue());
                 case "title" -> sorts.put("title" + Language.getLanguageById(language).suffix(), e.getValue());
                 case "description" -> sorts.put("description" + Language.getLanguageById(language).suffix(), e.getValue());
+                case "author" -> sorts.put("author" + Language.getLanguageById(language).suffix(), e.getValue());
                 default -> sorts.put(e.getKey(), e.getValue());
             }
         }
@@ -34,6 +35,7 @@ public class SortingUtil {
                 case "name" -> sorts.put("name" + language.suffix(), e.getValue());
                 case "title" -> sorts.put("title" + language.suffix(), e.getValue());
                 case "description" -> sorts.put("description" + language.suffix(), e.getValue());
+                case "author" -> sorts.put("author" + language.suffix(), e.getValue());
                 default -> sorts.put(e.getKey(), e.getValue());
             }
         }

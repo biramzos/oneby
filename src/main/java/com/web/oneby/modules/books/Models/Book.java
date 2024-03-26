@@ -9,6 +9,7 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 import lombok.ToString;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -44,7 +45,7 @@ public class Book {
     @ElementCollection(targetClass = Genre.class, fetch = FetchType.EAGER)
     @Enumerated(EnumType.STRING)
     @CollectionTable(name = "book_genres", joinColumns = @JoinColumn(name = "book_id"))
-    private List<Genre> genres;
+    private List<Genre> genres = new ArrayList<>();
     @JsonIgnore
     @Lob
     @Column(name = "image", columnDefinition = "LONGBLOB")

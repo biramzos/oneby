@@ -3,6 +3,7 @@ package com.web.oneby.modules.users.Services;
 import com.web.oneby.commons.DTOs.PageObject;
 import com.web.oneby.commons.DTOs.SearchFilter;
 import com.web.oneby.commons.Enums.HTTPMessage;
+import com.web.oneby.commons.Enums.Language;
 import com.web.oneby.commons.Enums.LogType;
 import com.web.oneby.commons.Handlers.HTTPMessageHandler;
 import com.web.oneby.commons.Services.EmailService;
@@ -52,7 +53,7 @@ public class UserService implements UserDetailsService {
         this.emailService = emailService;
     }
 
-    public PageObject<UserResponse> search(SearchFilter request, int language) {
+    public PageObject<UserResponse> search(SearchFilter request, Language language) {
         Pageable pageable = PageRequest.of(
                 request.getPageNumber() - 1,
                 request.getCountInPage(),

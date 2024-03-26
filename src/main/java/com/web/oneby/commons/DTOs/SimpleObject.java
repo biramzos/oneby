@@ -10,6 +10,6 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @AllArgsConstructor
 public class SimpleObject {
-    private String id;
+    private Object id;
     private String name;
 }

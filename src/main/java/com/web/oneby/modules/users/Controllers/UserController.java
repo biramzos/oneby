@@ -34,27 +34,15 @@ public class UserController {
     @ResponseBody
     @PostMapping("/")
     @PreAuthorize("hasAuthority('ADMIN')")
-    public Response findUsers(
-            @RequestHeader(value = "Current-Language", defaultValue = "ru") Language language,
-            @RequestBody SearchFilter request
-    ){
-        Response response = new Response();
-        PageObject<UserResponse> users = userService.search(request, language.getId());
-        response.put("users", users);
-        return response;
+    public Response search(@RequestHeader(value = "Current-Language", defaultValue = "ru") Language language, @RequestBody SearchFilter filter) {
+        return Response.getResponse("users", userService.search(filter, language));
     }
 
     @ResponseBody
     @GetMapping("/{userId}")
     @PreAuthorize(value = "hasAuthority('ADMIN')")
-    public Response getUser(
-            @PathVariable("userId") User user,
-            @RequestHeader(value = "Current-Language", defaultValue = "ru") Language language
-    ){
-        Response response = new Response();
-        UserResponse userResponse = UserResponse.fromUser(user, language.getId());
-        response.put("user", userResponse);
-        return response;
+    public Response getUser(@RequestHeader(value = "Current-Language", defaultValue = "ru") Language language, @PathVariable("userId") User user){
+        return Response.getResponse("user", UserResponse.fromUser(user, language));
     }
 
 //    @ResponseBody

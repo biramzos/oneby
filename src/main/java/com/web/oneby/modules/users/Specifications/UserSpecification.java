@@ -18,30 +18,14 @@ public class UserSpecification {
                 Object value = filter.get(key);
                 if (key.equals("name") && StringUtil.isNotEmpty((String) value)) {
                     predication = criteriaBuilder.or(
-                            criteriaBuilder.like(
-                                    root.get("nameKK"), "%" + (String) value + "%"
-                            ),
-                            criteriaBuilder.like(
-                                    root.get("nameRU"), "%" + (String) value + "%"
-                            ),
-                            criteriaBuilder.like(
-                                    root.get("nameEN"), "%" + (String) value + "%"
-                            ),
-                            criteriaBuilder.like(
-                                    root.get("lastnameKK"), "%" + (String) value + "%"
-                            ),
-                            criteriaBuilder.like(
-                                    root.get("lastnameRU"), "%" + (String) value + "%"
-                            ),
-                            criteriaBuilder.like(
-                                    root.get("lastnameEN"), "%" + (String) value + "%"
-                            ),
-                            criteriaBuilder.like(
-                                    root.get("username"), "%" + (String) value + "%"
-                            ),
-                            criteriaBuilder.like(
-                                    root.get("email"), "%" + (String) value + "%"
-                            )
+                        criteriaBuilder.like(root.get("nameKK"), "%" + (String) value + "%"),
+                        criteriaBuilder.like(root.get("nameRU"), "%" + (String) value + "%"),
+                        criteriaBuilder.like(root.get("nameEN"), "%" + (String) value + "%"),
+                        criteriaBuilder.like(root.get("lastnameKK"), "%" + (String) value + "%"),
+                        criteriaBuilder.like(root.get("lastnameRU"), "%" + (String) value + "%"),
+                        criteriaBuilder.like(root.get("lastnameEN"), "%" + (String) value + "%"),
+                        criteriaBuilder.like(root.get("username"), "%" + (String) value + "%"),
+                        criteriaBuilder.like(root.get("email"), "%" + (String) value + "%")
                     );
                 }
                 if (key.equals("roles") && !((List<String>) value).isEmpty()) {
