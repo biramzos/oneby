@@ -6,10 +6,8 @@ import com.web.oneby.commons.Enums.LogType;
 import com.web.oneby.commons.Utils.LogUtil;
 import com.web.oneby.commons.Utils.Response;
 import com.web.oneby.commons.Utils.StringUtil;
-import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
-import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.converter.HttpMessageNotReadableException;
 import org.springframework.security.access.AccessDeniedException;
 import org.springframework.security.authentication.BadCredentialsException;
@@ -24,14 +22,10 @@ import org.springframework.web.bind.MissingRequestHeaderException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 import org.springframework.web.servlet.resource.NoResourceFoundException;
-import java.io.IOException;
-import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 
 @RestControllerAdvice
-@Slf4j
 public class RestExceptionHandler {
 
     @ExceptionHandler(AccessDeniedException.class)
