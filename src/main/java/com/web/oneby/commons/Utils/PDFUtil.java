@@ -7,6 +7,7 @@ import com.lowagie.text.Image;
 import com.lowagie.text.pdf.*;
 import com.lowagie.text.pdf.draw.LineSeparator;
 import com.web.oneby.commons.Enums.LogType;
+import com.web.oneby.commons.Enums.PaymentStatus;
 import com.web.oneby.commons.Enums.ProductType;
 import com.web.oneby.commons.Enums.Template;
 import com.web.oneby.commons.Services.OBFileService;
@@ -142,6 +143,12 @@ public class PDFUtil {
         username.add(new Chunk(getSpacer(Color.white)));
         username.add(new Phrase("imramo00", fonts.get("font")));
         document.add(username);
+        //date
+        Paragraph paymentStatus = new Paragraph();
+        paymentStatus.add(new Phrase(TranslationUtil.getMessage("payment_status", language) + ":", fonts.get("font")));
+        paymentStatus.add(new Chunk(getSpacer(Color.white)));
+        paymentStatus.add(new Phrase(PaymentStatus.SUCCESS.getName(language), fonts.get("font")));
+        document.add(paymentStatus);
         //date
         Paragraph date = new Paragraph();
         date.add(new Phrase(TranslationUtil.getMessage("date", language) + ":", fonts.get("font")));

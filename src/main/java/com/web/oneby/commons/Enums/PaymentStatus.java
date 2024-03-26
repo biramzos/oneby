@@ -4,8 +4,8 @@ import java.util.HashMap;
 import java.util.Map;
 
 public enum PaymentStatus {
-    SUCCESS("", "", "Successfully payed!"),
-    ERROR("", "", "Error while paying!");
+    SUCCESS("Сәтті", "Успешно", "Successfully"),
+    ERROR("Төленбеген", "Не оплачено", "Not paid");
 
     PaymentStatus(String nameKK, String nameRU, String nameEN){
         this.nameKK = nameKK;

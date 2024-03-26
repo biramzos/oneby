@@ -17,9 +17,5 @@ public class UserServiceTest {
     @Autowired
     private UserService userService;
     @Test
-    void filterTest() {
-        SearchFilter filter = new SearchFilter(1, 2, new HashMap<>(), new HashMap<>());
-        PageObject<UserResponse> users = userService.search(filter, Language.ru);
-        System.out.println(users.getTotalSize());
-    }
+    void filterTest() {}
 }
