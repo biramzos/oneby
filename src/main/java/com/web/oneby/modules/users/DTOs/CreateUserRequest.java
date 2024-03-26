@@ -11,9 +11,13 @@ import org.springframework.web.multipart.MultipartFile;
 @NoArgsConstructor
 public class CreateUserRequest {
     @NotBlank(message = "CANNOT_BE_BLANK")
+    private String nameKK;
+    @NotBlank(message = "CANNOT_BE_BLANK")
     private String nameRU;
     @NotBlank(message = "CANNOT_BE_BLANK")
     private String nameEN;
+    @NotBlank(message = "CANNOT_BE_BLANK")
+    private String lastnameKK;
     @NotBlank(message = "CANNOT_BE_BLANK")
     private String lastnameRU;
     @NotBlank(message = "CANNOT_BE_BLANK")

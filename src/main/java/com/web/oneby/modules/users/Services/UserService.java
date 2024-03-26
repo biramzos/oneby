@@ -119,10 +119,10 @@ public class UserService implements UserDetailsService {
                 messageHandler.set(HTTPMessage.SUCCESSFULLY_REGISTERED, language);
                 return userRepository.save (
                     new User (
-                        createUserRequest.getNameRU(),
+                        createUserRequest.getNameKK(),
                         createUserRequest.getNameRU(),
                         createUserRequest.getNameEN(),
-                        createUserRequest.getLastnameRU(),
+                        createUserRequest.getLastnameKK(),
                         createUserRequest.getLastnameRU(),
                         createUserRequest.getLastnameEN(),
                         createUserRequest.getUsername(),
