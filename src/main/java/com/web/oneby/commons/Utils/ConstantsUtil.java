@@ -27,7 +27,7 @@ public class ConstantsUtil {
         try {
             return InetAddress.getLocalHost().getHostName();
         } catch (Exception e) {
-            LogUtil.write(e.getMessage(), LogType.ERROR);
+            LogUtil.write(e);
             return "http://127.0.0.1:8000";
         }
     }

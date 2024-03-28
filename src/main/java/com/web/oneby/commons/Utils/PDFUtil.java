@@ -55,7 +55,7 @@ public class PDFUtil {
             LogUtil.write("Payment bill is generated![id=?]", LogType.INFO);
             return baos.toByteArray();
         } catch (IOException e) {
-            LogUtil.write(e.getMessage(), LogType.ERROR);
+            LogUtil.write(e);
             return null;
         }
     }
@@ -69,7 +69,7 @@ public class PDFUtil {
             PdfConverter.getInstance().convert(document, outputStream, options);
             return outputStream.toByteArray();
         } catch (IOException e) {
-            LogUtil.write(e.getMessage(), LogType.ERROR);
+            LogUtil.write(e);
             return null;
         }
     }
@@ -85,7 +85,7 @@ public class PDFUtil {
             LogUtil.write("Document is generated![id=?]", LogType.INFO);
             return convertDocxToPdf(outputStream.toByteArray());
         } catch (Exception e) {
-            LogUtil.write(e.getMessage(), LogType.ERROR);
+            LogUtil.write(e);
             return null;
         }
     }
@@ -108,7 +108,7 @@ public class PDFUtil {
             image.scaleToFit(50, 50);
             return image;
         } catch (IOException e) {
-            LogUtil.write(e.getMessage(), LogType.ERROR);
+            LogUtil.write(e);
             return null;
         }
     }
@@ -244,6 +244,8 @@ public class PDFUtil {
         return new HashMap<>() {{
             put("font", FontUtil.getMonoscapeFontProvider().getFont("Monoscape", BaseFont.IDENTITY_H, 8, 0, Color.BLACK));
             put("fontBold", FontUtil.getMonoscapeFontProvider().getFont("Monoscape", BaseFont.IDENTITY_H, 9, 1, Color.BLACK));
+            put("fontItalic", FontUtil.getMonoscapeFontProvider().getFont("Monoscape", BaseFont.IDENTITY_H, 9, 2, Color.BLACK));
+            put("fontBoldItalic", FontUtil.getMonoscapeFontProvider().getFont("Monoscape", BaseFont.IDENTITY_H, 9, 3, Color.BLACK));
         }};
     }
 
@@ -253,7 +255,6 @@ public class PDFUtil {
             put("fontBold", FontUtil.getTimesNewRomanFontProvider().getFont("TimesNewRoman", BaseFont.IDENTITY_H, 9, 1, Color.BLACK));
             put("fontItalic", FontUtil.getTimesNewRomanFontProvider().getFont("TimesNewRoman", BaseFont.IDENTITY_H, 9, 2, Color.BLACK));
             put("fontBoldItalic", FontUtil.getTimesNewRomanFontProvider().getFont("TimesNewRoman", BaseFont.IDENTITY_H, 9, 3, Color.BLACK));
-
         }};
     }
 

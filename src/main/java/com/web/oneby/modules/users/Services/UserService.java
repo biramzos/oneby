@@ -70,7 +70,7 @@ public class UserService implements UserDetailsService {
         try {
             return userRepository.getUserByUsername(username);
         } catch (Exception e) {
-            LogUtil.write(e.getMessage(), LogType.ERROR);
+            LogUtil.write(e);
             return null;
         }
     }
@@ -130,7 +130,7 @@ public class UserService implements UserDetailsService {
                     )
                 );
             } catch (Exception e) {
-                LogUtil.write(e.getMessage(), LogType.ERROR);
+                LogUtil.write(e);
                 return null;
             }
         }
@@ -163,7 +163,7 @@ public class UserService implements UserDetailsService {
             LogUtil.write("Admin is exist!", LogType.WARNING);
             return false;
         } catch (Exception e) {
-            LogUtil.write(e.getMessage(), LogType.ERROR);
+            LogUtil.write(e);
             return false;
         }
     }

@@ -34,4 +34,13 @@ public class LogUtil {
             log.error(message);
         }
     }
+
+    public static void write(Exception exception) {
+        Long userId = 0L;
+        if (SecurityContextHolder.getContext().getAuthentication() != null && !SecurityContextHolder.getContext().getAuthentication().getCredentials().equals("")) {
+            userId = ((User) SecurityContextHolder.getContext().getAuthentication().getPrincipal()).getId();
+        }
+        loggerService.create(new Logger(LogType.ERROR, exception.getMessage(), userId));
+        exception.printStackTrace();
+    }
 }

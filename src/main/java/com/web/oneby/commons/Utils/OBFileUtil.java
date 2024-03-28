@@ -46,8 +46,6 @@ public class OBFileUtil {
 
     public static boolean saveTemplate(MultipartFile file, Template template, int lang) {
         try {
-
-
             String path = ConstantsUtil.TEMPLATES_DIRECTORY + template.getFileByLanguage(lang);
             Path templatePath = Path.of(path);
 
@@ -58,7 +56,7 @@ public class OBFileUtil {
             }
             return true;
         } catch (IOException e) {
-            e.printStackTrace();
+            LogUtil.write(e);
             return false;
         }
     }

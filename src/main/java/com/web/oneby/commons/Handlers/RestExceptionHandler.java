@@ -37,7 +37,7 @@ public class RestExceptionHandler {
                 Language.valueOf(request.getHeader("Current-Language")).getId()   :
                 Language.ru.getId();
         message.set(HTTPMessage.ACCESS_DENIED, language);
-        LogUtil.write(exception.getMessage(), LogType.ERROR);
+        LogUtil.write(exception);
         return Response.getResponse("message", message);
     }
 
@@ -48,7 +48,7 @@ public class RestExceptionHandler {
         int language = (StringUtil.isNotEmpty(request.getHeader("Current-Language")) && Language.contains(request.getHeader("Current-Language"))) ?
                 Language.valueOf(request.getHeader("Current-Language")).getId()   :
                 Language.ru.getId();
-        LogUtil.write(exception.getMessage(), LogType.ERROR);
+        LogUtil.write(exception);
         message.set(HTTPMessage.USER_IS_DISABLED, language);
         return Response.getResponse("message", message);
     }
@@ -61,7 +61,7 @@ public class RestExceptionHandler {
                 Language.valueOf(request.getHeader("Current-Language")).getId()   :
                 Language.ru.getId();
         message.set(HTTPMessage.USERNAME_OR_PASSWORD_IS_WRONG, language);
-        LogUtil.write(exception.getMessage(), LogType.ERROR);
+        LogUtil.write(exception);
         return Response.getResponse("message", message);
     }
 
@@ -73,7 +73,7 @@ public class RestExceptionHandler {
                 Language.valueOf(request.getHeader("Current-Language")).getId()   :
                 Language.ru.getId();
         message.set(HTTPMessage.ENTITY_IS_NOT_FOUND,language);
-        LogUtil.write(exception.getMessage(), LogType.ERROR);
+        LogUtil.write(exception);
         return Response.getResponse("message", message);
     }
 
@@ -84,7 +84,7 @@ public class RestExceptionHandler {
         int language = (StringUtil.isNotEmpty(request.getHeader("Current-Language")) && Language.contains(request.getHeader("Current-Language"))) ?
                 Language.valueOf(request.getHeader("Current-Language")).getId()   :
                 Language.ru.getId();
-        LogUtil.write(exception.getMessage(), LogType.ERROR);
+        LogUtil.write(exception);
         if (exception.getMessage().contains(Authentication.class.getName())) {
             message.set(HTTPMessage.FAILED_AUTHENTICATION, language);
         } else {
@@ -101,7 +101,7 @@ public class RestExceptionHandler {
                 Language.valueOf(request.getHeader("Current-Language")).getId()   :
                 Language.ru.getId();
         message.set(HTTPMessage.NO_RESOURCES_FOUND, language);
-        LogUtil.write(exception.getMessage(), LogType.ERROR);
+        LogUtil.write(exception);
         return Response.getResponse("message", message);
     }
 
@@ -113,7 +113,7 @@ public class RestExceptionHandler {
                 Language.valueOf(request.getHeader("Current-Language")).getId()   :
                 Language.ru.getId();
         message.set(HTTPMessage.CANNOT_PARSE_DATA, language);
-        LogUtil.write(exception.getMessage(), LogType.ERROR);
+        LogUtil.write(exception);
         return Response.getResponse("message", message);
     }
 
@@ -125,7 +125,7 @@ public class RestExceptionHandler {
                 Language.valueOf(request.getHeader("Current-Language")).getId()   :
                 Language.ru.getId();
         message.set(HTTPMessage.MISSING_REQUEST_HEADER, language);
-        LogUtil.write(exception.getMessage(), LogType.ERROR);
+        LogUtil.write(exception);
         return Response.getResponse("message", message);
     }
 
@@ -137,7 +137,7 @@ public class RestExceptionHandler {
                 Language.valueOf(request.getHeader("Current-Language")).getId()   :
                 Language.ru.getId();
         message.set(HTTPMessage.USER_NOT_FOUND, language);
-        LogUtil.write(exception.getMessage(), LogType.ERROR);
+        LogUtil.write(exception);
         return Response.getResponse("message", message);
     }
 
@@ -149,7 +149,7 @@ public class RestExceptionHandler {
                 Language.valueOf(request.getHeader("Current-Language")).getId()   :
                 Language.ru.getId();
         message.set(HTTPMessage.USER_IS_NOT_EXIST, language);
-        LogUtil.write(exception.getMessage(), LogType.ERROR);
+        LogUtil.write(exception);
         return Response.getResponse("message", message);
     }
 
@@ -163,7 +163,7 @@ public class RestExceptionHandler {
         exception.getBindingResult().getFieldErrors().forEach(fieldError -> {
             messages.put(fieldError.getField(), new HTTPMessageHandler(HTTPMessage.valueOf(fieldError.getDefaultMessage()), language));
         });
-        LogUtil.write(exception.getMessage(), LogType.ERROR);
+        LogUtil.write(exception);
         return Response.getResponse("message", messages);
     }
 
@@ -175,7 +175,7 @@ public class RestExceptionHandler {
                 Language.valueOf(request.getHeader("Current-Language")).getId()   :
                 Language.ru.getId();
         message.set(HTTPMessage.LANGUAGE_IS_NOT_EXIST, language);
-        LogUtil.write(exception.getMessage(), LogType.ERROR);
+        LogUtil.write(exception);
         return Response.getResponse("message", message);
     }
 
@@ -187,7 +187,7 @@ public class RestExceptionHandler {
                 Language.valueOf(request.getHeader("Current-Language")).getId()   :
                 Language.ru.getId();
         message.set(HTTPMessage.ERROR, language);
-        LogUtil.write(exception.getMessage(), LogType.ERROR);
+        LogUtil.write(exception);
         return Response.getResponse("message", message);
     }
 
