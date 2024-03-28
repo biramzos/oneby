@@ -1,7 +1,21 @@
 package com.web.oneby.commons.Utils;
 
+import com.fasterxml.jackson.databind.JsonNode;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.web.oneby.commons.Enums.LogType;
+import jakarta.servlet.http.HttpServletRequest;
+import org.apache.catalina.core.ApplicationContext;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.core.io.ClassPathResource;
+import org.springframework.http.ResponseEntity;
+import org.springframework.http.server.ServletServerHttpRequest;
+import org.springframework.web.client.RestTemplate;
+import org.springframework.web.context.request.RequestContextHolder;
+import org.springframework.web.context.request.ServletRequestAttributes;
+import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
+
+import java.io.IOException;
 import java.net.InetAddress;
 
 public class ConstantsUtil {
@@ -23,12 +37,40 @@ public class ConstantsUtil {
     public static final String VIDEOS_DIRECTORY = new ClassPathResource("/assets/videos/").getPath();
     public static final String FILES_DIRECTORY = new ClassPathResource("/assets/files/").getPath();
 
+    @Autowired
+    private ApplicationContext applicationContext;
+
+    public static String getServerAddress() {
+        HttpServletRequest request = ((ServletRequestAttributes) RequestContextHolder.getRequestAttributes()).getRequest();
+        return getServerAddress(request);
+    }
+
+    public static String getServerAddress(HttpServletRequest request) {
+        ServletUriComponentsBuilder builder = ServletUriComponentsBuilder.fromRequest(request);
+        return builder.build().getHost();
+    }
+
+    public static int getServerPort() {
+        HttpServletRequest request = ((ServletRequestAttributes) RequestContextHolder.getRequestAttributes()).getRequest();
+        return getServerPort(request);
+    }
+
+    public static int getServerPort(HttpServletRequest request) {
+        ServletUriComponentsBuilder builder = ServletUriComponentsBuilder.fromRequest(request);
+        return builder.build().getPort();
+    }
+
+    public static String getDomain() {
+        HttpServletRequest request = ((ServletRequestAttributes) RequestContextHolder.getRequestAttributes()).getRequest();
+        return getDomain(request);
+    }
+
+    public static String getDomain(HttpServletRequest request) {
+        ServletUriComponentsBuilder builder = ServletUriComponentsBuilder.fromRequest(request);
+        return builder.build().getHost();
+    }
+
     public static String getHostName() {
-        try {
-            return InetAddress.getLocalHost().getHostName();
-        } catch (Exception e) {
-            LogUtil.write(e);
-            return "http://127.0.0.1:8000";
-        }
+        return getDomain() + ((getServerPort() != 80) ?  ":" + getServerPort() : "");
     }
 }
