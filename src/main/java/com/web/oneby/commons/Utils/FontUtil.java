@@ -12,20 +12,8 @@ public class FontUtil {
         return new IFontProvider() {
             @Override
             public Font getFont(String fontFamily, String encoding, float size, int style, Color color) {
-                boolean isBold = style == Font.BOLD;
-                boolean isItalic = style == Font.ITALIC;
-                boolean isBoth = style == Font.BOLDITALIC;
-                String fontPath = "";
-                if (isBold) {
-                    fontPath = ConstantsUtil.FONTS_DIRECTORY + "TimesNewRoman/font_bold.ttf";
-                } else if (isItalic) {
-                    fontPath = ConstantsUtil.FONTS_DIRECTORY + "TimesNewRoman/font_italic.ttf";
-                } else if (isBoth) {
-                    fontPath = ConstantsUtil.FONTS_DIRECTORY + "TimesNewRoman/font_bold_italic.ttf";
-                } else {
-                    fontPath = ConstantsUtil.FONTS_DIRECTORY + "TimesNewRoman/font.ttf";
-                }
-                return FontFactory.getFont(fontPath, BaseFont.IDENTITY_H, false, size, 0, color);
+                String fontPath = ConstantsUtil.FONTS_DIRECTORY + "TimesNewRoman/font.ttf";
+                return FontFactory.getFont(fontPath, BaseFont.IDENTITY_H, false, size, style, color);
             }
         };
     }
