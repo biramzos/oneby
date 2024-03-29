@@ -6,6 +6,9 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 import com.web.oneby.commons.Enums.Module;
 
+import java.util.HashMap;
+import java.util.Map;
+
 @Data
 @Entity
 @Table(name = "settings")
@@ -22,8 +25,8 @@ public class Setting {
     private String nameRU;
     @Column(name = "name_en")
     private String nameEN;
-    @Column(name = "module")
     @Enumerated(EnumType.STRING)
+    @Column(name = "module")
     private Module module;
     @Column(name = "value")
     private String value;
@@ -45,22 +48,20 @@ public class Setting {
     }
 
     public String getName(int language){
-        if (language == Language.kk.getId()) {
-            return nameKK;
-        } else if (language == Language.ru.getId()) {
-            return nameRU;
-        } else {
-            return nameEN;
-        }
+        Map<String, String> names = new HashMap<>() {{
+            put(Language.kk.suffix(), nameKK);
+            put(Language.ru.suffix(), nameRU);
+            put(Language.en.suffix(), nameEN);
+        }};
+        return names.get(Language.getLanguageById(language).suffix());
     }
 
     public String getName(Language language){
-        if (language == Language.kk) {
-            return nameKK;
-        } else if (language == Language.ru) {
-            return nameRU;
-        } else {
-            return nameEN;
-        }
+        Map<String, String> names = new HashMap<>() {{
+            put(Language.kk.suffix(), nameKK);
+            put(Language.ru.suffix(), nameRU);
+            put(Language.en.suffix(), nameEN);
+        }};
+        return names.get(language.suffix());
     }
 }

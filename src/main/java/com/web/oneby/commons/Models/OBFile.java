@@ -1,5 +1,7 @@
 package com.web.oneby.commons.Models;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.web.oneby.commons.Utils.LogUtil;
 import com.web.oneby.commons.Utils.OBFileUtil;
 import jakarta.persistence.*;
 import lombok.Data;
@@ -22,6 +24,7 @@ public class OBFile {
     private String format;
     @Column(name = "name")
     private String name;
+    @JsonIgnore
     @Lob
     @Column(name = "content", columnDefinition = "LONGBLOB")
     private byte[] content;
@@ -44,7 +47,7 @@ public class OBFile {
             this.name = file.getName();
             this.content = file.getBytes();
         } catch (IOException e) {
-            log.error(e.getMessage());
+            LogUtil.write(e);
         }
     }
 }

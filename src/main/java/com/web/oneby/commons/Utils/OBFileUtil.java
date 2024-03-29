@@ -1,5 +1,6 @@
 package com.web.oneby.commons.Utils;
 
+import com.web.oneby.commons.Enums.LogType;
 import com.web.oneby.commons.Enums.Template;
 import org.springframework.web.multipart.MultipartFile;
 import java.io.File;
@@ -31,7 +32,7 @@ public class OBFileUtil {
             }
             return buffer;
         } catch (IOException e) {
-            e.printStackTrace();
+            LogUtil.write(e);
             return null;
         } finally {
             try {
@@ -39,7 +40,7 @@ public class OBFileUtil {
                     fis.close();
                 }
             } catch (IOException e) {
-                e.printStackTrace();
+                LogUtil.write(e);
             }
         }
     }
@@ -48,11 +49,10 @@ public class OBFileUtil {
         try {
             String path = ConstantsUtil.TEMPLATES_DIRECTORY + template.getFileByLanguage(lang);
             Path templatePath = Path.of(path);
-
             Files.createDirectories(templatePath.getParent());
-
             try (InputStream inputStream = file.getInputStream()) {
                 Files.copy(inputStream, templatePath, StandardCopyOption.REPLACE_EXISTING);
+                LogUtil.write("Template saved [templateId = " + template.getId() + "]!", LogType.INFO);
             }
             return true;
         } catch (IOException e) {
