@@ -27,167 +27,61 @@ import java.util.HashMap;
 import java.util.Map;
 
 @RestControllerAdvice
-public class RestExceptionHandler {
-
-    @ExceptionHandler(AccessDeniedException.class)
-    public static ResponseEntity<Response> handleAccessDeniedException(HttpServletRequest request, HttpServletResponse response,
-                                    AccessDeniedException exception) {
-        HTTPMessageHandler message = new HTTPMessageHandler();
-        int language = (StringUtil.isNotEmpty(request.getHeader("Current-Language")) && Language.contains(request.getHeader("Current-Language"))) ?
-                Language.valueOf(request.getHeader("Current-Language")).getId()   :
-                Language.ru.getId();
-        message.set(HTTPMessage.ACCESS_DENIED, language);
-        LogUtil.write(exception);
-        return ResponseEntity.badRequest().body(Response.getResponse("message", message));
-    }
-
-    @ExceptionHandler(DisabledException.class)
-    public static ResponseEntity<Response> handleDisabledException(HttpServletRequest request, HttpServletResponse response,
-                                       DisabledException exception) {
-        HTTPMessageHandler message = new HTTPMessageHandler();
-        int language = (StringUtil.isNotEmpty(request.getHeader("Current-Language")) && Language.contains(request.getHeader("Current-Language"))) ?
-                Language.valueOf(request.getHeader("Current-Language")).getId()   :
-                Language.ru.getId();
-        LogUtil.write(exception);
-        message.set(HTTPMessage.USER_IS_DISABLED, language);
-        return ResponseEntity.badRequest().body(Response.getResponse("message", message));
-    }
-
-    @ExceptionHandler(BadCredentialsException.class)
-    public static ResponseEntity<Response> handleBadCredentialsException(HttpServletRequest request, HttpServletResponse response,
-                                      AuthenticationException exception) {
-        HTTPMessageHandler message = new HTTPMessageHandler();
-        int language = (StringUtil.isNotEmpty(request.getHeader("Current-Language")) && Language.contains(request.getHeader("Current-Language"))) ?
-                Language.valueOf(request.getHeader("Current-Language")).getId()   :
-                Language.ru.getId();
-        message.set(HTTPMessage.USERNAME_OR_PASSWORD_IS_WRONG, language);
-        LogUtil.write(exception);
-        return ResponseEntity.badRequest().body(Response.getResponse("message", message));
-    }
-
-    @ExceptionHandler(MissingPathVariableException.class)
-    public static ResponseEntity<Response> handleMissingPathVariableException (HttpServletRequest request, HttpServletResponse response,
-                                       MissingPathVariableException exception) {
-        HTTPMessageHandler message = new HTTPMessageHandler();
-        int language = (StringUtil.isNotEmpty(request.getHeader("Current-Language")) && Language.contains(request.getHeader("Current-Language"))) ?
-                Language.valueOf(request.getHeader("Current-Language")).getId()   :
-                Language.ru.getId();
-        message.set(HTTPMessage.ENTITY_IS_NOT_FOUND,language);
-        LogUtil.write(exception);
-        return ResponseEntity.badRequest().body(Response.getResponse("message", message));
-    }
-
-    @ExceptionHandler(NullPointerException.class)
-    public static ResponseEntity<Response> handleNullPointerException (HttpServletRequest request, HttpServletResponse response,
-                                       NullPointerException exception) {
-        HTTPMessageHandler message = new HTTPMessageHandler();
-        int language = (StringUtil.isNotEmpty(request.getHeader("Current-Language")) && Language.contains(request.getHeader("Current-Language"))) ?
-                Language.valueOf(request.getHeader("Current-Language")).getId()   :
-                Language.ru.getId();
-        LogUtil.write(exception);
-        if (exception.getMessage().contains(Authentication.class.getName())) {
-            message.set(HTTPMessage.FAILED_AUTHENTICATION, language);
-        } else {
-            message.set(HTTPMessage.NULL_POINTER, language);
-        }
-        return ResponseEntity.badRequest().body(Response.getResponse("message", message));
-    }
-
-    @ExceptionHandler(NoResourceFoundException.class)
-    public static ResponseEntity<Response> handleNoResourceFoundException (HttpServletRequest request, HttpServletResponse response,
-                                       NoResourceFoundException exception) {
-        HTTPMessageHandler message = new HTTPMessageHandler();
-        int language = (StringUtil.isNotEmpty(request.getHeader("Current-Language")) && Language.contains(request.getHeader("Current-Language"))) ?
-                Language.valueOf(request.getHeader("Current-Language")).getId()   :
-                Language.ru.getId();
-        message.set(HTTPMessage.NO_RESOURCES_FOUND, language);
-        LogUtil.write(exception);
-        return ResponseEntity.badRequest().body(Response.getResponse("message", message));
-    }
-
-    @ExceptionHandler(HttpMessageNotReadableException.class)
-    public static ResponseEntity<Response> handleHttpMessageNotReadableException (HttpServletRequest request, HttpServletResponse response,
-                                      HttpMessageNotReadableException exception) {
-        HTTPMessageHandler message = new HTTPMessageHandler();
-        int language = (StringUtil.isNotEmpty(request.getHeader("Current-Language")) && Language.contains(request.getHeader("Current-Language"))) ?
-                Language.valueOf(request.getHeader("Current-Language")).getId()   :
-                Language.ru.getId();
-        message.set(HTTPMessage.CANNOT_PARSE_DATA, language);
-        LogUtil.write(exception);
-        return ResponseEntity.badRequest().body(Response.getResponse("message", message));
-    }
-
-    @ExceptionHandler(MissingRequestHeaderException.class)
-    public static ResponseEntity<Response> handleMissingRequestHeaderException (HttpServletRequest request, HttpServletResponse response,
-                                        MissingRequestHeaderException exception) {
-        HTTPMessageHandler message = new HTTPMessageHandler();
-        int language = (StringUtil.isNotEmpty(request.getHeader("Current-Language")) && Language.contains(request.getHeader("Current-Language"))) ?
-                Language.valueOf(request.getHeader("Current-Language")).getId()   :
-                Language.ru.getId();
-        message.set(HTTPMessage.MISSING_REQUEST_HEADER, language);
-        LogUtil.write(exception);
-        return ResponseEntity.badRequest().body(Response.getResponse("message", message));
-    }
-
-    @ExceptionHandler(UsernameNotFoundException.class)
-    public static ResponseEntity<Response> handleUsernameNotFoundException (HttpServletRequest request, HttpServletResponse response,
-                                        UsernameNotFoundException exception) {
-        HTTPMessageHandler message = new HTTPMessageHandler();
-        int language = (StringUtil.isNotEmpty(request.getHeader("Current-Language")) && Language.contains(request.getHeader("Current-Language"))) ?
-                Language.valueOf(request.getHeader("Current-Language")).getId()   :
-                Language.ru.getId();
-        message.set(HTTPMessage.USER_NOT_FOUND, language);
-        LogUtil.write(exception);
-        return ResponseEntity.badRequest().body(Response.getResponse("message", message));
-    }
-
-    @ExceptionHandler(InternalAuthenticationServiceException.class)
-    public static ResponseEntity<Response> handleInternalAuthenticationServiceException (HttpServletRequest request, HttpServletResponse response,
-                                         InternalAuthenticationServiceException exception) {
-        HTTPMessageHandler message = new HTTPMessageHandler();
-        int language = (StringUtil.isNotEmpty(request.getHeader("Current-Language")) && Language.contains(request.getHeader("Current-Language"))) ?
-                Language.valueOf(request.getHeader("Current-Language")).getId()   :
-                Language.ru.getId();
-        message.set(HTTPMessage.USER_IS_NOT_EXIST, language);
-        LogUtil.write(exception);
-        return ResponseEntity.badRequest().body(Response.getResponse("message", message));
-    }
-
-    @ExceptionHandler(MethodArgumentNotValidException.class)
-    public static ResponseEntity<Response> handleMethodArgumentNotValidException (HttpServletRequest request, HttpServletResponse response,
-                                      MethodArgumentNotValidException exception) {
-        Map<String, HTTPMessageHandler> messages = new HashMap<>();
-        int language = (StringUtil.isNotEmpty(request.getHeader("Current-Language")) && Language.contains(request.getHeader("Current-Language"))) ?
-                Language.valueOf(request.getHeader("Current-Language")).getId()   :
-                Language.ru.getId();
-        exception.getBindingResult().getFieldErrors().forEach(fieldError -> {
-            messages.put(fieldError.getField(), new HTTPMessageHandler(HTTPMessage.valueOf(fieldError.getDefaultMessage()), language));
-        });
-        LogUtil.write(exception);
-        return ResponseEntity.badRequest().body(Response.getResponse("message", messages));
-    }
-
-    @ExceptionHandler(MethodArgumentTypeMismatchException.class)
-    public static ResponseEntity<Response> handleMethodArgumentTypeMismatchException (HttpServletRequest request, HttpServletResponse response,
-                                      MethodArgumentTypeMismatchException exception) {
-        HTTPMessageHandler message = new HTTPMessageHandler();
-        int language = (StringUtil.isNotEmpty(request.getHeader("Current-Language")) && Language.contains(request.getHeader("Current-Language"))) ?
-                Language.valueOf(request.getHeader("Current-Language")).getId()   :
-                Language.ru.getId();
-        message.set(HTTPMessage.LANGUAGE_IS_NOT_EXIST, language);
-        LogUtil.write(exception);
-        return ResponseEntity.badRequest().body(Response.getResponse("message", message));
-    }
+public class RestExceptionHandler  {
 
     @ExceptionHandler(Exception.class)
-    public static ResponseEntity<Response> handleException (HttpServletRequest request, HttpServletResponse response,
-                                                           Exception exception) {
-        HTTPMessageHandler message = new HTTPMessageHandler();
+    public static ResponseEntity<Response> handleExceptions (HttpServletRequest request, HttpServletResponse response, Exception exception) {
         int language = (StringUtil.isNotEmpty(request.getHeader("Current-Language")) && Language.contains(request.getHeader("Current-Language"))) ?
                 Language.valueOf(request.getHeader("Current-Language")).getId()   :
                 Language.ru.getId();
-        message.set(HTTPMessage.ERROR, language);
+        Object message;
         LogUtil.write(exception);
+        if (exception instanceof AccessDeniedException) {
+            message = new HTTPMessageHandler();
+            ((HTTPMessageHandler) message).set(HTTPMessage.ACCESS_DENIED, language);
+        } else if (exception instanceof DisabledException) {
+            message = new HTTPMessageHandler();
+            ((HTTPMessageHandler) message).set(HTTPMessage.USER_IS_DISABLED, language);
+        } else if (exception instanceof BadCredentialsException) {
+            message = new HTTPMessageHandler();
+            ((HTTPMessageHandler) message).set(HTTPMessage.USERNAME_OR_PASSWORD_IS_WRONG, language);
+        } else if (exception instanceof MissingPathVariableException) {
+            message = new HTTPMessageHandler();
+            ((HTTPMessageHandler) message).set(HTTPMessage.ENTITY_IS_NOT_FOUND,language);
+        } else if (exception instanceof NullPointerException) {
+            message = new HTTPMessageHandler();
+            if (exception.getMessage().contains(Authentication.class.getName())) {
+                ((HTTPMessageHandler) message).set(HTTPMessage.FAILED_AUTHENTICATION, language);
+            } else {
+                ((HTTPMessageHandler) message).set(HTTPMessage.NULL_POINTER, language);
+            }
+        } else if (exception instanceof NoResourceFoundException) {
+            message = new HTTPMessageHandler();
+            ((HTTPMessageHandler) message).set(HTTPMessage.NO_RESOURCES_FOUND, language);
+        } else if (exception instanceof HttpMessageNotReadableException) {
+            message = new HTTPMessageHandler();
+            ((HTTPMessageHandler) message).set(HTTPMessage.CANNOT_PARSE_DATA, language);
+        } else if (exception instanceof MissingRequestHeaderException) {
+            message = new HTTPMessageHandler();
+            ((HTTPMessageHandler) message).set(HTTPMessage.MISSING_REQUEST_HEADER, language);
+        } else if (exception instanceof UsernameNotFoundException) {
+            message = new HTTPMessageHandler();
+            ((HTTPMessageHandler) message).set(HTTPMessage.USER_NOT_FOUND, language);
+        } else if (exception instanceof InternalAuthenticationServiceException) {
+            message = new HTTPMessageHandler();
+            ((HTTPMessageHandler) message).set(HTTPMessage.USER_IS_NOT_EXIST, language);
+        } else if (exception instanceof MethodArgumentNotValidException) {
+            message = new HashMap<String, HTTPMessageHandler>();
+            ((MethodArgumentNotValidException) exception).getBindingResult().getFieldErrors().forEach(fieldError -> {
+                ((HashMap<String, HTTPMessageHandler>) message).put(fieldError.getField(), new HTTPMessageHandler(HTTPMessage.valueOf(fieldError.getDefaultMessage()), language));
+            });
+        } else if (exception instanceof MethodArgumentTypeMismatchException) {
+            message = new HTTPMessageHandler();
+            ((HTTPMessageHandler) message).set(HTTPMessage.LANGUAGE_IS_NOT_EXIST, language);
+        } else {
+            message = new HTTPMessageHandler();
+            ((HTTPMessageHandler) message).set(HTTPMessage.ERROR, language);
+        }
         return ResponseEntity.badRequest().body(Response.getResponse("message", message));
     }
 
