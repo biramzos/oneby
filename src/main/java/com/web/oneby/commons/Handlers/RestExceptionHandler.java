@@ -2,7 +2,6 @@ package com.web.oneby.commons.Handlers;
 
 import com.web.oneby.commons.Enums.HTTPMessage;
 import com.web.oneby.commons.Enums.Language;
-import com.web.oneby.commons.Enums.LogType;
 import com.web.oneby.commons.Utils.LogUtil;
 import com.web.oneby.commons.Utils.Response;
 import com.web.oneby.commons.Utils.StringUtil;

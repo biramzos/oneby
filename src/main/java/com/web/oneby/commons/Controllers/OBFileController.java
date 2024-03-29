@@ -4,8 +4,10 @@ import com.web.oneby.commons.DTOs.FileObject;
 import com.web.oneby.commons.DTOs.TemplateDataObject;
 import com.web.oneby.commons.Enums.HTTPMessage;
 import com.web.oneby.commons.Enums.Language;
+import com.web.oneby.commons.Enums.LogType;
 import com.web.oneby.commons.Enums.Template;
 import com.web.oneby.commons.Handlers.HTTPMessageHandler;
+import com.web.oneby.commons.Utils.LogUtil;
 import com.web.oneby.commons.Utils.OBFileUtil;
 import com.web.oneby.commons.Utils.PDFUtil;
 import org.springframework.http.HttpHeaders;
@@ -57,10 +59,12 @@ public class OBFileController {
     public ResponseEntity<HTTPMessageHandler> replaceAndSaveTemplate(@RequestHeader(value = "Current-Language", defaultValue = "ru") Language language,
                                                                      @PathVariable("type") int type, @ModelAttribute FileObject file) {
         if (file.getFile().isEmpty()) {
+            LogUtil.write(HTTPMessage.ERROR_WHILE_UPLOADING.getMessage(Language.en), LogType.ERROR);
             return ResponseEntity.badRequest().body(new HTTPMessageHandler(HTTPMessage.ERROR_WHILE_UPLOADING, language.getId()));
         }
         Template template = Template.getById(type);
         if (template == null) {
+            LogUtil.write(HTTPMessage.NO_RESOURCES_FOUND.getMessage(Language.en), LogType.ERROR);
             return ResponseEntity.badRequest().body(new HTTPMessageHandler(HTTPMessage.NO_RESOURCES_FOUND, language.getId()));
         }
         OBFileUtil.saveTemplate(file.getFile(), template, language.getId());
