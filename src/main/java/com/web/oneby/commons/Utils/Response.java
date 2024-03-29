@@ -9,4 +9,13 @@ public class Response extends HashMap<String, Object> {
             put(name, object);
         }};
     }
+
+    public static Response getResponse(Field... objects) {
+        return new Response() {{
+            for(Field object : objects) {
+                put(object.name, object.value);
+            }
+        }};
+    }
+
 }
