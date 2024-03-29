@@ -5,6 +5,7 @@ import org.springframework.security.core.GrantedAuthority;
 
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Objects;
 
 public enum UserRole implements GrantedAuthority {
     ADMIN("Әкімші", "Администратор", "Administrator"),
@@ -32,33 +33,21 @@ public enum UserRole implements GrantedAuthority {
         this.nameEN = nameEN;
     }
 
-    public String getNameKK() {
-        return nameKK;
-    }
-
-    public String getNameRU() {
-        return nameRU;
-    }
-
-    public String getNameEN() {
-        return nameEN;
-    }
-
     public String getName(int language) {
         Map<String, String> names = new HashMap<>() {{
-            put("nameKK", nameKK);
-            put("nameRU", nameRU);
-            put("nameEN", nameEN);
+            put(Language.kk.suffix(), nameKK);
+            put(Language.ru.suffix(), nameRU);
+            put(Language.en.suffix(), nameEN);
         }};
-        return names.get("name" + Language.getLanguageById(language).suffix());
+        return names.get(Objects.requireNonNull(Language.getLanguageById(language)).suffix());
     }
 
     public String getName(Language language) {
         Map<String, String> names = new HashMap<>() {{
-            put("nameKK", nameKK);
-            put("nameRU", nameRU);
-            put("nameEN", nameEN);
+            put(Language.kk.suffix(), nameKK);
+            put(Language.ru.suffix(), nameRU);
+            put(Language.en.suffix(), nameEN);
         }};
-        return names.get("name" + language.suffix());
+        return names.get(language.suffix());
     }
 }

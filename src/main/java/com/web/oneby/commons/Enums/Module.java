@@ -1,5 +1,7 @@
 package com.web.oneby.commons.Enums;
 
+import com.web.oneby.commons.Utils.LogUtil;
+
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Objects;
@@ -17,6 +19,16 @@ public enum Module {
     private final String nameEN;
     private final boolean forPremium;
     private final boolean isStudy;
+
+    private final static Map<String, Module> modulesByCode = new HashMap<>();
+    private final static Map<Integer, Module> modulesById = new HashMap<>();
+
+    static {
+        for (Module module : values()) {
+            modulesByCode.put(module.code, module);
+            modulesById.put(module.id, module);
+        }
+    }
 
     Module(
             int id,
@@ -54,17 +66,21 @@ public enum Module {
     }
 
     public static Module getModuleByCode(String code){
-        Module module = null;
-        for (Module m: values()) {
-            if (Objects.equals(m.code, code)) {
-                module = m;
-                break;
-            }
+        try {
+            return modulesByCode.get(code);
+        } catch (Exception e) {
+            LogUtil.write(e);
+            return null;
         }
-        if (module == null) {
-            throw new RuntimeException("Module '" + code + "' not found!");
+    }
+
+    public static Module getModuleById(Integer id){
+        try {
+            return modulesById.get(id);
+        } catch (Exception e) {
+            LogUtil.write(e);
+            return null;
         }
-        return module;
     }
 
     public int getId() {

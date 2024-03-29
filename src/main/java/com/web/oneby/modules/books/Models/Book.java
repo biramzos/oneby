@@ -88,55 +88,55 @@ public class Book {
 
     public String getTitle(int language) {
         Map<String, String> titles = new HashMap<>() {{
-            put("titleKK", titleKK);
-            put("titleRU", titleRU);
-            put("titleEN", titleEN);
+            put(Language.kk.suffix(), titleKK);
+            put(Language.ru.suffix(), titleRU);
+            put(Language.en.suffix(), titleEN);
         }};
-        return titles.get("title" + Language.getLanguageById(language).suffix());
+        return titles.get(Language.getLanguageById(language).suffix());
     }
 
     public String getTitle(Language language) {
         Map<String, String> titles = new HashMap<>() {{
-            put("titleKK", titleKK);
-            put("titleRU", titleRU);
-            put("titleEN", titleEN);
+            put(Language.kk.suffix(), titleKK);
+            put(Language.ru.suffix(), titleRU);
+            put(Language.en.suffix(), titleEN);
         }};
-        return titles.get("title" + language.suffix());
+        return titles.get(language.suffix());
     }
 
     public String getDescription(int language) {
         Map<String, String> descriptions = new HashMap<>() {{
-            put("descriptionKK", descriptionKK);
-            put("descriptionRU", descriptionRU);
-            put("descriptionEN", descriptionEN);
+            put(Language.kk.suffix(), descriptionKK);
+            put(Language.ru.suffix(), descriptionRU);
+            put(Language.en.suffix(), descriptionEN);
         }};
-        return descriptions.get("description" + Language.getLanguageById(language).suffix());
+        return descriptions.get(Language.getLanguageById(language).suffix());
     }
 
     public String getDescription(Language language) {
         Map<String, String> descriptions = new HashMap<>() {{
-            put("descriptionKK", descriptionKK);
-            put("descriptionRU", descriptionRU);
-            put("descriptionEN", descriptionEN);
+            put(Language.kk.suffix(), descriptionKK);
+            put(Language.ru.suffix(), descriptionRU);
+            put(Language.en.suffix(), descriptionEN);
         }};
-        return descriptions.get("description" + language.suffix());
+        return descriptions.get(language.suffix());
     }
 
     public String getAuthor(int language) {
         Map<String, String> authors = new HashMap<>() {{
-            put("authorKK", authorKK);
-            put("authorRU", authorRU);
-            put("authorEN", authorEN);
+            put(Language.kk.suffix(), authorKK);
+            put(Language.ru.suffix(), authorRU);
+            put(Language.en.suffix(), authorEN);
         }};
-        return authors.get("author" + Language.getLanguageById(language).suffix());
+        return authors.get(Language.getLanguageById(language).suffix());
     }
 
     public String getAuthor(Language language) {
         Map<String, String> authors = new HashMap<>() {{
-            put("authorKK", authorKK);
-            put("authorRU", authorRU);
-            put("authorEN", authorEN);
+            put(Language.kk.suffix(), authorKK);
+            put(Language.ru.suffix(), authorRU);
+            put(Language.en.suffix(), authorEN);
         }};
-        return authors.get("author" + language.suffix());
+        return authors.get(language.suffix());
     }
 }

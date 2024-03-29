@@ -214,20 +214,20 @@ public enum HTTPMessage {
 
     public String getMessage(int language) {
         Map<String, String> names = new HashMap<>() {{
-            put("messageKZ", messageKK);
-            put("messageRU", messageRU);
-            put("messageEN", messageEN);
+            put(Language.kk.suffix(), messageKK);
+            put(Language.ru.suffix(), messageRU);
+            put(Language.en.suffix(), messageEN);
         }};
-        return names.get("message" + Language.getLanguageById(language).suffix());
+        return names.get(Language.getLanguageById(language).suffix());
     }
 
     public String getMessage(Language language) {
         Map<String, String> names = new HashMap<>() {{
-            put("messageKZ", messageKK);
-            put("messageRU", messageRU);
-            put("messageEN", messageEN);
+            put(Language.kk.suffix(), messageKK);
+            put(Language.ru.suffix(), messageRU);
+            put(Language.en.suffix(), messageEN);
         }};
-        return names.get("message" + language.suffix());
+        return names.get(language.suffix());
     }
 
     @JsonValue

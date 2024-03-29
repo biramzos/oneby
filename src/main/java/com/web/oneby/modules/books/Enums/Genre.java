@@ -1,6 +1,7 @@
 package com.web.oneby.modules.books.Enums;
 
 import com.web.oneby.commons.Enums.Language;
+import com.web.oneby.commons.Utils.LogUtil;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -43,40 +44,33 @@ public enum Genre {
     }
 
     public static Genre getByID(int id) {
-        return genres.get(id);
+        try {
+            return genres.get(id);
+        } catch (Exception e) {
+            LogUtil.write(e);
+            return null;
+        }
     }
 
     public int getId() {
         return id;
     }
 
-    public String getNameKK() {
-        return nameKK;
-    }
-
-    public String getNameRU() {
-        return nameRU;
-    }
-
-    public String getNameEN() {
-        return nameEN;
-    }
-
     public String getName(int language) {
         Map<String, String> names = new HashMap<>() {{
-            put("nameKK", nameKK);
-            put("nameRU", nameRU);
-            put("nameEN", nameEN);
+            put(Language.kk.suffix(), nameKK);
+            put(Language.ru.suffix(), nameRU);
+            put(Language.en.suffix(), nameEN);
         }};
-        return names.get("name" + Language.getLanguageById(language).suffix());
+        return names.get(Language.getLanguageById(language).suffix());
     }
 
     public String getName(Language language) {
         Map<String, String> names = new HashMap<>() {{
-            put("nameKK", nameKK);
-            put("nameRU", nameRU);
-            put("nameEN", nameEN);
+            put(Language.kk.suffix(), nameKK);
+            put(Language.ru.suffix(), nameRU);
+            put(Language.en.suffix(), nameEN);
         }};
-        return names.get("name" + language.suffix());
+        return names.get(language.suffix());
     }
 }

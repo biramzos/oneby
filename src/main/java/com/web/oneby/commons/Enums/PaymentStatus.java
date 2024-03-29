@@ -19,19 +19,19 @@ public enum PaymentStatus {
 
     public String getName(int language){
         Map<String, String> names = new HashMap<>() {{
-            put("nameKK", nameKK);
-            put("nameRU", nameRU);
-            put("nameEN", nameEN);
+            put(Language.kk.suffix(), nameKK);
+            put(Language.ru.suffix(), nameRU);
+            put(Language.en.suffix(), nameEN);
         }};
-        return names.get("name" + Language.getLanguageById(language).suffix());
+        return names.get(Language.getLanguageById(language).suffix());
     }
 
     public String getName(Language language){
         Map<String, String> names = new HashMap<>() {{
-            put("nameKK", nameKK);
-            put("nameRU", nameRU);
-            put("nameEN", nameEN);
+            put(Language.kk.suffix(), nameKK);
+            put(Language.ru.suffix(), nameRU);
+            put(Language.en.suffix(), nameEN);
         }};
-        return names.get("name" + language.suffix());
+        return names.get(language.suffix());
     }
 }

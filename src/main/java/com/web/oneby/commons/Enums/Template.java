@@ -1,5 +1,7 @@
 package com.web.oneby.commons.Enums;
 
+import com.web.oneby.commons.Utils.LogUtil;
+
 import java.util.HashMap;
 import java.util.Map;
 
@@ -61,34 +63,48 @@ public enum Template {
     }
 
     public static Template getById (int id) {
-        return templates.get(id);
+        try {
+            return templates.get(id);
+        } catch (Exception e) {
+            LogUtil.write(e);
+            return null;
+        }
     }
 
     public String getTemplateName(int language) {
         Map<String, String> names = new HashMap<>() {{
-            put(Language.kk.name(), templateKK);
-            put(Language.ru.name(), templateRU);
-            put(Language.en.name(), templateEN);
+            put(Language.kk.suffix(), templateKK);
+            put(Language.ru.suffix(), templateRU);
+            put(Language.en.suffix(), templateEN);
         }};
-        return names.get(Language.getLanguageById(language).name());
+        return names.get(Language.getLanguageById(language).suffix());
     }
 
     public String getTemplateName(Language language) {
         Map<String, String> names = new HashMap<>() {{
-            put(Language.kk.name(), templateKK);
-            put(Language.ru.name(), templateRU);
-            put(Language.en.name(), templateEN);
+            put(Language.kk.suffix(), templateKK);
+            put(Language.ru.suffix(), templateRU);
+            put(Language.en.suffix(), templateEN);
         }};
-        return names.get(language.name());
+        return names.get(language.suffix());
     }
 
-    public String getFileByLanguage (int lang) {
+    public String getFileByLanguage (int language) {
         Map<String, String> files = new HashMap<>() {{
-            put(Language.kk.name(), fileKK);
-            put(Language.ru.name(), fileRU);
-            put(Language.en.name(), fileEN);
+            put(Language.kk.suffix(), fileKK);
+            put(Language.ru.suffix(), fileRU);
+            put(Language.en.suffix(), fileEN);
         }};
-        return files.get(Language.getLanguageById(lang).name());
+        return files.get(Language.getLanguageById(language).suffix());
+    }
+
+    public String getFileByLanguage (Language language) {
+        Map<String, String> files = new HashMap<>() {{
+            put(Language.kk.suffix(), fileKK);
+            put(Language.ru.suffix(), fileRU);
+            put(Language.en.suffix(), fileEN);
+        }};
+        return files.get(language.suffix());
     }
 
 
@@ -96,27 +112,4 @@ public enum Template {
         return id;
     }
 
-    public String getTemplateKK() {
-        return templateKK;
-    }
-
-    public String getTemplateRU() {
-        return templateRU;
-    }
-
-    public String getTemplateEN() {
-        return templateEN;
-    }
-
-    public String getFileKK() {
-        return fileKK;
-    }
-
-    public String getFileRU() {
-        return fileRU;
-    }
-
-    public String getFileEN() {
-        return fileEN;
-    }
 }
