@@ -2,10 +2,7 @@ package com.web.oneby.commons.Controllers;
 
 import com.web.oneby.commons.DTOs.FileObject;
 import com.web.oneby.commons.DTOs.TemplateDataObject;
-import com.web.oneby.commons.Enums.HTTPMessage;
-import com.web.oneby.commons.Enums.Language;
-import com.web.oneby.commons.Enums.LogType;
-import com.web.oneby.commons.Enums.Template;
+import com.web.oneby.commons.Enums.*;
 import com.web.oneby.commons.Handlers.HTTPMessageHandler;
 import com.web.oneby.commons.Utils.*;
 import org.springframework.http.HttpHeaders;
@@ -27,7 +24,7 @@ public class OBFileController {
         byte[] billBytes = PDFUtil.generateBill(language.getId());
         HttpHeaders headers = new HttpHeaders();
         headers.setContentType(MediaType.APPLICATION_PDF);
-        headers.setContentDispositionFormData("attachment", "bill.pdf");
+        headers.setContentDispositionFormData("attachment", "bill" + FileType.PDF.getFormat());
         return new ResponseEntity<>(billBytes, headers, HttpStatus.OK);
     }
 
@@ -35,8 +32,7 @@ public class OBFileController {
     @ResponseBody
     @PostMapping("/generate-document")
     @PreAuthorize("isAnonymous()")
-    public ResponseEntity<byte[]> download(
-            @RequestHeader(value = "Current-Language", defaultValue = "ru") Language language,
+    public ResponseEntity<byte[]> download(@RequestHeader(value = "Current-Language", defaultValue = "ru") Language language,
             @RequestBody TemplateDataObject dataHandler
     ) {
         Template template = Template.getById(dataHandler.getType());
@@ -44,7 +40,7 @@ public class OBFileController {
             byte[] billBytes = PDFUtil.generateDocument(template, dataHandler.getData(), language.getId());
             HttpHeaders headers = new HttpHeaders();
             headers.setContentType(MediaType.APPLICATION_PDF);
-            headers.setContentDispositionFormData("attachment", template.name() + ".pdf");
+            headers.setContentDispositionFormData("attachment", template.name() + FileType.PDF.getFormat());
             return new ResponseEntity<>(billBytes, headers, HttpStatus.OK);
         }
         return new ResponseEntity<>(HttpStatus.NOT_FOUND);
