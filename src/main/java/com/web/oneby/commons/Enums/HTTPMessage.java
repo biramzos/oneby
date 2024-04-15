@@ -4,6 +4,7 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonValue;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Objects;
 
 public enum HTTPMessage {
 
@@ -218,7 +219,7 @@ public enum HTTPMessage {
             put(Language.ru.suffix(), messageRU);
             put(Language.en.suffix(), messageEN);
         }};
-        return names.get(Language.getLanguageById(language).suffix());
+        return names.get(Objects.requireNonNull(Language.getLanguageById(language)).suffix());
     }
 
     public String getMessage(Language language) {
