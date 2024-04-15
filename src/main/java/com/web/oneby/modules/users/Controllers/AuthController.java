@@ -42,7 +42,7 @@ public class AuthController {
     @PostMapping(value = "/register", consumes = {MediaType.MULTIPART_FORM_DATA_VALUE})
     @PreAuthorize("isAnonymous()")
     public Response registerUser(
-            HttpServletResponse httpServletResponse,
+            HttpServletResponse httpResponse,
             @ModelAttribute @Valid CreateUserRequest createUserRequest,
             @RequestHeader(value = "Current-Language", defaultValue = "ru") Language language
     ) {
@@ -50,13 +50,8 @@ public class AuthController {
         HTTPMessageHandler messageHandler = new HTTPMessageHandler();
         User user = userService.create(createUserRequest, messageHandler, language.getId());
         if (user != null){
-            if (httpServletResponse.containsHeader(HttpHeaders.AUTHORIZATION)) {
-                httpServletResponse.setHeader(HttpHeaders.AUTHORIZATION, "Bearer " + user.getToken());
-                //session.setAttribute(HttpHeaders.AUTHORIZATION, "Bearer " + user.getToken());
-            } else {
-                httpServletResponse.addHeader(HttpHeaders.AUTHORIZATION, "Bearer " + user.getToken());
-                //session.setAttribute(HttpHeaders.AUTHORIZATION, "Bearer " + user.getToken());
-            }
+            httpResponse.setHeader("Token", user.getToken());
+            httpResponse.setHeader("Access-Control-Allow-Credentials", "Token");
             response.put("user", UserResponse.fromUser(user, language.getId()));
         }
         response.put("message", messageHandler);
@@ -69,11 +64,8 @@ public class AuthController {
     public Response loginUserPost(HttpServletResponse httpResponse, @RequestBody LoginUserRequest loginUserRequest, @RequestHeader(value = "Current-Language", defaultValue = "ru") Language language){
         Response response = new Response();
         Authentication auth = authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(loginUserRequest.getUsername(), loginUserRequest.getPassword()));
-        if (httpResponse.containsHeader(HttpHeaders.AUTHORIZATION)) {
-            httpResponse.setHeader(HttpHeaders.AUTHORIZATION, "Bearer " + ((User) auth.getPrincipal()).getToken());
-        } else {
-            httpResponse.setHeader(HttpHeaders.AUTHORIZATION, "Bearer " + ((User) auth.getPrincipal()).getToken());
-        }
+        httpResponse.setHeader("Token", ((User) auth.getPrincipal()).getToken());
+        httpResponse.setHeader("Access-Control-Allow-Credentials", "Token");
         response.put("user", UserResponse.fromUser((User) auth.getPrincipal(), language.getId()));
         response.put("message", new HTTPMessageHandler(HTTPMessage.SUCCESSFULLY_LOGIN, language.getId()));
         return response;
@@ -82,14 +74,11 @@ public class AuthController {
     @ResponseBody
     @GetMapping("/login")
     @PreAuthorize("isAuthenticated()")
-    public Response loginUserGet(HttpServletResponse httpServletResponse, Authentication auth,
+    public Response loginUserGet(HttpServletResponse httpResponse, Authentication auth,
              @RequestHeader(value = "Current-Language", defaultValue = "ru") Language language){
         Response response = new Response();
-        if (httpServletResponse.containsHeader(HttpHeaders.AUTHORIZATION)) {
-            httpServletResponse.setHeader(HttpHeaders.AUTHORIZATION, "Bearer " + ((User) auth.getPrincipal()).getToken());
-        } else {
-            httpServletResponse.addHeader(HttpHeaders.AUTHORIZATION, "Bearer " + ((User) auth.getPrincipal()).getToken());
-        }
+        httpResponse.setHeader("Token", ((User) auth.getPrincipal()).getToken());
+        httpResponse.setHeader("Access-Control-Allow-Credentials", "Token");
         response.put("user", UserResponse.fromUser((User) auth.getPrincipal(), language.getId()));
         response.put("message", new HTTPMessageHandler(HTTPMessage.SUCCESSFULLY_LOGIN, language.getId()));
         return response;
@@ -102,7 +91,7 @@ public class AuthController {
                            @RequestHeader(value = "Current-Language", defaultValue = "ru") Language language){
         Response response = new Response();
         SecurityContextHolder.getContext().setAuthentication(null);
-        httpServletResponse.setHeader(HttpHeaders.AUTHORIZATION, null);
+        httpServletResponse.setHeader("Token", null);
         response.put("message", new HTTPMessageHandler(HTTPMessage.SUCCESSFULLY_LOGOUT, language.getId()));
         return response;
     }

@@ -46,10 +46,8 @@ public class JWTFilter extends OncePerRequestFilter {
                 !(request.getServletPath().equals("/api/v1/auth/login") && request.getMethod().equals(HttpMethod.POST.name()))
             ) {
                 String token = "";
-                if (request.getHeader("Authorization") != null &&
-                        request.getHeader("Authorization").length() > 7 &&
-                        request.getHeader("Authorization").startsWith("Bearer ")) {
-                    token = request.getHeader("Authorization").substring(7);
+                if (request.getHeader("Token") != null && !request.getHeader("Token").isEmpty()) {
+                    token = request.getHeader("Token");
                 }
                 if (!token.isEmpty() && TokenUtil.validateToken(token)) {
                     User user = parseUser(token);
