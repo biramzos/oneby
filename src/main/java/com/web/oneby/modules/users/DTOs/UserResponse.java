@@ -19,7 +19,6 @@ public class UserResponse {
     private String username;
     private String email;
     private List<String> roles;
-    private String token;
     private String image;
     private boolean isActivated;
 
@@ -31,7 +30,6 @@ public class UserResponse {
         userResponse.shortname = StringUtil.getFullNameShort(user.getName(language), user.getLastname(language));
         userResponse.username = user.getUsername();
         userResponse.email = user.getEmail();
-        userResponse.token = user.getToken();
         userResponse.roles = user.getRoles().stream().map((role) -> role.getName(language)).toList();
         userResponse.image = "/api/v1/auth/images/" + user.getId();
         userResponse.isActivated = user.isActive();
@@ -45,7 +43,6 @@ public class UserResponse {
         userResponse.shortname = StringUtil.getFullNameShort(user.getName(language), user.getLastname(language));
         userResponse.username = user.getUsername();
         userResponse.email = user.getEmail();
-        userResponse.token = user.getToken();
         userResponse.roles = user.getRoles().stream().map((role) -> role.getName(language)).toList();
         userResponse.image = "/api/v1/auth/images/" + user.getId();
         userResponse.isActivated = user.isActive();

@@ -39,8 +39,6 @@ public class User implements UserDetails {
     @JsonIgnore
     @Column(name = "password")
     private String password;
-    @Column(name = "token")
-    private String token;
     @JsonIgnore
     @ElementCollection(targetClass = UserRole.class, fetch = FetchType.EAGER)
     @Enumerated(EnumType.STRING)
@@ -72,7 +70,6 @@ public class User implements UserDetails {
             String username,
             String email,
             String password,
-            String token,
             List<UserRole> roles,
             byte[] image,
             boolean isActive
@@ -86,7 +83,6 @@ public class User implements UserDetails {
         this.username = username;
         this.email = email;
         this.password = password;
-        this.token = token;
         this.roles = roles;
         this.image = image;
         this.isActive = isActive;

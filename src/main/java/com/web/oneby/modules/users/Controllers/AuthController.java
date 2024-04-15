@@ -1,9 +1,11 @@
 package com.web.oneby.modules.users.Controllers;
 
+import com.web.oneby.commons.DTOs.TokenData;
 import com.web.oneby.commons.Enums.HTTPMessage;
 import com.web.oneby.commons.Enums.Language;
 import com.web.oneby.commons.Handlers.HTTPMessageHandler;
 import com.web.oneby.commons.Utils.Response;
+import com.web.oneby.commons.Utils.TokenUtil;
 import com.web.oneby.modules.users.DTOs.CreateUserRequest;
 import com.web.oneby.modules.users.DTOs.LoginUserRequest;
 import com.web.oneby.modules.users.DTOs.UserResponse;
@@ -48,11 +50,16 @@ public class AuthController {
     ) {
         Response response = new Response();
         HTTPMessageHandler messageHandler = new HTTPMessageHandler();
-        User user = userService.create(createUserRequest, messageHandler, language.getId());
-        if (user != null){
-            httpResponse.setHeader("Token", user.getToken());
+        boolean isSaved = userService.create(createUserRequest, messageHandler, language.getId());
+        if (isSaved){
+            TokenData token = TokenData
+                    .builder()
+                    .accessToken(TokenUtil.generateAccessTokenByUsername(createUserRequest.getUsername()))
+                    .refreshToken(TokenUtil.generateRefreshTokenByUsername(createUserRequest.getUsername()))
+                    .build();
+            httpResponse.setHeader("Token", token.getAccessToken());
             httpResponse.setHeader("Access-Control-Allow-Credentials", "Token");
-            response.put("user", UserResponse.fromUser(user, language.getId()));
+            response.put("token", token);
         }
         response.put("message", messageHandler);
         return response;
@@ -63,24 +70,51 @@ public class AuthController {
     @PreAuthorize("isAnonymous()")
     public Response loginUserPost(HttpServletResponse httpResponse, @RequestBody LoginUserRequest loginUserRequest, @RequestHeader(value = "Current-Language", defaultValue = "ru") Language language){
         Response response = new Response();
-        Authentication auth = authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(loginUserRequest.getUsername(), loginUserRequest.getPassword()));
-        httpResponse.setHeader("Token", ((User) auth.getPrincipal()).getToken());
+        User user = ((User) authenticationManager.authenticate
+                (new UsernamePasswordAuthenticationToken(loginUserRequest.getUsername(), loginUserRequest.getPassword()))
+                .getPrincipal());
+        TokenData token = TokenData
+                .builder()
+                .accessToken(TokenUtil.generateAccessTokenByUsername(user.getUsername()))
+                .refreshToken(TokenUtil.generateRefreshTokenByUsername(user.getUsername()))
+                .build();
+        httpResponse.setHeader("Token", token.getAccessToken());
         httpResponse.setHeader("Access-Control-Allow-Credentials", "Token");
-        response.put("user", UserResponse.fromUser((User) auth.getPrincipal(), language.getId()));
+        response.put("token", token);
         response.put("message", new HTTPMessageHandler(HTTPMessage.SUCCESSFULLY_LOGIN, language.getId()));
         return response;
     }
 
     @ResponseBody
-    @GetMapping("/login")
+    @GetMapping("/info")
     @PreAuthorize("isAuthenticated()")
     public Response loginUserGet(HttpServletResponse httpResponse, Authentication auth,
              @RequestHeader(value = "Current-Language", defaultValue = "ru") Language language){
         Response response = new Response();
-        httpResponse.setHeader("Token", ((User) auth.getPrincipal()).getToken());
+        User user = (User) auth.getPrincipal();
+        TokenData token = TokenData
+                .builder()
+                .accessToken(TokenUtil.generateAccessTokenByUsername(user.getUsername()))
+                .refreshToken(TokenUtil.generateRefreshTokenByUsername(user.getUsername()))
+                .build();
+        httpResponse.setHeader("Token", token.getAccessToken());
         httpResponse.setHeader("Access-Control-Allow-Credentials", "Token");
-        response.put("user", UserResponse.fromUser((User) auth.getPrincipal(), language.getId()));
+        response.put("token", token);
         response.put("message", new HTTPMessageHandler(HTTPMessage.SUCCESSFULLY_LOGIN, language.getId()));
+        return response;
+    }
+
+    @ResponseBody
+    @PostMapping("/refresh")
+    @PreAuthorize("isAuthenticated()")
+    public Response refreshToken(Authentication auth) {
+        Response response = new Response();
+        TokenData token = TokenData
+                .builder()
+                .accessToken(TokenUtil.generateAccessTokenByUsername(((User) auth).getUsername()))
+                .refreshToken(TokenUtil.generateRefreshTokenByUsername(((User) auth).getUsername()))
+                .build();
+        response.put("token", token);
         return response;
     }
 

@@ -75,31 +75,31 @@ public class UserService implements UserDetailsService {
         }
     }
 
-    public User create(CreateUserRequest createUserRequest, HTTPMessageHandler messageHandler, int language) {
+    public boolean create(CreateUserRequest createUserRequest, HTTPMessageHandler messageHandler, int language) {
         if (
                 userRepository.findByUsername(createUserRequest.getUsername()).isPresent() &&
                 userRepository.findByEmail(createUserRequest.getEmail()).isEmpty()
         ) {
             LogUtil.write(HTTPMessage.USERNAME_IS_EXIST.getMessageEN(), LogType.ERROR);
             messageHandler.set(HTTPMessage.USERNAME_IS_EXIST, language);
-            return null;
+            return false;
         } else if (
                 userRepository.findByUsername(createUserRequest.getUsername()).isEmpty() &&
                 userRepository.findByEmail(createUserRequest.getEmail()).isPresent()
         ) {
             LogUtil.write(HTTPMessage.EMAIL_IS_EXIST.getMessageEN(), LogType.ERROR);
             messageHandler.set(HTTPMessage.EMAIL_IS_EXIST, language);
-            return null;
+            return false;
         } else if (
                 userRepository.findByUsername(createUserRequest.getUsername()).isPresent() &&
                 userRepository.findByEmail(createUserRequest.getEmail()).isPresent()
         ) {
             LogUtil.write(HTTPMessage.USER_IS_EXIST.getMessageEN(), LogType.ERROR);
             messageHandler.set(HTTPMessage.USER_IS_EXIST, language);
-            return null;
+            return false;
         }
         else {
-            emailService.send(ConstantsUtil.getHostName() + "/api/v1/auth/confirm/" + TokenUtil.generateTokenByUsername(createUserRequest.getUsername()), createUserRequest.getEmail());
+            emailService.send(ConstantsUtil.getHostName() + "/api/v1/auth/confirm/" + TokenUtil.generateAccessTokenByUsername(createUserRequest.getUsername()), createUserRequest.getEmail());
             try {
                 byte [] image = null;
                 if (createUserRequest.getImage() == null) {
@@ -112,8 +112,8 @@ public class UserService implements UserDetailsService {
                 }
                 LogUtil.write(HTTPMessage.SUCCESSFULLY_REGISTERED.getMessageEN(), LogType.INFO);
                 messageHandler.set(HTTPMessage.SUCCESSFULLY_REGISTERED, language);
-                return userRepository.save (
-                    new User (
+                userRepository.save(
+                    new User(
                         createUserRequest.getNameKK(),
                         createUserRequest.getNameRU(),
                         createUserRequest.getNameEN(),
@@ -123,15 +123,15 @@ public class UserService implements UserDetailsService {
                         createUserRequest.getUsername(),
                         createUserRequest.getEmail(),
                         passwordEncoder.encode(createUserRequest.getPassword()),
-                        TokenUtil.generateTokenByUsername(createUserRequest.getUsername()),
                         List.of(UserRole.USER),
                         image,
                         false
                     )
                 );
+                return true;
             } catch (Exception e) {
                 LogUtil.write(e);
-                return null;
+                return false;
             }
         }
     }
@@ -151,7 +151,6 @@ public class UserService implements UserDetailsService {
                         ConstantsUtil.ADMIN_USERNAME,
                         ConstantsUtil.ADMIN_EMAIL,
                         passwordEncoder.encode(ConstantsUtil.ADMIN_PASSWORD),
-                        TokenUtil.generateTokenByUsername(ConstantsUtil.ADMIN_USERNAME),
                         List.of(UserRole.ADMIN),
                         inputStream.readAllBytes(),
                         true

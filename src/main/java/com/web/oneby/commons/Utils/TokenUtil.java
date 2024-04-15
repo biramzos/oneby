@@ -4,12 +4,27 @@ import com.web.oneby.commons.Enums.LogType;
 import io.jsonwebtoken.*;
 import org.springframework.stereotype.Component;
 
+import java.sql.Date;
+import java.time.LocalDate;
+
 @Component
 public class TokenUtil {
 
     private static final String SECRET_KEY = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz";
+    private static final long EXPIRATION = 1000 * 60 * 24;
 
-    public static String generateTokenByUsername(String username){
+    public static String generateAccessTokenByUsername(String username){
+        return Jwts
+                .builder()
+                .claim("username", username)
+                .setSubject(username)
+                .setIssuedAt(new Date(System.currentTimeMillis()))
+                .setExpiration(new Date(System.currentTimeMillis() + EXPIRATION))
+                .signWith(SignatureAlgorithm.HS256, SECRET_KEY)
+                .compact();
+    }
+
+    public static String generateRefreshTokenByUsername(String username){
         return Jwts
                 .builder()
                 .claim("username", username)
