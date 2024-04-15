@@ -10,6 +10,7 @@ import com.web.oneby.modules.users.DTOs.UserResponse;
 import com.web.oneby.modules.users.Models.User;
 import com.web.oneby.modules.users.Services.UserService;
 import jakarta.servlet.http.HttpServletResponse;
+import jakarta.servlet.http.HttpSession;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpHeaders;
@@ -20,8 +21,6 @@ import org.springframework.security.authentication.UsernamePasswordAuthenticatio
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
-
-import java.io.IOException;
 
 @RestController
 @RequestMapping("/api/v1/auth")
@@ -53,8 +52,10 @@ public class AuthController {
         if (user != null){
             if (httpServletResponse.containsHeader(HttpHeaders.AUTHORIZATION)) {
                 httpServletResponse.setHeader(HttpHeaders.AUTHORIZATION, "Bearer " + user.getToken());
+                //session.setAttribute(HttpHeaders.AUTHORIZATION, "Bearer " + user.getToken());
             } else {
                 httpServletResponse.addHeader(HttpHeaders.AUTHORIZATION, "Bearer " + user.getToken());
+                //session.setAttribute(HttpHeaders.AUTHORIZATION, "Bearer " + user.getToken());
             }
             response.put("user", UserResponse.fromUser(user, language.getId()));
         }
@@ -65,13 +66,13 @@ public class AuthController {
     @ResponseBody
     @PostMapping("/login")
     @PreAuthorize("isAnonymous()")
-    public Response loginUserPost(HttpServletResponse httpServletResponse, @RequestBody LoginUserRequest loginUserRequest, @RequestHeader(value = "Current-Language", defaultValue = "ru") Language language){
+    public Response loginUserPost(HttpServletResponse httpResponse, @RequestBody LoginUserRequest loginUserRequest, @RequestHeader(value = "Current-Language", defaultValue = "ru") Language language){
         Response response = new Response();
         Authentication auth = authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(loginUserRequest.getUsername(), loginUserRequest.getPassword()));
-        if (httpServletResponse.containsHeader(HttpHeaders.AUTHORIZATION)) {
-            httpServletResponse.setHeader(HttpHeaders.AUTHORIZATION, "Bearer " + ((User) auth.getPrincipal()).getToken());
+        if (httpResponse.containsHeader(HttpHeaders.AUTHORIZATION)) {
+            httpResponse.setHeader(HttpHeaders.AUTHORIZATION, "Bearer " + ((User) auth.getPrincipal()).getToken());
         } else {
-            httpServletResponse.addHeader(HttpHeaders.AUTHORIZATION, "Bearer " + ((User) auth.getPrincipal()).getToken());
+            httpResponse.setHeader(HttpHeaders.AUTHORIZATION, "Bearer " + ((User) auth.getPrincipal()).getToken());
         }
         response.put("user", UserResponse.fromUser((User) auth.getPrincipal(), language.getId()));
         response.put("message", new HTTPMessageHandler(HTTPMessage.SUCCESSFULLY_LOGIN, language.getId()));
