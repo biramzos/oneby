@@ -116,9 +116,6 @@ public class AuthController {
     ){
         Response response = new Response();
         HTTPMessageHandler messageHandler = new HTTPMessageHandler();
-        if (language == null) {
-            language = Language.ru;
-        }
         userService.confirm(token, messageHandler, language.getId());
         response.put("message", messageHandler);
         return response;
