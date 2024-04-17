@@ -99,7 +99,7 @@ public class UserService implements UserDetailsService {
             return false;
         }
         else {
-            emailService.send(ConstantsUtil.getHostName() + "/api/v1/auth/confirm/" + TokenUtil.generateAccessTokenByUsername(createUserRequest.getUsername()), createUserRequest.getEmail());
+            emailService.send(ConstantsUtil.getHostName() + "/api/v1/auth/confirm/" + TokenUtil.getRefreshToken(createUserRequest.getUsername()), createUserRequest.getEmail());
             try {
                 byte [] image = null;
                 if (createUserRequest.getImage() == null) {
@@ -172,7 +172,7 @@ public class UserService implements UserDetailsService {
     }
 
     public void confirm(String token, HTTPMessageHandler messageHandler, int language){
-        Optional<User> user = userRepository.findByToken(token);
+        Optional<User> user = userRepository.findByUsername(TokenUtil.getUsernameFromToken(token));
         if (user.isPresent()) {
             if (user.get().isActive()) {
                 LogUtil.write(HTTPMessage.USER_ALREADY_CONFIRMED.getMessageEN(), LogType.INFO);

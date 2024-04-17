@@ -26,8 +26,6 @@ public interface UserRepository extends JpaRepository<User, Long> {
     @EntityGraph(attributePaths = {"roles"})
     Optional<User> findByEmail(String email);
     @EntityGraph(attributePaths = {"roles"})
-    Optional<User> findByToken(String token);
-    @EntityGraph(attributePaths = {"roles"})
     Page<User> findAll(Specification<User> specification, Pageable pageable);
     @EntityGraph(attributePaths = {"roles"})
     Integer countAllByRolesContaining(UserRole role);

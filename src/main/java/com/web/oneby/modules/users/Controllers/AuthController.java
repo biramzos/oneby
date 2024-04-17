@@ -52,13 +52,9 @@ public class AuthController {
         HTTPMessageHandler messageHandler = new HTTPMessageHandler();
         boolean isSaved = userService.create(createUserRequest, messageHandler, language.getId());
         if (isSaved){
-            TokenData token = TokenData
-                    .builder()
-                    .accessToken(TokenUtil.generateAccessTokenByUsername(createUserRequest.getUsername()))
-                    .refreshToken(TokenUtil.generateRefreshTokenByUsername(createUserRequest.getUsername()))
-                    .build();
-            httpResponse.setHeader("Token", token.getAccessToken());
-            httpResponse.setHeader("Access-Control-Allow-Credentials", "Token");
+            TokenData token = new TokenData();
+            token.setRefreshToken(TokenUtil.getRefreshToken(createUserRequest.getUsername()));
+            token.setAccessToken(TokenUtil.getAccessToken(token.getRefreshToken()));
             response.put("token", token);
         }
         response.put("message", messageHandler);
@@ -68,18 +64,14 @@ public class AuthController {
     @ResponseBody
     @PostMapping("/login")
     @PreAuthorize("isAnonymous()")
-    public Response loginUserPost(HttpServletResponse httpResponse, @RequestBody LoginUserRequest loginUserRequest, @RequestHeader(value = "Current-Language", defaultValue = "ru") Language language){
+    public Response loginUserPost(@RequestBody LoginUserRequest loginUserRequest, @RequestHeader(value = "Current-Language", defaultValue = "ru") Language language){
         Response response = new Response();
         User user = ((User) authenticationManager.authenticate
                 (new UsernamePasswordAuthenticationToken(loginUserRequest.getUsername(), loginUserRequest.getPassword()))
                 .getPrincipal());
-        TokenData token = TokenData
-                .builder()
-                .accessToken(TokenUtil.generateAccessTokenByUsername(user.getUsername()))
-                .refreshToken(TokenUtil.generateRefreshTokenByUsername(user.getUsername()))
-                .build();
-        httpResponse.setHeader("Token", token.getAccessToken());
-        httpResponse.setHeader("Access-Control-Allow-Credentials", "Token");
+        TokenData token = new TokenData();
+        token.setRefreshToken(TokenUtil.getRefreshToken(loginUserRequest.getUsername()));
+        token.setAccessToken(TokenUtil.getAccessToken(token.getRefreshToken()));
         response.put("token", token);
         response.put("message", new HTTPMessageHandler(HTTPMessage.SUCCESSFULLY_LOGIN, language.getId()));
         return response;
@@ -88,19 +80,11 @@ public class AuthController {
     @ResponseBody
     @GetMapping("/info")
     @PreAuthorize("isAuthenticated()")
-    public Response loginUserGet(HttpServletResponse httpResponse, Authentication auth,
+    public Response loginUserGet(Authentication auth,
              @RequestHeader(value = "Current-Language", defaultValue = "ru") Language language){
         Response response = new Response();
         User user = (User) auth.getPrincipal();
-        TokenData token = TokenData
-                .builder()
-                .accessToken(TokenUtil.generateAccessTokenByUsername(user.getUsername()))
-                .refreshToken(TokenUtil.generateRefreshTokenByUsername(user.getUsername()))
-                .build();
-        httpResponse.setHeader("Token", token.getAccessToken());
-        httpResponse.setHeader("Access-Control-Allow-Credentials", "Token");
-        response.put("token", token);
-        response.put("message", new HTTPMessageHandler(HTTPMessage.SUCCESSFULLY_LOGIN, language.getId()));
+        response.put("user", UserResponse.fromUser(user, language));
         return response;
     }
 
@@ -109,11 +93,9 @@ public class AuthController {
     @PreAuthorize("isAuthenticated()")
     public Response refreshToken(Authentication auth) {
         Response response = new Response();
-        TokenData token = TokenData
-                .builder()
-                .accessToken(TokenUtil.generateAccessTokenByUsername(((User) auth).getUsername()))
-                .refreshToken(TokenUtil.generateRefreshTokenByUsername(((User) auth).getUsername()))
-                .build();
+        TokenData token = new TokenData();
+        token.setRefreshToken(TokenUtil.getRefreshToken(((User) auth.getPrincipal()).getUsername()));
+        token.setAccessToken(TokenUtil.getAccessToken(token.getRefreshToken()));
         response.put("token", token);
         return response;
     }
@@ -148,7 +130,7 @@ public class AuthController {
     @ResponseBody
     @GetMapping(value = "/images/{userId}", produces = MediaType.IMAGE_JPEG_VALUE)
     @PreAuthorize("isAuthenticated() or isAnonymous()")
-    public byte[] getImage(@PathVariable("userId") User user, @RequestHeader(value = "Current-Language", defaultValue = "ru") Language language){
+    public byte[] getImage(@PathVariable("userId") User user, @RequestHeader(value = "Current-Language", defaultValue = "ru") Language language) {
         return user.getImage();
     }
 
