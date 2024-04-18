@@ -2,8 +2,12 @@ package com.web.oneby.commons.Utils;
 
 import com.web.oneby.commons.Enums.LogType;
 import io.jsonwebtoken.*;
+import org.apache.logging.log4j.CloseableThreadContext;
 import org.springframework.stereotype.Component;
+
+import javax.management.InstanceAlreadyExistsException;
 import java.sql.Date;
+import java.time.Instant;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -30,7 +34,7 @@ public class TokenUtil {
         return Jwts
                 .builder()
                 .setClaims(claims)
-                .setExpiration(new Date(System.currentTimeMillis() + EXPIRATION * 24))
+                .setExpiration(new Date(System.currentTimeMillis() + EXPIRATION * 2))
                 .signWith(SignatureAlgorithm.HS256, SECRET_KEY)
                 .compact();
     }

@@ -49,14 +49,13 @@ public class JWTFilter extends OncePerRequestFilter {
                 filterChain.doFilter(request, response);
                 return;
             }
-            String endpoint = request.getServletPath();
             String token = "";
             if (request.getHeader("Token") != null && !request.getHeader("Token").isEmpty()) {
                 token = request.getHeader("Token");
             }
             if (!token.isEmpty() && TokenUtil.validateToken(token)) {
                 String username = TokenUtil.getUsernameFromToken(token);
-                User user = parseUser(token);
+                User user =  (User) userService.loadUserByUsername(username);
                 SecurityContextHolder.getContext().setAuthentication(new UsernamePasswordAuthenticationToken(user, user.getUsername(), user.getRoles()));
             }
             filterChain.doFilter(request, response);
