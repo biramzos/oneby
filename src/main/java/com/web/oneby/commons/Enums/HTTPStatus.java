@@ -10,9 +10,6 @@ public enum HTTPStatus {
 
     @JsonValue
     public Object serialize() {
-        return new Object() {
-            @JsonProperty("status")
-            String status = name();
-        };
+        return name();
     }
 }
