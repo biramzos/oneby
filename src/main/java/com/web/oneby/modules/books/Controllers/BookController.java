@@ -47,4 +47,9 @@ public class BookController {
         return Response.getResponse("book", BookResponse.fromBook(book, language));
     }
 
+//    @ResponseBody
+//    @GetMapping("/")
+//    @PreAuthorize("isAuthenticated() or isAnonymous()")
+//    public Response get
+
 }
