@@ -213,15 +213,6 @@ public enum HTTPMessage {
         return status;
     }
 
-    public String getMessage(int language) {
-        Map<String, String> names = new HashMap<>() {{
-            put(Language.kk.suffix(), messageKK);
-            put(Language.ru.suffix(), messageRU);
-            put(Language.en.suffix(), messageEN);
-        }};
-        return names.get(Objects.requireNonNull(Language.getLanguageById(language)).suffix());
-    }
-
     public String getMessage(Language language) {
         Map<String, String> names = new HashMap<>() {{
             put(Language.kk.suffix(), messageKK);

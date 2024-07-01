@@ -17,14 +17,6 @@ public enum PaymentStatus {
     private String nameRU;
     private String nameEN;
 
-    public String getName(int language){
-        Map<String, String> names = new HashMap<>() {{
-            put(Language.kk.suffix(), nameKK);
-            put(Language.ru.suffix(), nameRU);
-            put(Language.en.suffix(), nameEN);
-        }};
-        return names.get(Language.getLanguageById(language).suffix());
-    }
 
     public String getName(Language language){
         Map<String, String> names = new HashMap<>() {{

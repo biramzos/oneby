@@ -1,5 +1,6 @@
 package com.web.oneby.commons.Utils;
 
+import com.web.oneby.commons.Enums.Language;
 import com.web.oneby.commons.Enums.LogType;
 import com.web.oneby.commons.Enums.Template;
 import org.springframework.web.multipart.MultipartFile;
@@ -45,7 +46,7 @@ public class OBFileUtil {
         }
     }
 
-    public static boolean saveTemplate(MultipartFile file, Template template, int lang) {
+    public static boolean saveTemplate(MultipartFile file, Template template, Language lang) {
         try {
             String path = ConstantsUtil.TEMPLATES_DIRECTORY + template.getFileByLanguage(lang);
             Path templatePath = Path.of(path);

@@ -1,11 +1,9 @@
 package com.web.oneby.modules.users.Services;
 
-import com.web.oneby.commons.DTOs.PageObject;
-import com.web.oneby.commons.DTOs.SearchFilter;
+import com.web.oneby.commons.DTOs.*;
 import com.web.oneby.commons.Enums.HTTPMessage;
 import com.web.oneby.commons.Enums.Language;
 import com.web.oneby.commons.Enums.LogType;
-import com.web.oneby.commons.Handlers.HTTPMessageHandler;
 import com.web.oneby.commons.Services.EmailService;
 import com.web.oneby.commons.Utils.ConstantsUtil;
 import com.web.oneby.commons.Utils.LogUtil;
@@ -17,11 +15,17 @@ import com.web.oneby.modules.users.Enums.UserRole;
 import com.web.oneby.modules.users.Models.User;
 import com.web.oneby.modules.users.Repositories.UserRepository;
 import com.web.oneby.modules.users.Specifications.UserSpecification;
-import io.jsonwebtoken.Jwts;
-import io.jsonwebtoken.SignatureAlgorithm;
+import jakarta.el.ValueExpression;
+import jakarta.el.VariableMapper;
 import jakarta.transaction.Transactional;
+import lombok.SneakyThrows;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.el.lang.VariableMapperImpl;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.builder.ParentContextApplicationContextInitializer;
+import org.springframework.boot.web.servlet.support.ServletContextApplicationContextInitializer;
+import org.springframework.context.ApplicationContext;
+import org.springframework.context.ApplicationContextInitializer;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
@@ -31,6 +35,7 @@ import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import java.io.FileInputStream;
+import java.io.FilterOutputStream;
 import java.io.InputStream;
 import java.util.*;
 
@@ -41,16 +46,19 @@ public class UserService implements UserDetailsService {
     private static UserRepository userRepository;
     private static PasswordEncoder passwordEncoder;
     private EmailService emailService;
+    private org.springframework.context.ApplicationContext context;
 
     @Autowired
     public UserService(
             UserRepository userRepository,
             PasswordEncoder passwordEncoder,
-            EmailService emailService
+            EmailService emailService,
+            ApplicationContext context
     ){
         UserService.userRepository = userRepository;
         UserService.passwordEncoder = passwordEncoder;
         this.emailService = emailService;
+        this.context = context;
     }
 
     public PageObject<UserResponse> search(SearchFilter request, Language language) {
@@ -75,7 +83,7 @@ public class UserService implements UserDetailsService {
         }
     }
 
-    public boolean create(CreateUserRequest createUserRequest, HTTPMessageHandler messageHandler, int language) {
+    public boolean create(CreateUserRequest createUserRequest, MessageData messageHandler, Language language) {
         if (
                 userRepository.findByUsername(createUserRequest.getUsername()).isPresent() &&
                 userRepository.findByEmail(createUserRequest.getEmail()).isEmpty()
@@ -110,8 +118,6 @@ public class UserService implements UserDetailsService {
                 } else {
                     image = createUserRequest.getImage().getBytes();
                 }
-                LogUtil.write(HTTPMessage.SUCCESSFULLY_REGISTERED.getMessageEN(), LogType.INFO);
-                messageHandler.set(HTTPMessage.SUCCESSFULLY_REGISTERED, language);
                 userRepository.save(
                     new User(
                         createUserRequest.getNameKK(),
@@ -128,6 +134,8 @@ public class UserService implements UserDetailsService {
                         false
                     )
                 );
+                LogUtil.write(HTTPMessage.SUCCESSFULLY_REGISTERED.getMessageEN(), LogType.INFO);
+                messageHandler.set(HTTPMessage.SUCCESSFULLY_REGISTERED, language);
                 return true;
             } catch (Exception e) {
                 LogUtil.write(e);
@@ -136,8 +144,20 @@ public class UserService implements UserDetailsService {
         }
     }
 
+
+    @SneakyThrows
     public boolean onInit() {
         try {
+            Map<String, Object> map = new HashMap<>();
+            System.out.println("getDeclaredFields");
+            //Class<? extends ClassInitil> myClass = ExampleClass.class;
+            ExampleClass init = new ExampleClass();
+//            Object classInitil = myClass.getDeclaredConstructor().newInstance();
+//            for (java.lang.reflect.Field field : myClass.getDeclaredFields()) {
+//                map.put(field.getName(), field.get(classInitil));
+//                System.out.println(field.getName() + " " + field.getType() + " " + field.get(classInitil));
+//            }
+            System.out.println(init.getName(Language.kk));
             InputStream inputStream = new FileInputStream(ConstantsUtil.IMAGES_DIRECTORY + "userDefault.png");
             boolean isAdminExist = UserService.userRepository.countAllByRolesContaining(UserRole.ADMIN) > 0;
             if (!isAdminExist) {
@@ -171,7 +191,7 @@ public class UserService implements UserDetailsService {
         return userRepository.findById(id).orElseThrow(() -> new UsernameNotFoundException("User '#" + id + "' not found!"));
     }
 
-    public void confirm(String token, HTTPMessageHandler messageHandler, int language){
+    public void confirm(String token, MessageData messageHandler, Language language){
         Optional<User> user = userRepository.findByUsername(TokenUtil.getUsernameFromToken(token));
         if (user.isPresent()) {
             if (user.get().isActive()) {

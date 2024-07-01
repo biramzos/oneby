@@ -21,15 +21,7 @@ public class TranslationUtil {
         return messageSource.getMessage(key, arguments, new Locale(language.name()));
     }
 
-    public static String getMessage(String key, int language, String... args) {
-        return messageSource.getMessage(key, args, new Locale(Language.getLanguageById(language).name()));
-    }
-
     public static String getMessage(String key, Language language) {
         return messageSource.getMessage(key, null, new Locale(language.name()));
-    }
-
-    public static String getMessage(String key, int language) {
-        return messageSource.getMessage(key, null, new Locale(Language.getLanguageById(language).name()));
     }
 }

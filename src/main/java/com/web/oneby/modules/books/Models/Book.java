@@ -9,10 +9,7 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 import lombok.ToString;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 @Entity
 @Table(name = "books")
@@ -86,15 +83,6 @@ public class Book {
         this.file = file;
     }
 
-    public String getTitle(int language) {
-        Map<String, String> titles = new HashMap<>() {{
-            put(Language.kk.suffix(), titleKK);
-            put(Language.ru.suffix(), titleRU);
-            put(Language.en.suffix(), titleEN);
-        }};
-        return titles.get(Language.getLanguageById(language).suffix());
-    }
-
     public String getTitle(Language language) {
         Map<String, String> titles = new HashMap<>() {{
             put(Language.kk.suffix(), titleKK);
@@ -104,15 +92,6 @@ public class Book {
         return titles.get(language.suffix());
     }
 
-    public String getDescription(int language) {
-        Map<String, String> descriptions = new HashMap<>() {{
-            put(Language.kk.suffix(), descriptionKK);
-            put(Language.ru.suffix(), descriptionRU);
-            put(Language.en.suffix(), descriptionEN);
-        }};
-        return descriptions.get(Language.getLanguageById(language).suffix());
-    }
-
     public String getDescription(Language language) {
         Map<String, String> descriptions = new HashMap<>() {{
             put(Language.kk.suffix(), descriptionKK);
@@ -120,15 +99,6 @@ public class Book {
             put(Language.en.suffix(), descriptionEN);
         }};
         return descriptions.get(language.suffix());
-    }
-
-    public String getAuthor(int language) {
-        Map<String, String> authors = new HashMap<>() {{
-            put(Language.kk.suffix(), authorKK);
-            put(Language.ru.suffix(), authorRU);
-            put(Language.en.suffix(), authorEN);
-        }};
-        return authors.get(Language.getLanguageById(language).suffix());
     }
 
     public String getAuthor(Language language) {

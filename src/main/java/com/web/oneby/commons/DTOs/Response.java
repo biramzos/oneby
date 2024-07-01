@@ -1,4 +1,4 @@
-package com.web.oneby.commons.Utils;
+package com.web.oneby.commons.DTOs;
 
 import java.util.HashMap;
 

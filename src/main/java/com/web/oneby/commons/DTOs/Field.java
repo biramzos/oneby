@@ -1,4 +1,4 @@
-package com.web.oneby.commons.Utils;
+package com.web.oneby.commons.DTOs;
 
 public class Field {
     public String name;

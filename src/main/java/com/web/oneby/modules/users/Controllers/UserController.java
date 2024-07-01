@@ -1,22 +1,14 @@
 package com.web.oneby.modules.users.Controllers;
 
-import com.web.oneby.commons.DTOs.PageObject;
 import com.web.oneby.commons.DTOs.SearchFilter;
-import com.web.oneby.commons.Enums.HTTPMessage;
 import com.web.oneby.commons.Enums.Language;
-import com.web.oneby.commons.Handlers.HTTPMessageHandler;
-import com.web.oneby.commons.Utils.Response;
+import com.web.oneby.commons.DTOs.Response;
 import com.web.oneby.modules.users.DTOs.UserResponse;
-import com.web.oneby.modules.users.Enums.UserRole;
 import com.web.oneby.modules.users.Models.User;
 import com.web.oneby.modules.users.Services.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;
-import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
-
-import java.util.List;
-import java.util.Objects;
 
 @RestController
 @RequestMapping("/api/v1/users")

@@ -22,20 +22,6 @@ public class UserResponse {
     private String image;
     private boolean isActivated;
 
-
-    public static UserResponse fromUser(User user, int language) {
-        UserResponse userResponse = new UserResponse();
-        userResponse.id = user.getId();
-        userResponse.fullname = StringUtil.getFullName(user.getName(language), user.getLastname(language));
-        userResponse.shortname = StringUtil.getFullNameShort(user.getName(language), user.getLastname(language));
-        userResponse.username = user.getUsername();
-        userResponse.email = user.getEmail();
-        userResponse.roles = user.getRoles().stream().map((role) -> role.getName(language)).toList();
-        userResponse.image = "/api/v1/auth/images/" + user.getId();
-        userResponse.isActivated = user.isActive();
-        return userResponse;
-    }
-
     public static UserResponse fromUser(User user, Language language) {
         UserResponse userResponse = new UserResponse();
         userResponse.id = user.getId();

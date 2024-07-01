@@ -20,18 +20,6 @@ public class BookResponse {
     private String image;
     private String file;
 
-    public static BookResponse fromBook(Book book, int language) {
-        BookResponse bookResponse = new BookResponse();
-        bookResponse.id = book.getId();
-        bookResponse.title = book.getTitle(language);
-        bookResponse.description = book.getDescription(language);
-        bookResponse.author = book.getAuthor(language);
-        bookResponse.genres = book.getGenres().stream().map((role) -> role.getName(language)).toList();
-        bookResponse.image = "/api/v1/books/poster/" + book.getId();
-        bookResponse.file = "/api/v1/books/file/" + book.getId();
-        return bookResponse;
-    }
-
     public static BookResponse fromBook(Book book, Language language) {
         BookResponse bookResponse = new BookResponse();
         bookResponse.id = book.getId();

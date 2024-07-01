@@ -6,14 +6,12 @@ import com.lowagie.text.Font;
 import com.lowagie.text.Image;
 import com.lowagie.text.pdf.*;
 import com.lowagie.text.pdf.draw.LineSeparator;
-import com.web.oneby.commons.Enums.LogType;
-import com.web.oneby.commons.Enums.PaymentStatus;
-import com.web.oneby.commons.Enums.ProductType;
-import com.web.oneby.commons.Enums.Template;
+import com.web.oneby.commons.Enums.*;
 import com.web.oneby.commons.Services.OBFileService;
 import fr.opensagres.poi.xwpf.converter.pdf.PdfConverter;
 import fr.opensagres.poi.xwpf.converter.pdf.PdfOptions;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.commons.codec.language.bm.Lang;
 import org.apache.poi.xwpf.usermodel.*;
 import org.docx4j.openpackaging.packages.WordprocessingMLPackage;
 import org.docx4j.openpackaging.parts.WordprocessingML.MainDocumentPart;
@@ -36,7 +34,7 @@ public class PDFUtil {
         PDFUtil.fileService = fileService;
     }
 
-    public static byte[] generateBill(int language) {
+    public static byte[] generateBill(Language language) {
         try (ByteArrayOutputStream baos = new ByteArrayOutputStream();
              Document document = new Document(PageSize.A6)) {
             PdfWriter.getInstance(document, baos);
@@ -75,7 +73,7 @@ public class PDFUtil {
     }
 
 
-    public static byte[] generateDocument(Template template, Map<String, String> replacements, int lang) {
+    public static byte[] generateDocument(Template template, Map<String, String> replacements, Language lang) {
         try (InputStream inputStream = new FileInputStream(ConstantsUtil.TEMPLATES_DIRECTORY + template.getFileByLanguage(lang))) {
             WordprocessingMLPackage wordMLPackage = WordprocessingMLPackage.load(inputStream);
             MainDocumentPart documentPart = wordMLPackage.getMainDocumentPart();
@@ -90,7 +88,7 @@ public class PDFUtil {
         }
     }
 
-    private static Map<String, String> getReplacements(Map<String, String> replacements, int language) {
+    private static Map<String, String> getReplacements(Map<String, String> replacements, Language language) {
         Map<String, String> variables = new HashMap<>();
         for (Map.Entry<String, String> replacement : replacements.entrySet()) {
             if (replacement.getKey().equals("date")) {
@@ -113,7 +111,7 @@ public class PDFUtil {
         }
     }
 
-    private static Paragraph getHeader(Long id, int language) {
+    private static Paragraph getHeader(Long id, Language language) {
         Map<String, Font> fonts = getMonoscapeFonts();
         Paragraph paragraph = new Paragraph();
         paragraph.add(new Phrase(TranslationUtil.getMessage("payment_bill", language), fonts.get("fontBold")));
@@ -122,7 +120,7 @@ public class PDFUtil {
         return paragraph;
     }
 
-    private static void writeCustomerInfo(Document document, int language) {
+    private static void writeCustomerInfo(Document document, Language language) {
         Map<String, Font> fonts = getMonoscapeFonts();
         document.add(new Paragraph(TranslationUtil.getMessage("customer", language) + "\n", fonts.get("fontBold")));
         //full name
@@ -157,7 +155,7 @@ public class PDFUtil {
         document.add(date);
     }
 
-    private static void writeProductsInfo(Document document, int language) {
+    private static void writeProductsInfo(Document document, Language language) {
         Map<String, Font> fonts = getMonoscapeFonts();
         document.add(new Paragraph(TranslationUtil.getMessage("products", language) + "\n\n", fonts.get("fontBold")));
         PdfPTable table = new PdfPTable(3);
@@ -189,7 +187,7 @@ public class PDFUtil {
         document.add(table);
     }
 
-    private static void writeFooter(Document document, int language) {
+    private static void writeFooter(Document document, Language language) {
         Map<String, Font> fonts = getMonoscapeFonts();
         document.add(new Paragraph(TranslationUtil.getMessage("terms_and_conditions", language), fonts.get("fontBold")));
         document.add(new Paragraph(TranslationUtil.getMessage("payment_is_due_within", language, "15"), fonts.get("font")));
@@ -204,7 +202,7 @@ public class PDFUtil {
         return spacer;
     }
 
-    private static PdfPCell getTableProductHeader(String productType, int language) {
+    private static PdfPCell getTableProductHeader(String productType, Language language) {
         Map<String, Font> fonts = getMonoscapeFonts();
         PdfPCell header = new PdfPCell();
         header.setColspan(3);

@@ -70,15 +70,6 @@ public enum Template {
         }
     }
 
-    public String getTemplateName(int language) {
-        Map<String, String> names = new HashMap<>() {{
-            put(Language.kk.suffix(), templateKK);
-            put(Language.ru.suffix(), templateRU);
-            put(Language.en.suffix(), templateEN);
-        }};
-        return names.get(Language.getLanguageById(language).suffix());
-    }
-
     public String getTemplateName(Language language) {
         Map<String, String> names = new HashMap<>() {{
             put(Language.kk.suffix(), templateKK);
@@ -86,15 +77,6 @@ public enum Template {
             put(Language.en.suffix(), templateEN);
         }};
         return names.get(language.suffix());
-    }
-
-    public String getFileByLanguage (int language) {
-        Map<String, String> files = new HashMap<>() {{
-            put(Language.kk.suffix(), fileKK);
-            put(Language.ru.suffix(), fileRU);
-            put(Language.en.suffix(), fileEN);
-        }};
-        return files.get(Language.getLanguageById(language).suffix());
     }
 
     public String getFileByLanguage (Language language) {

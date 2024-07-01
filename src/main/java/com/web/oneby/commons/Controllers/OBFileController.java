@@ -1,9 +1,9 @@
 package com.web.oneby.commons.Controllers;
 
 import com.web.oneby.commons.DTOs.FileObject;
+import com.web.oneby.commons.DTOs.MessageData;
 import com.web.oneby.commons.DTOs.TemplateDataObject;
 import com.web.oneby.commons.Enums.*;
-import com.web.oneby.commons.Handlers.HTTPMessageHandler;
 import com.web.oneby.commons.Utils.*;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
@@ -21,7 +21,7 @@ public class OBFileController {
     @GetMapping("/bill")
     @PreAuthorize("isAnonymous()")
     public ResponseEntity<byte[]> downloadBill(@RequestHeader(value = "Current-Language", defaultValue = "ru") Language language) {
-        byte[] billBytes = PDFUtil.generateBill(language.getId());
+        byte[] billBytes = PDFUtil.generateBill(language);
         HttpHeaders headers = new HttpHeaders();
         headers.setContentType(MediaType.APPLICATION_PDF);
         headers.setContentDispositionFormData("attachment", "bill" + FileType.PDF.getFormat());
@@ -37,7 +37,7 @@ public class OBFileController {
     ) {
         Template template = Template.getById(dataHandler.getType());
         if (template != null) {
-            byte[] billBytes = PDFUtil.generateDocument(template, dataHandler.getData(), language.getId());
+            byte[] billBytes = PDFUtil.generateDocument(template, dataHandler.getData(), language);
             HttpHeaders headers = new HttpHeaders();
             headers.setContentType(MediaType.APPLICATION_PDF);
             headers.setContentDispositionFormData("attachment", template.name() + FileType.PDF.getFormat());
@@ -50,19 +50,19 @@ public class OBFileController {
     @PostMapping(path = "/template/{type}",
             consumes = {MediaType.MULTIPART_FORM_DATA_VALUE})
     @PreAuthorize("isAnonymous()")
-    public ResponseEntity<HTTPMessageHandler> replaceAndSaveTemplate(@RequestHeader(value = "Current-Language", defaultValue = "ru") Language language,
-                                                                     @PathVariable("type") int type, @ModelAttribute FileObject file) {
+    public ResponseEntity<MessageData> replaceAndSaveTemplate(@RequestHeader(value = "Current-Language", defaultValue = "ru") Language language,
+                                                              @PathVariable("type") int type, @ModelAttribute FileObject file) {
         if (file.getFile().isEmpty()) {
             LogUtil.write(HTTPMessage.ERROR_WHILE_UPLOADING.getMessage(Language.en), LogType.ERROR);
-            return ResponseEntity.badRequest().body(new HTTPMessageHandler(HTTPMessage.ERROR_WHILE_UPLOADING, language.getId()));
+            return ResponseEntity.badRequest().body(new MessageData(HTTPMessage.ERROR_WHILE_UPLOADING, language));
         }
         Template template = Template.getById(type);
         if (template == null) {
             LogUtil.write(HTTPMessage.NO_RESOURCES_FOUND.getMessage(Language.en), LogType.ERROR);
-            return ResponseEntity.badRequest().body(new HTTPMessageHandler(HTTPMessage.NO_RESOURCES_FOUND, language.getId()));
+            return ResponseEntity.badRequest().body(new MessageData(HTTPMessage.NO_RESOURCES_FOUND, language));
         }
-        OBFileUtil.saveTemplate(file.getFile(), template, language.getId());
-        return ResponseEntity.ok().body(new HTTPMessageHandler(HTTPMessage.SUCCESSFULLY_UPLOADED, language.getId()));
+        OBFileUtil.saveTemplate(file.getFile(), template, language);
+        return ResponseEntity.ok().body(new MessageData(HTTPMessage.SUCCESSFULLY_UPLOADED, language));
     }
 
 }

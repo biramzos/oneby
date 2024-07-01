@@ -1,10 +1,11 @@
 package com.web.oneby.modules.users.Controllers;
 
+import com.web.oneby.commons.DTOs.MessageData;
+import com.web.oneby.commons.DTOs.TemplateDataObject;
 import com.web.oneby.commons.DTOs.TokenData;
 import com.web.oneby.commons.Enums.HTTPMessage;
 import com.web.oneby.commons.Enums.Language;
-import com.web.oneby.commons.Handlers.HTTPMessageHandler;
-import com.web.oneby.commons.Utils.Response;
+import com.web.oneby.commons.DTOs.Response;
 import com.web.oneby.commons.Utils.TokenUtil;
 import com.web.oneby.modules.users.DTOs.CreateUserRequest;
 import com.web.oneby.modules.users.DTOs.LoginUserRequest;
@@ -12,10 +13,8 @@ import com.web.oneby.modules.users.DTOs.UserResponse;
 import com.web.oneby.modules.users.Models.User;
 import com.web.oneby.modules.users.Services.UserService;
 import jakarta.servlet.http.HttpServletResponse;
-import jakarta.servlet.http.HttpSession;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -49,8 +48,8 @@ public class AuthController {
             @RequestHeader(value = "Current-Language", defaultValue = "ru") Language language
     ) {
         Response response = new Response();
-        HTTPMessageHandler messageHandler = new HTTPMessageHandler();
-        boolean isSaved = userService.create(createUserRequest, messageHandler, language.getId());
+        MessageData messageHandler = new MessageData();
+        boolean isSaved = userService.create(createUserRequest, messageHandler, language);
         if (isSaved){
             TokenData token = new TokenData();
             token.setRefreshToken(TokenUtil.getRefreshToken(createUserRequest.getUsername()));
@@ -73,7 +72,7 @@ public class AuthController {
         token.setRefreshToken(TokenUtil.getRefreshToken(loginUserRequest.getUsername()));
         token.setAccessToken(TokenUtil.getAccessToken(token.getRefreshToken()));
         response.put("token", token);
-        response.put("message", new HTTPMessageHandler(HTTPMessage.SUCCESSFULLY_LOGIN, language.getId()));
+        response.put("message", new MessageData(HTTPMessage.SUCCESSFULLY_LOGIN, language));
         return response;
     }
 
@@ -108,7 +107,7 @@ public class AuthController {
         Response response = new Response();
         SecurityContextHolder.getContext().setAuthentication(null);
         httpServletResponse.setHeader("Token", null);
-        response.put("message", new HTTPMessageHandler(HTTPMessage.SUCCESSFULLY_LOGOUT, language.getId()));
+        response.put("message", new MessageData(HTTPMessage.SUCCESSFULLY_LOGOUT, language));
         return response;
     }
 
@@ -120,8 +119,8 @@ public class AuthController {
             @PathVariable("token") String token
     ){
         Response response = new Response();
-        HTTPMessageHandler messageHandler = new HTTPMessageHandler();
-        userService.confirm(token, messageHandler, language.getId());
+        MessageData messageHandler = new MessageData();
+        userService.confirm(token, messageHandler, language);
         response.put("message", messageHandler);
         return response;
     }
